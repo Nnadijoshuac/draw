@@ -1,7 +1,15 @@
-﻿import { createNoopSigner, type Address, type Instruction } from "@solana/kit";
+﻿import {
+  createNoopSigner,
+  getAddressEncoder,
+  getProgramDerivedAddress,
+  type Address,
+  type Instruction,
+} from "@solana/kit";
+import { SYSTEM_PROGRAM_ADDRESS } from "@solana-program/system";
 import {
   KaminoAction,
   KaminoMarket,
+  UserMetadata,
   VanillaObligation,
   DEFAULT_RECENT_SLOT_DURATION_MS,
   getCurrentLedgerInstant,
@@ -135,10 +143,20 @@ export interface DrawInstructionsParams {
   marketAddress?: Address;
 }
 
-export interface DrawInstructions {
+export interface InstructionGroup {
   instructions: Instruction[];
   /** Labels in the same order, which make a failed simulation readable. */
   labels: string[];
+}
+
+export interface DrawInstructions {
+  /**
+   * One-time account creation: user metadata, the obligation, farm state and
+   * the user's lookup table. Empty once a user has drawn before.
+   */
+  setup: InstructionGroup;
+  /** The deposit, borrow and their refreshes. Runs on every draw. */
+  draw: InstructionGroup;
 }
 
 /**
@@ -187,35 +205,63 @@ export async function buildDrawInstructions(
   });
 
   return {
-    instructions: collectInstructions(action),
-    labels: collectLabels(action),
+    setup: {
+      instructions: [...action.setupIxs],
+      labels: [...action.setupIxsLabels],
+    },
+    draw: {
+      instructions: [
+        ...action.inBetweenIxs,
+        ...action.lendingIxs,
+        ...action.postLendingIxs,
+        ...action.cleanupIxs,
+      ],
+      labels: [
+        ...action.lendingIxsLabels,
+        ...action.postLendingIxsLabels,
+        ...action.cleanupIxsLabels,
+      ],
+    },
   };
 }
 
 /**
- * Flatten a KaminoAction into a single ordered instruction list.
+ * The lookup table Kamino created for this user during setup.
  *
- * The ordering is not arbitrary. `inBetweenIxs` has to sit between the deposit
- * and the borrow â€” it carries the obligation refresh that makes the freshly
- * deposited collateral visible to the borrow that follows it.
+ * Without it the draw does not fit in a transaction, so this is not an
+ * optimisation. Returns null before the user has been set up.
  */
-function collectInstructions(action: KaminoAction): Instruction[] {
-  return [
-    ...action.setupIxs,
-    ...action.inBetweenIxs,
-    ...action.lendingIxs,
-    ...action.postLendingIxs,
-    ...action.cleanupIxs,
-  ];
+export async function getUserLookupTable(
+  rpc: SolanaRpc,
+  owner: Address,
+): Promise<Address | null> {
+  const [userMetadataAddress] = await getProgramDerivedAddress({
+    programAddress: KAMINO_PROGRAM_ID,
+    seeds: [new TextEncoder().encode("user_meta"), getAddressEncoder().encode(owner)],
+  });
+
+  const metadata = await UserMetadata.fetch(
+    rpc,
+    userMetadataAddress,
+    KAMINO_PROGRAM_ID,
+  );
+  if (!metadata) return null;
+
+  const lut = metadata.userLookupTable;
+  return lut === SYSTEM_PROGRAM_ADDRESS ? null : lut;
 }
 
-function collectLabels(action: KaminoAction): string[] {
-  return [
-    ...action.setupIxsLabels,
-    ...action.lendingIxsLabels,
-    ...action.postLendingIxsLabels,
-    ...action.cleanupIxsLabels,
-  ];
+/**
+ * Does this user still need their Kamino accounts created?
+ *
+ * Kamino always emits an idempotent create-ATA instruction, so a non-empty
+ * setup group does not by itself mean anything is missing. Only the
+ * account-creating instructions do.
+ */
+export function needsAccountSetup(setupLabels: string[]): boolean {
+  return setupLabels.some((label) =>
+    /^(initUserMetadata|InitObligation|createUserLut)/i.test(label),
+  );
 }
 
 /** Drop the cached market. Used by scripts that switch clusters mid-run. */
