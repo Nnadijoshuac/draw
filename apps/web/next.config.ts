@@ -1,8 +1,24 @@
+import path from "node:path";
+import { config as loadEnv } from "dotenv";
 import type { NextConfig } from "next";
+
+// Next only reads .env.local from its own directory, but ours lives at the
+// repo root so the chain scripts and both apps share one file.
+loadEnv({ path: path.join(process.cwd(), "..", "..", ".env.local") });
 
 const nextConfig: NextConfig = {
   // Don't scatter generated tooling files through the app directory.
   agentRules: false,
+
+  // NEXT_PUBLIC_ values are inlined at build time from Next's own env loading,
+  // which never saw the root file. Pass them through explicitly.
+  env: {
+    NEXT_PUBLIC_PRIVY_APP_ID: process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "",
+    NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL ?? "",
+    NEXT_PUBLIC_RPC_URL: process.env.NEXT_PUBLIC_RPC_URL ?? "",
+    NEXT_PUBLIC_XSTOCK_MINT: process.env.NEXT_PUBLIC_XSTOCK_MINT ?? "",
+    NEXT_PUBLIC_USDC_MINT: process.env.NEXT_PUBLIC_USDC_MINT ?? "",
+  },
 
   // Workspace packages ship TypeScript source rather than a build step, so
   // Next compiles them alongside the app.
