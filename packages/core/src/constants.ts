@@ -1,20 +1,20 @@
-import { PublicKey } from "@solana/web3.js";
+import { address } from "@solana/kit";
 
 /**
  * Kamino Lend. The program is deployed at the same address on mainnet and
  * devnet, but only mainnet has configured markets and reserves — which is why
  * we develop against a mainnet fork rather than devnet.
  */
-export const KAMINO_PROGRAM_ID = new PublicKey(
+export const KAMINO_PROGRAM_ID = address(
   "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
 );
 
 /** Kamino's main lending market, where the xStocks reserves live. */
-export const KAMINO_MAIN_MARKET = new PublicKey(
+export const KAMINO_MAIN_MARKET = address(
   "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
 );
 
-export const USDC_MINT = new PublicKey(
+export const USDC_MINT = address(
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
 );
 
