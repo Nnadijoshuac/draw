@@ -1,17 +1,19 @@
 import {
-  TOKEN_PROGRAM_ID,
-  TOKEN_2022_PROGRAM_ID,
-  getAssociatedTokenAddressSync,
-  createAssociatedTokenAccountIdempotentInstruction,
-  getMint,
-  type Mint,
-} from "@solana/spl-token";
+  createNoopSigner,
+  fetchEncodedAccount,
+  type Address,
+  type Instruction,
+} from "@solana/kit";
 import {
-  Connection,
-  PublicKey,
-  type TransactionInstruction,
-} from "@solana/web3.js";
+  TOKEN_PROGRAM_ADDRESS,
+  findAssociatedTokenPda,
+  getCreateAssociatedTokenIdempotentInstruction,
+  fetchMint,
+  type Mint,
+} from "@solana-program/token";
+import { TOKEN_2022_PROGRAM_ADDRESS } from "@solana-program/token-2022";
 import type { TokenProgram } from "@draw/shared";
+import type { SolanaRpc } from "./connection.js";
 
 /**
  * xStocks are issued under Token-2022 while USDC uses the original token
@@ -20,83 +22,74 @@ import type { TokenProgram } from "@draw/shared";
  * simply does not exist, and the resulting errors point nowhere near the
  * actual mistake.
  *
- * Nothing in this codebase should hardcode a token program id. Resolve it from
+ * Nothing in this codebase should hardcode a token program. Resolve it from
  * the mint, every time, through here.
  */
 
-const programCache = new Map<string, PublicKey>();
-const mintCache = new Map<string, Mint>();
+const programCache = new Map<Address, Address>();
+const mintCache = new Map<Address, Mint>();
 
-export function isTokenProgram(programId: PublicKey): boolean {
+export function isTokenProgram(programAddress: Address): boolean {
   return (
-    programId.equals(TOKEN_PROGRAM_ID) || programId.equals(TOKEN_2022_PROGRAM_ID)
+    programAddress === TOKEN_PROGRAM_ADDRESS ||
+    programAddress === TOKEN_2022_PROGRAM_ADDRESS
   );
 }
 
-export function describeTokenProgram(programId: PublicKey): TokenProgram {
-  return programId.equals(TOKEN_2022_PROGRAM_ID) ? "spl-token-2022" : "spl-token";
+export function describeTokenProgram(programAddress: Address): TokenProgram {
+  return programAddress === TOKEN_2022_PROGRAM_ADDRESS
+    ? "spl-token-2022"
+    : "spl-token";
 }
 
 /** Look up which token program owns a mint. Cached — mints do not migrate. */
-export async function getTokenProgramId(
-  connection: Connection,
-  mint: PublicKey,
-): Promise<PublicKey> {
-  const key = mint.toBase58();
-
-  const cached = programCache.get(key);
+export async function getTokenProgram(
+  rpc: SolanaRpc,
+  mint: Address,
+): Promise<Address> {
+  const cached = programCache.get(mint);
   if (cached) return cached;
 
-  const account = await connection.getAccountInfo(mint);
-  if (!account) {
-    throw new Error(`Mint account not found: ${key}`);
+  const account = await fetchEncodedAccount(rpc, mint);
+  if (!account.exists) {
+    throw new Error(`Mint account not found: ${mint}`);
   }
-  if (!isTokenProgram(account.owner)) {
+  if (!isTokenProgram(account.programAddress)) {
     throw new Error(
-      `Account ${key} is owned by ${account.owner.toBase58()}, which is not a token program`,
+      `Account ${mint} is owned by ${account.programAddress}, which is not a token program`,
     );
   }
 
-  programCache.set(key, account.owner);
-  return account.owner;
+  programCache.set(mint, account.programAddress);
+  return account.programAddress;
 }
 
-export async function getMintInfo(
-  connection: Connection,
-  mint: PublicKey,
-): Promise<Mint> {
-  const key = mint.toBase58();
-
-  const cached = mintCache.get(key);
+export async function getMintInfo(rpc: SolanaRpc, mint: Address): Promise<Mint> {
+  const cached = mintCache.get(mint);
   if (cached) return cached;
 
-  const programId = await getTokenProgramId(connection, mint);
-  const info = await getMint(connection, mint, undefined, programId);
-
-  mintCache.set(key, info);
-  return info;
+  const account = await fetchMint(rpc, mint);
+  mintCache.set(mint, account.data);
+  return account.data;
 }
 
 export interface ResolvedAta {
-  address: PublicKey;
-  programId: PublicKey;
+  address: Address;
+  tokenProgram: Address;
 }
 
 /**
  * Derive the associated token account for an owner, using whichever token
  * program actually owns the mint.
- *
- * `allowOwnerOffCurve` is enabled because some owners are program-derived
- * addresses rather than wallets.
  */
 export async function getAta(
-  connection: Connection,
-  mint: PublicKey,
-  owner: PublicKey,
+  rpc: SolanaRpc,
+  mint: Address,
+  owner: Address,
 ): Promise<ResolvedAta> {
-  const programId = await getTokenProgramId(connection, mint);
-  const address = getAssociatedTokenAddressSync(mint, owner, true, programId);
-  return { address, programId };
+  const tokenProgram = await getTokenProgram(rpc, mint);
+  const [address] = await findAssociatedTokenPda({ owner, tokenProgram, mint });
+  return { address, tokenProgram };
 }
 
 /**
@@ -107,33 +100,32 @@ export async function getAta(
  * transaction landing. Safe to include unconditionally.
  */
 export async function createAtaInstruction(
-  connection: Connection,
-  params: { mint: PublicKey; owner: PublicKey; payer: PublicKey },
-): Promise<TransactionInstruction> {
+  rpc: SolanaRpc,
+  params: { mint: Address; owner: Address; payer: Address },
+): Promise<Instruction> {
   const { mint, owner, payer } = params;
-  const { address, programId } = await getAta(connection, mint, owner);
+  const { address, tokenProgram } = await getAta(rpc, mint, owner);
 
-  return createAssociatedTokenAccountIdempotentInstruction(
-    payer,
-    address,
-    owner,
-    mint,
-    programId,
+  // The payer signs in the relay, not here, so a noop signer carries the
+  // address through instruction construction without needing key material.
+  return getCreateAssociatedTokenIdempotentInstruction(
+    { payer: createNoopSigner(payer), ata: address, owner, mint, tokenProgram },
+    { programAddress: tokenProgram },
   );
 }
 
 /** Read a token balance in base units. Returns 0n when the account is absent. */
 export async function getTokenBalance(
-  connection: Connection,
-  mint: PublicKey,
-  owner: PublicKey,
+  rpc: SolanaRpc,
+  mint: Address,
+  owner: Address,
 ): Promise<bigint> {
-  const { address } = await getAta(connection, mint, owner);
+  const { address } = await getAta(rpc, mint, owner);
 
-  const account = await connection.getAccountInfo(address);
-  if (!account) return 0n;
+  const account = await fetchEncodedAccount(rpc, address);
+  if (!account.exists) return 0n;
 
-  const balance = await connection.getTokenAccountBalance(address);
+  const balance = await rpc.getTokenAccountBalance(address).send();
   return BigInt(balance.value.amount);
 }
 
