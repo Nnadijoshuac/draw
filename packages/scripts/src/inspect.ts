@@ -1,4 +1,4 @@
-﻿import { address } from "@solana/kit";
+import { address } from "@solana/kit";
 import { createChainClient, describeTokenProgram, getAta, getTokenProgram } from "@draw/core";
 import { env } from "./env";
 

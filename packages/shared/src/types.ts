@@ -1,4 +1,4 @@
-﻿import type { DecimalString } from "./money";
+import type { DecimalString } from "./money";
 
 export type Cluster = "surfnet" | "mainnet";
 

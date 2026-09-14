@@ -1,4 +1,4 @@
-﻿import {
+import {
   createNoopSigner,
   fetchEncodedAccount,
   type Address,

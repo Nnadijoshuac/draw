@@ -1,4 +1,4 @@
-﻿import type { Address } from "@solana/kit";
+import type { Address } from "@solana/kit";
 import Decimal from "decimal.js";
 import type { Portfolio, Quote, RiskBand } from "@draw/shared";
 import type { SolanaRpc } from "./connection";

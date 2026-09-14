@@ -1,4 +1,4 @@
-﻿import {
+import {
   createKeyPairSignerFromBytes,
   getBase58Encoder,
   getBase64Encoder,

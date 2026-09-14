@@ -1,4 +1,4 @@
-﻿import { address } from "@solana/kit";
+import { address } from "@solana/kit";
 
 /**
  * Kamino Lend. The program is deployed at the same address on mainnet and

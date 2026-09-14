@@ -1,4 +1,4 @@
-﻿import {
+import {
   createNoopSigner,
   getAddressEncoder,
   getProgramDerivedAddress,

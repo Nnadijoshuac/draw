@@ -1,4 +1,4 @@
-﻿import { address } from "@solana/kit";
+import { address } from "@solana/kit";
 import { createChainClient, getTokenProgram } from "@draw/core";
 import { env } from "./env";
 import { assertSurfnet, setLamports, setTokenBalance } from "./surfnet";

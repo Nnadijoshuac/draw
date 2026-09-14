@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Don't scatter generated tooling files through the app directory.
+  agentRules: false,
+
   // Workspace packages ship TypeScript source rather than a build step, so
   // Next compiles them alongside the app.
   transpilePackages: ["@draw/core", "@draw/shared"],

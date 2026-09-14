@@ -1,4 +1,4 @@
-﻿import {
+import {
   createSolanaRpc,
   createSolanaRpcSubscriptions,
   type Rpc,

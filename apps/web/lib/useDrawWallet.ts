@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { usePrivy, useSolanaWallets } from "@privy-io/react-auth";
 import { VersionedTransaction } from "@solana/web3.js";
