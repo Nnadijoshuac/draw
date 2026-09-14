@@ -1,4 +1,4 @@
-import type { DecimalString } from "./money.js";
+﻿import type { DecimalString } from "./money";
 
 export type Cluster = "surfnet" | "mainnet";
 
@@ -113,7 +113,7 @@ export interface CheckoutResult {
 
 /**
  * Server-to-server notification. This, not the postMessage, is the source of
- * truth — a browser can claim anything.
+ * truth â€” a browser can claim anything.
  */
 export interface WebhookEvent {
   id: string;

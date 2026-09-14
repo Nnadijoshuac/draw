@@ -16,8 +16,8 @@ import {
   type KaminoReserve,
 } from "@kamino-finance/klend-sdk";
 import Decimal from "decimal.js";
-import { KAMINO_DEFAULT_MARKET, KAMINO_PROGRAM_ID } from "./constants.js";
-import type { SolanaRpc } from "./connection.js";
+import { KAMINO_DEFAULT_MARKET, KAMINO_PROGRAM_ID } from "./constants";
+import type { SolanaRpc } from "./connection";
 
 /**
  * Thin adapter over Kamino Lend.

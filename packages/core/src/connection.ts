@@ -1,4 +1,4 @@
-import {
+﻿import {
   createSolanaRpc,
   createSolanaRpcSubscriptions,
   type Rpc,
@@ -6,7 +6,7 @@ import {
   type SolanaRpcApi,
   type SolanaRpcSubscriptionsApi,
 } from "@solana/kit";
-import { SURFNET_RPC_URL } from "./constants.js";
+import { SURFNET_RPC_URL } from "./constants";
 
 export type SolanaRpc = Rpc<SolanaRpcApi>;
 export type SolanaRpcSubscriptions = RpcSubscriptions<SolanaRpcSubscriptionsApi>;
@@ -25,7 +25,7 @@ export interface ChainClientOptions {
 /**
  * Derive the websocket endpoint from the http one.
  *
- * Validators — surfpool included — serve subscriptions on the RPC port plus
+ * Validators â€” surfpool included â€” serve subscriptions on the RPC port plus
  * one. Hosted providers usually accept the same host over wss.
  */
 export function deriveSubscriptionsUrl(rpcUrl: string): string {

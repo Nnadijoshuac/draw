@@ -1,9 +1,9 @@
-import type { Address } from "@solana/kit";
+﻿import type { Address } from "@solana/kit";
 import Decimal from "decimal.js";
 import type { Portfolio, Quote, RiskBand } from "@draw/shared";
-import type { SolanaRpc } from "./connection.js";
-import { loadMarket, summariseReserve } from "./kamino.js";
-import { baseUnitsForUsd, getAssetPrice, valueInUsd } from "./prices.js";
+import type { SolanaRpc } from "./connection";
+import { loadMarket, summariseReserve } from "./kamino";
+import { baseUnitsForUsd, getAssetPrice, valueInUsd } from "./prices";
 import {
   DEFAULT_POLICY,
   availableToSpendUsd,
@@ -13,8 +13,8 @@ import {
   liquidationPriceUsd,
   riskBand,
   type RiskPolicy,
-} from "./policy.js";
-import { getTokenBalance } from "./tokens.js";
+} from "./policy";
+import { getTokenBalance } from "./tokens";
 
 /**
  * Turns "I want to spend $40" into every number the user and the transaction
@@ -58,7 +58,7 @@ export async function getPortfolio(params: PortfolioParams): Promise<Portfolio> 
 
   const valueUsd = valueInUsd(balance, price);
 
-  // Existing debt is not yet read from the obligation — a user who has never
+  // Existing debt is not yet read from the obligation â€” a user who has never
   // drawn has none, which covers every path through the current product.
   const debtUsd = new Decimal(0);
 
@@ -213,7 +213,7 @@ export async function buildQuote(params: QuoteParams): Promise<QuoteResult> {
   return { quote, collateralBaseUnits, borrowBaseUnits };
 }
 
-/** A quote past its expiry must never be signed — prices move. */
+/** A quote past its expiry must never be signed â€” prices move. */
 export function isQuoteExpired(quote: Quote): boolean {
   return new Date(quote.expiresAt).getTime() < Date.now();
 }

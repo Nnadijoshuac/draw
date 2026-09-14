@@ -53,13 +53,16 @@ importers:
         version: link:../../packages/shared
       '@privy-io/react-auth':
         specifier: ^2.0.0
-        version: 2.25.0(@solana-program/system@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))))(@solana-program/token@0.5.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))))(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(@types/react@19.3.0)(bs58@6.0.0)(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)
+        version: 2.25.0(dc5dddb40c8bc2a54977b5a01fe06ae4)
       '@solana/kit':
         specifier: ^2.3.0
         version: 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@solana/web3.js':
+        specifier: ^1.99.0
+        version: 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       convex:
         specifier: ^1.17.0
-        version: 1.45.0(bufferutil@4.1.0)(react@19.3.0)
+        version: 1.45.0(bufferutil@4.1.0)(react@19.3.0)(utf-8-validate@6.0.6)
       decimal.js:
         specifier: ^10.4.3
         version: 10.6.0
@@ -105,22 +108,22 @@ importers:
         version: link:../shared
       '@kamino-finance/klend-sdk':
         specifier: ^12.0.0
-        version: 12.0.0(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
+        version: 12.0.0(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana-program/address-lookup-table':
         specifier: ^0.8.0
         version: 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
       '@solana-program/compute-budget':
         specifier: ^0.8.0
-        version: 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
+        version: 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/system':
         specifier: ^0.8.1
-        version: 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
+        version: 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/token':
         specifier: ^0.6.0
-        version: 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
+        version: 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/token-2022':
         specifier: ^0.5.0
-        version: 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
+        version: 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
       '@solana/compat':
         specifier: ^2.3.0
         version: 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -4509,7 +4512,7 @@ snapshots:
 
   '@babel/runtime@7.29.7': {}
 
-  '@base-org/account@1.1.1(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)':
+  '@base-org/account@1.1.1(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@noble/hashes': 1.4.0
       clsx: 1.2.1
@@ -4517,7 +4520,7 @@ snapshots:
       idb-keyval: 6.2.1
       ox: 0.6.9(typescript@5.9.3)(zod@3.25.76)
       preact: 10.24.2
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       zustand: 5.0.3(@types/react@19.3.0)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
     transitivePeerDependencies:
       - '@types/react'
@@ -4529,16 +4532,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@base-org/account@2.4.0(@types/react@19.3.0)(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)':
+  '@base-org/account@2.4.0(@types/react@19.3.0)(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@coinbase/cdp-sdk': 1.55.0(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@coinbase/cdp-sdk': 1.55.0(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@noble/hashes': 1.4.0
       clsx: 1.2.1
       eventemitter3: 5.0.1
       idb-keyval: 6.2.1
       ox: 0.6.9(typescript@5.9.3)(zod@3.25.76)
       preact: 10.24.2
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       zustand: 5.0.3(@types/react@19.3.0)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
     transitivePeerDependencies:
       - '@types/react'
@@ -4557,11 +4560,11 @@ snapshots:
       - zod
     optional: true
 
-  '@coinbase/cdp-sdk@1.55.0(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
+  '@coinbase/cdp-sdk@1.55.0(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
-      '@solana-program/system': 0.10.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
-      '@solana-program/token': 0.9.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
-      '@solana/kit': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@solana-program/system': 0.10.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@solana-program/token': 0.9.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@solana/kit': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
       abitype: 1.0.6(typescript@5.9.3)(zod@3.25.76)
       axios: 1.16.0
       axios-retry: 4.5.0(axios@1.16.0)
@@ -4569,7 +4572,7 @@ snapshots:
       jose: 6.2.12
       md5: 2.3.0
       uncrypto: 0.1.3
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       zod: 3.25.76
     transitivePeerDependencies:
       - bufferutil
@@ -4588,7 +4591,7 @@ snapshots:
     transitivePeerDependencies:
       - preact-render-to-string
 
-  '@coinbase/wallet-sdk@4.3.6(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)':
+  '@coinbase/wallet-sdk@4.3.6(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@noble/hashes': 1.4.0
       clsx: 1.2.1
@@ -4596,7 +4599,7 @@ snapshots:
       idb-keyval: 6.2.1
       ox: 0.6.9(typescript@5.9.3)(zod@3.25.76)
       preact: 10.24.2
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       zustand: 5.0.3(@types/react@19.3.0)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
     transitivePeerDependencies:
       - '@types/react'
@@ -4609,9 +4612,9 @@ snapshots:
       - zod
     optional: true
 
-  '@coral-xyz/anchor@0.28.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)':
+  '@coral-xyz/anchor@0.28.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)':
     dependencies:
-      '@coral-xyz/borsh': 0.28.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@coral-xyz/borsh': 0.28.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       base64-js: 1.5.1
       bn.js: 5.2.5
@@ -4632,9 +4635,9 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@coral-xyz/anchor@0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)':
+  '@coral-xyz/anchor@0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)':
     dependencies:
-      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
       '@noble/hashes': 1.8.0
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       bn.js: 5.2.5
@@ -4654,19 +4657,19 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@coral-xyz/borsh@0.28.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))':
+  '@coral-xyz/borsh@0.28.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))':
     dependencies:
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       bn.js: 5.2.5
       buffer-layout: 1.2.2
 
-  '@coral-xyz/borsh@0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))':
+  '@coral-xyz/borsh@0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))':
     dependencies:
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       bn.js: 5.2.5
       buffer-layout: 1.2.2
 
-  '@coral-xyz/borsh@0.30.1(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))':
+  '@coral-xyz/borsh@0.30.1(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))':
     dependencies:
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       bn.js: 5.2.5
@@ -5104,7 +5107,7 @@ snapshots:
     dependencies:
       '@ethersproject/logger': 5.8.0
 
-  '@ethersproject/providers@5.8.0(bufferutil@4.1.0)':
+  '@ethersproject/providers@5.8.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
     dependencies:
       '@ethersproject/abstract-provider': 5.8.0
       '@ethersproject/abstract-signer': 5.8.0
@@ -5125,7 +5128,7 @@ snapshots:
       '@ethersproject/transactions': 5.8.0
       '@ethersproject/web': 5.8.0
       bech32: 1.1.4
-      ws: 8.18.0(bufferutil@4.1.0)
+      ws: 8.18.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -5226,7 +5229,7 @@ snapshots:
     dependencies:
       react: 19.3.0
 
-  '@hubbleprotocol/hubble-config@5.0.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))':
+  '@hubbleprotocol/hubble-config@5.0.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))':
     dependencies:
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
 
@@ -5370,15 +5373,15 @@ snapshots:
 
   '@jup-ag/api@6.0.39': {}
 
-  '@kamino-finance/farms-sdk@3.2.26(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))':
+  '@kamino-finance/farms-sdk@3.2.26(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))':
     dependencies:
-      '@kamino-finance/kliquidity-sdk': 8.5.10(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
-      '@kamino-finance/scope-sdk': 9.1.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
-      '@solana-program/address-lookup-table': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/compute-budget': 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
+      '@kamino-finance/kliquidity-sdk': 8.5.10(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@kamino-finance/scope-sdk': 9.1.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@solana-program/address-lookup-table': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/compute-budget': 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/system': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/token': 0.5.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
-      '@solana-program/token-2022': 0.4.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
+      '@solana-program/token-2022': 0.4.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
       '@solana/compat': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -5397,20 +5400,20 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@kamino-finance/klend-sdk@12.0.0(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))':
+  '@kamino-finance/klend-sdk@12.0.0(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))':
     dependencies:
-      '@coral-xyz/anchor': 0.28.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
-      '@coral-xyz/borsh': 0.28.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
-      '@kamino-finance/farms-sdk': 3.2.26(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
-      '@kamino-finance/kliquidity-sdk': 11.0.3(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
-      '@kamino-finance/scope-sdk': 10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
+      '@coral-xyz/anchor': 0.28.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+      '@coral-xyz/borsh': 0.28.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
+      '@kamino-finance/farms-sdk': 3.2.26(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@kamino-finance/kliquidity-sdk': 11.0.3(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@kamino-finance/scope-sdk': 10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana-program/address-lookup-table': 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/system': 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/token': 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/token-2022': 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
+      '@solana-program/system': 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/token': 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/token-2022': 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
       '@solana/compat': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
-      '@solana/spl-stake-pool': 1.1.8(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@solana/spl-stake-pool': 1.1.8(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       axios: 1.20.0
       bn.js: 5.2.5
@@ -5431,21 +5434,21 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@kamino-finance/kliquidity-sdk@11.0.3(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))':
+  '@kamino-finance/kliquidity-sdk@11.0.3(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))':
     dependencies:
-      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
-      '@hubbleprotocol/hubble-config': 5.0.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+      '@hubbleprotocol/hubble-config': 5.0.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
       '@jup-ag/api': 6.0.39
-      '@kamino-finance/scope-sdk': 10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
-      '@orca-so/common-sdk': 0.6.11(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
-      '@orca-so/whirlpools': 2.2.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@kamino-finance/scope-sdk': 10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@orca-so/common-sdk': 0.6.11(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
+      '@orca-so/whirlpools': 2.2.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@orca-so/whirlpools-core': 2.0.0
-      '@raydium-io/raydium-sdk-v2': 0.1.126-alpha(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@raydium-io/raydium-sdk-v2': 0.1.126-alpha(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana-program/address-lookup-table': 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/compute-budget': 0.9.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/system': 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/token': 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/token-2022': 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
+      '@solana-program/compute-budget': 0.9.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/system': 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/token': 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/token-2022': 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
       '@solana/compat': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -5466,22 +5469,22 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@kamino-finance/kliquidity-sdk@8.5.10(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))':
+  '@kamino-finance/kliquidity-sdk@8.5.10(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))':
     dependencies:
-      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
-      '@coral-xyz/borsh': 0.30.1(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
-      '@hubbleprotocol/hubble-config': 5.0.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+      '@coral-xyz/borsh': 0.30.1(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
+      '@hubbleprotocol/hubble-config': 5.0.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
       '@jup-ag/api': 6.0.39
-      '@kamino-finance/scope-sdk': 10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))
-      '@orca-so/common-sdk': 0.6.11(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
-      '@orca-so/whirlpools': 2.2.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@kamino-finance/scope-sdk': 10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@orca-so/common-sdk': 0.6.11(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
+      '@orca-so/whirlpools': 2.2.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@orca-so/whirlpools-core': 2.0.0
-      '@raydium-io/raydium-sdk-v2': 0.1.126-alpha(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@raydium-io/raydium-sdk-v2': 0.1.126-alpha(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana-program/address-lookup-table': 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/compute-budget': 0.9.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/system': 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/token': 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/token-2022': 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
+      '@solana-program/compute-budget': 0.9.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/system': 0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/token': 0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/token-2022': 0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
       '@solana/compat': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -5503,10 +5506,10 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@kamino-finance/scope-sdk@10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))':
+  '@kamino-finance/scope-sdk@10.2.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))':
     dependencies:
-      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
-      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
       '@solana-program/system': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -5522,10 +5525,10 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@kamino-finance/scope-sdk@9.1.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))':
+  '@kamino-finance/scope-sdk@9.1.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))':
     dependencies:
-      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
-      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
       '@solana-program/system': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -5664,35 +5667,35 @@ snapshots:
 
   '@noble/hashes@1.8.0': {}
 
-  '@orca-so/common-sdk@0.6.11(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))':
+  '@orca-so/common-sdk@0.6.11(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))':
     dependencies:
       '@solana/spl-token': 0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       decimal.js: 10.6.0
       tiny-invariant: 1.3.3
 
-  '@orca-so/tx-sender@1.0.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@orca-so/tx-sender@1.0.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
-      '@solana-program/address-lookup-table': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@solana-program/compute-budget': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
+      '@solana-program/address-lookup-table': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@solana-program/compute-budget': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/system': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@orca-so/whirlpools-client@2.0.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@orca-so/whirlpools-client@2.0.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
   '@orca-so/whirlpools-core@2.0.0': {}
 
-  '@orca-so/whirlpools@2.2.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
+  '@orca-so/whirlpools@2.2.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
     dependencies:
-      '@orca-so/tx-sender': 1.0.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
-      '@orca-so/whirlpools-client': 2.0.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
+      '@orca-so/tx-sender': 1.0.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
+      '@orca-so/whirlpools-client': 2.0.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@orca-so/whirlpools-core': 2.0.0
-      '@solana-program/memo': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
+      '@solana-program/memo': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/system': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
       '@solana-program/token': 0.5.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
-      '@solana-program/token-2022': 0.4.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
+      '@solana-program/token-2022': 0.4.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
     transitivePeerDependencies:
@@ -5709,21 +5712,21 @@ snapshots:
 
   '@privy-io/chains@0.0.2': {}
 
-  '@privy-io/ethereum@0.0.2(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76))':
+  '@privy-io/ethereum@0.0.2(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76))':
     dependencies:
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
 
-  '@privy-io/js-sdk-core@0.55.0(bufferutil@4.1.0)(typescript@5.9.3)(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76))':
+  '@privy-io/js-sdk-core@0.55.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76))':
     dependencies:
       '@ethersproject/abstract-signer': 5.8.0
       '@ethersproject/bignumber': 5.8.0
       '@ethersproject/contracts': 5.8.0
-      '@ethersproject/providers': 5.8.0(bufferutil@4.1.0)
+      '@ethersproject/providers': 5.8.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@ethersproject/transactions': 5.8.0
       '@ethersproject/units': 5.8.0
       '@privy-io/api-base': 1.7.0
       '@privy-io/chains': 0.0.2
-      '@privy-io/public-api': 2.45.0(bufferutil@4.1.0)(typescript@5.9.3)
+      '@privy-io/public-api': 2.45.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       canonicalize: 2.1.0
       eventemitter3: 5.0.4
       fetch-retry: 6.0.0
@@ -5733,27 +5736,27 @@ snapshots:
       set-cookie-parser: 2.7.2
       uuid: 8.3.2
     optionalDependencies:
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
 
-  '@privy-io/public-api@2.45.0(bufferutil@4.1.0)(typescript@5.9.3)':
+  '@privy-io/public-api@2.45.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
       '@privy-io/api-base': 1.7.0
       bs58: 5.0.0
       libphonenumber-js: 1.13.13
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       zod: 3.25.76
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
 
-  '@privy-io/react-auth@2.25.0(@solana-program/system@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))))(@solana-program/token@0.5.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))))(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/spl-token@0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(@types/react@19.3.0)(bs58@6.0.0)(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)':
+  '@privy-io/react-auth@2.25.0(dc5dddb40c8bc2a54977b5a01fe06ae4)':
     dependencies:
-      '@base-org/account': 1.1.1(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)
+      '@base-org/account': 1.1.1(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)
       '@coinbase/wallet-sdk': 4.3.2
       '@floating-ui/react': 0.26.28(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@headlessui/react': 2.2.10(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -5762,18 +5765,18 @@ snapshots:
       '@metamask/eth-sig-util': 6.0.2
       '@privy-io/api-base': 1.7.0
       '@privy-io/chains': 0.0.2
-      '@privy-io/ethereum': 0.0.2(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76))
-      '@privy-io/js-sdk-core': 0.55.0(bufferutil@4.1.0)(typescript@5.9.3)(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76))
-      '@privy-io/public-api': 2.45.0(bufferutil@4.1.0)(typescript@5.9.3)
-      '@reown/appkit': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)
+      '@privy-io/ethereum': 0.0.2(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76))
+      '@privy-io/js-sdk-core': 0.55.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76))
+      '@privy-io/public-api': 2.45.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@reown/appkit': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)
       '@scure/base': 1.2.6
       '@simplewebauthn/browser': 9.0.1
-      '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
-      '@solana/wallet-standard-wallet-adapter-base': 1.1.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bs58@6.0.0)
-      '@solana/wallet-standard-wallet-adapter-react': 1.1.7(@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bs58@6.0.0)(react@19.3.0)
+      '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@solana/wallet-standard-wallet-adapter-base': 1.1.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bs58@6.0.0)
+      '@solana/wallet-standard-wallet-adapter-react': 1.1.7(@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bs58@6.0.0)(react@19.3.0)
       '@tanstack/react-virtual': 3.14.12(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wallet-standard/app': 1.1.1
-      '@walletconnect/ethereum-provider': 2.21.7(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/ethereum-provider': 2.21.7(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       base64-js: 1.5.1
       dotenv: 16.6.1
       encoding: 0.1.13
@@ -5796,7 +5799,7 @@ snapshots:
       stylis: 4.4.0
       tinycolor2: 1.6.0
       uuid: 8.3.2
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       zustand: 5.0.15(@types/react@19.3.0)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
     optionalDependencies:
       '@solana-program/system': 0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))
@@ -5843,7 +5846,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@raydium-io/raydium-sdk-v2@0.1.126-alpha(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)':
+  '@raydium-io/raydium-sdk-v2@0.1.126-alpha(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
     dependencies:
       '@solana/buffer-layout': 4.0.1
       '@solana/spl-token': 0.4.15(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
@@ -5885,57 +5888,57 @@ snapshots:
     dependencies:
       react: 19.3.0
 
-  '@reown/appkit-common@1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.22.4)':
+  '@reown/appkit-common@1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.22.4)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.22.4)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
       - zod
 
-  '@reown/appkit-common@1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit-common@1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
       - zod
 
-  '@reown/appkit-common@1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.22.4)':
+  '@reown/appkit-common@1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.22.4)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.22.4)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
       - zod
 
-  '@reown/appkit-common@1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit-common@1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
       - zod
 
-  '@reown/appkit-controllers@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit-controllers@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)
-      '@walletconnect/universal-provider': 2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)
+      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@walletconnect/universal-provider': 2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       valtio: 1.13.2(@types/react@19.3.0)(react@19.3.0)
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -5964,13 +5967,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-controllers@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit-controllers@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)
-      '@walletconnect/universal-provider': 2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)
+      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@walletconnect/universal-provider': 2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       valtio: 2.1.7(@types/react@19.3.0)(react@19.3.0)
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -5999,12 +6002,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-pay@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit-pay@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-utils': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-utils': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
       lit: 3.3.0
       valtio: 1.13.2(@types/react@19.3.0)(react@19.3.0)
     transitivePeerDependencies:
@@ -6035,12 +6038,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-pay@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)':
+  '@reown/appkit-pay@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-utils': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-utils': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
       lit: 3.3.0
       valtio: 2.1.7(@types/react@19.3.0)(react@19.3.0)
     transitivePeerDependencies:
@@ -6087,13 +6090,13 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@reown/appkit-scaffold-ui@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
+  '@reown/appkit-scaffold-ui@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-utils': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
-      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)
+      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-utils': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       lit: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -6124,14 +6127,14 @@ snapshots:
       - valtio
       - zod
 
-  '@reown/appkit-scaffold-ui@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
+  '@reown/appkit-scaffold-ui@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-pay': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)
-      '@reown/appkit-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-utils': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
-      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)
+      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-pay': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-utils': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       lit: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -6170,11 +6173,11 @@ snapshots:
       - valtio
       - zod
 
-  '@reown/appkit-ui@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit-ui@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)
+      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       lit: 3.3.0
       qrcode: 1.5.3
     transitivePeerDependencies:
@@ -6205,12 +6208,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-ui@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit-ui@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@phosphor-icons/webcomponents': 2.1.5
-      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)
+      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       lit: 3.3.0
       qrcode: 1.5.3
     transitivePeerDependencies:
@@ -6241,16 +6244,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-utils@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
+  '@reown/appkit-utils@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
+      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@reown/appkit-polyfills': 1.7.8
-      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)
+      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/universal-provider': 2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/universal-provider': 2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       valtio: 1.13.2(@types/react@19.3.0)(react@19.3.0)
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -6279,22 +6282,22 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-utils@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
+  '@reown/appkit-utils@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
+      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@reown/appkit-polyfills': 1.8.23
-      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)
+      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@wallet-standard/wallet': 1.1.0
       '@walletconnect/logger': 3.0.2
-      '@walletconnect/universal-provider': 2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/universal-provider': 2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       valtio: 2.1.7(@types/react@19.3.0)(react@19.3.0)
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     optionalDependencies:
-      '@base-org/account': 2.4.0(@types/react@19.3.0)(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)
-      '@coinbase/wallet-sdk': 4.3.6(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)
-      '@safe-global/safe-apps-provider': 0.18.6(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@base-org/account': 2.4.0(@types/react@19.3.0)(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@coinbase/wallet-sdk': 4.3.6(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@safe-global/safe-apps-provider': 0.18.6(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -6331,9 +6334,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-wallet@1.7.8(bufferutil@4.1.0)(typescript@5.9.3)':
+  '@reown/appkit-wallet@1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
-      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.22.4)
+      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.22.4)
       '@reown/appkit-polyfills': 1.7.8
       '@walletconnect/logger': 2.1.2
       zod: 3.22.4
@@ -6342,9 +6345,9 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@reown/appkit-wallet@1.8.23(bufferutil@4.1.0)(typescript@5.9.3)':
+  '@reown/appkit-wallet@1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
-      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.22.4)
+      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.22.4)
       '@reown/appkit-polyfills': 1.8.23
       '@walletconnect/logger': 3.0.2
       zod: 3.22.4
@@ -6353,21 +6356,21 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@reown/appkit@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@reown/appkit@1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-pay': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
+      '@reown/appkit-common': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-pay': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@reown/appkit-polyfills': 1.7.8
-      '@reown/appkit-scaffold-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
-      '@reown/appkit-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-utils': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
-      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)
+      '@reown/appkit-scaffold-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-ui': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-utils': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(valtio@1.13.2(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-wallet': 1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@walletconnect/types': 2.21.0
-      '@walletconnect/universal-provider': 2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/universal-provider': 2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       bs58: 6.0.0
       valtio: 1.13.2(@types/react@19.3.0)(react@19.3.0)
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -6396,21 +6399,21 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)':
+  '@reown/appkit@1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-pay': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-common': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-controllers': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-pay': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(zod@3.25.76)
       '@reown/appkit-polyfills': 1.8.23
-      '@reown/appkit-scaffold-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
-      '@reown/appkit-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
-      '@reown/appkit-utils': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
-      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)
-      '@walletconnect/universal-provider': 2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)
+      '@reown/appkit-scaffold-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-ui': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@reown/appkit-utils': 1.8.23(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.3.0)(typescript@5.9.3)(use-sync-external-store@1.7.0(react@19.3.0))(utf-8-validate@6.0.6)(valtio@2.1.7(@types/react@19.3.0)(react@19.3.0))(zod@3.25.76)
+      '@reown/appkit-wallet': 1.8.23(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@walletconnect/universal-provider': 2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       bs58: 6.0.0
       semver: 7.7.2
       valtio: 2.1.7(@types/react@19.3.0)(react@19.3.0)
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     optionalDependencies:
       '@lit/react': 1.0.8(@types/react@19.3.0)
     transitivePeerDependencies:
@@ -6524,9 +6527,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.63.2':
     optional: true
 
-  '@safe-global/safe-apps-provider@0.18.6(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@safe-global/safe-apps-provider@0.18.6(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       events: 3.3.0
     transitivePeerDependencies:
       - bufferutil
@@ -6535,10 +6538,10 @@ snapshots:
       - zod
     optional: true
 
-  '@safe-global/safe-apps-sdk@9.1.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@safe-global/safe-apps-sdk@9.1.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.23.1
-      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -6592,7 +6595,7 @@ snapshots:
 
   '@simplewebauthn/types@9.0.1': {}
 
-  '@solana-program/address-lookup-table@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@solana-program/address-lookup-table@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
@@ -6600,46 +6603,46 @@ snapshots:
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/compute-budget@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@solana-program/compute-budget@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/compute-budget@0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@solana-program/compute-budget@0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/compute-budget@0.9.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@solana-program/compute-budget@0.9.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/memo@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@solana-program/memo@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/system@0.10.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
+  '@solana-program/system@0.10.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))':
     dependencies:
-      '@solana/kit': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@solana/kit': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
     optional: true
 
   '@solana-program/system@0.7.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/system@0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@solana-program/system@0.8.1(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/token-2022@0.4.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
-    dependencies:
-      '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
-      '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
-
-  '@solana-program/token-2022@0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
+  '@solana-program/token-2022@0.4.2(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
 
-  '@solana-program/token-2022@0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
+  '@solana-program/token-2022@0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
+    dependencies:
+      '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
+      '@solana/sysvars': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+
+  '@solana-program/token-2022@0.5.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
       '@solana/sysvars': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -6648,13 +6651,13 @@ snapshots:
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/token@0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))':
+  '@solana-program/token@0.6.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)))':
     dependencies:
       '@solana/kit': 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))
 
-  '@solana-program/token@0.9.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))':
+  '@solana-program/token@0.9.0(@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6))':
     dependencies:
-      '@solana/kit': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@solana/kit': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
     optional: true
 
   '@solana/accounts@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
@@ -6716,7 +6719,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@solana/buffer-layout-utils@0.2.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)':
+  '@solana/buffer-layout-utils@0.2.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)':
     dependencies:
       '@solana/buffer-layout': 4.0.1
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
@@ -6986,7 +6989,7 @@ snapshots:
       - fastestsmallesttextencoderdecoder
       - ws
 
-  '@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
+  '@solana/kit@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
       '@solana/accounts': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/addresses': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -7003,11 +7006,11 @@ snapshots:
       '@solana/rpc-api': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/rpc-parsed-types': 5.5.1(typescript@5.9.3)
       '@solana/rpc-spec-types': 5.5.1(typescript@5.9.3)
-      '@solana/rpc-subscriptions': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@solana/rpc-subscriptions': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@solana/rpc-types': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/signers': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/sysvars': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
-      '@solana/transaction-confirmation': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@solana/transaction-confirmation': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@solana/transaction-messages': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/transactions': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
     optionalDependencies:
@@ -7211,7 +7214,7 @@ snapshots:
       typescript: 5.9.3
       ws: 8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)
 
-  '@solana/rpc-subscriptions-channel-websocket@5.5.1(bufferutil@4.1.0)(typescript@5.9.3)':
+  '@solana/rpc-subscriptions-channel-websocket@5.5.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
       '@solana/errors': 5.5.1(typescript@5.9.3)
       '@solana/functional': 5.5.1(typescript@5.9.3)
@@ -7261,7 +7264,7 @@ snapshots:
       - fastestsmallesttextencoderdecoder
       - ws
 
-  '@solana/rpc-subscriptions@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
+  '@solana/rpc-subscriptions@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
       '@solana/errors': 5.5.1(typescript@5.9.3)
       '@solana/fast-stable-stringify': 5.5.1(typescript@5.9.3)
@@ -7269,7 +7272,7 @@ snapshots:
       '@solana/promises': 5.5.1(typescript@5.9.3)
       '@solana/rpc-spec-types': 5.5.1(typescript@5.9.3)
       '@solana/rpc-subscriptions-api': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
-      '@solana/rpc-subscriptions-channel-websocket': 5.5.1(bufferutil@4.1.0)(typescript@5.9.3)
+      '@solana/rpc-subscriptions-channel-websocket': 5.5.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@solana/rpc-subscriptions-spec': 5.5.1(typescript@5.9.3)
       '@solana/rpc-transformers': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/rpc-types': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -7412,10 +7415,10 @@ snapshots:
       - fastestsmallesttextencoderdecoder
     optional: true
 
-  '@solana/spl-stake-pool@1.1.8(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)':
+  '@solana/spl-stake-pool@1.1.8(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
     dependencies:
       '@solana/buffer-layout': 4.0.1
-      '@solana/spl-token': 0.4.9(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@solana/spl-token': 0.4.9(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
       bn.js: 5.2.5
       buffer: 6.0.3
@@ -7459,10 +7462,10 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@solana/spl-token@0.4.9(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)':
+  '@solana/spl-token@0.4.9(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bufferutil@4.1.0)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
     dependencies:
       '@solana/buffer-layout': 4.0.1
-      '@solana/buffer-layout-utils': 0.2.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
+      '@solana/buffer-layout-utils': 0.2.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
       '@solana/spl-token-group': 0.0.7(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/spl-token-metadata': 0.1.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
@@ -7524,7 +7527,7 @@ snapshots:
       - fastestsmallesttextencoderdecoder
       - ws
 
-  '@solana/transaction-confirmation@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)':
+  '@solana/transaction-confirmation@5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)':
     dependencies:
       '@solana/addresses': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/codecs-strings': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -7532,7 +7535,7 @@ snapshots:
       '@solana/keys': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/promises': 5.5.1(typescript@5.9.3)
       '@solana/rpc': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
-      '@solana/rpc-subscriptions': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
+      '@solana/rpc-subscriptions': 5.5.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@6.0.6)
       '@solana/rpc-types': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/transaction-messages': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
       '@solana/transactions': 5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
@@ -7614,7 +7617,7 @@ snapshots:
       - fastestsmallesttextencoderdecoder
     optional: true
 
-  '@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))':
+  '@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))':
     dependencies:
       '@solana/wallet-standard-features': 1.5.0
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
@@ -7622,7 +7625,7 @@ snapshots:
       '@wallet-standard/features': 1.1.1
       eventemitter3: 4.0.7
 
-  '@solana/wallet-adapter-base@0.9.28(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))':
+  '@solana/wallet-adapter-base@0.9.28(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))':
     dependencies:
       '@solana/wallet-standard-features': 1.5.0
       '@solana/web3.js': 1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)
@@ -7645,9 +7648,9 @@ snapshots:
       '@solana/wallet-standard-chains': 1.1.2
       '@solana/wallet-standard-features': 1.5.0
 
-  '@solana/wallet-standard-wallet-adapter-base@1.1.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bs58@6.0.0)':
+  '@solana/wallet-standard-wallet-adapter-base@1.1.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bs58@6.0.0)':
     dependencies:
-      '@solana/wallet-adapter-base': 0.9.28(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
+      '@solana/wallet-adapter-base': 0.9.28(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
       '@solana/wallet-standard-chains': 1.1.2
       '@solana/wallet-standard-features': 1.5.0
       '@solana/wallet-standard-util': 1.1.4
@@ -7658,10 +7661,10 @@ snapshots:
       '@wallet-standard/wallet': 1.1.1
       bs58: 6.0.0
 
-  '@solana/wallet-standard-wallet-adapter-react@1.1.7(@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bs58@6.0.0)(react@19.3.0)':
+  '@solana/wallet-standard-wallet-adapter-react@1.1.7(@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)))(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bs58@6.0.0)(react@19.3.0)':
     dependencies:
-      '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))
-      '@solana/wallet-standard-wallet-adapter-base': 1.1.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(bs58@6.0.0)
+      '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@solana/wallet-standard-wallet-adapter-base': 1.1.6(@solana/web3.js@1.99.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6))(bs58@6.0.0)
       '@wallet-standard/app': 1.1.1
       '@wallet-standard/base': 1.1.1
       react: 19.3.0
@@ -7869,13 +7872,13 @@ snapshots:
     dependencies:
       '@wallet-standard/base': 1.1.1
 
-  '@walletconnect/core@2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/core@2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-types': 1.0.4
       '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/jsonrpc-ws-connection': 1.0.16(bufferutil@4.1.0)
+      '@walletconnect/jsonrpc-ws-connection': 1.0.16(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 2.1.2
       '@walletconnect/relay-api': 1.0.11
@@ -7883,7 +7886,7 @@ snapshots:
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.21.0
-      '@walletconnect/utils': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/utils': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/window-getters': 1.0.1
       es-toolkit: 1.33.0
       events: 3.3.0
@@ -7913,13 +7916,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/core@2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/core@2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-types': 1.0.4
       '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/jsonrpc-ws-connection': 1.0.16(bufferutil@4.1.0)
+      '@walletconnect/jsonrpc-ws-connection': 1.0.16(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 2.1.2
       '@walletconnect/relay-api': 1.0.11
@@ -7927,7 +7930,7 @@ snapshots:
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.21.7
-      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/window-getters': 1.0.1
       es-toolkit: 1.39.3
       events: 3.3.0
@@ -7957,13 +7960,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/core@2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/core@2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-types': 1.0.4
       '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/jsonrpc-ws-connection': 1.0.16(bufferutil@4.1.0)
+      '@walletconnect/jsonrpc-ws-connection': 1.0.16(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 3.0.2
       '@walletconnect/relay-api': 1.0.11
@@ -8005,18 +8008,18 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/ethereum-provider@2.21.7(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/ethereum-provider@2.21.7(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@reown/appkit': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(zod@3.25.76)
+      '@reown/appkit': 1.7.8(@types/react@19.3.0)(bufferutil@4.1.0)(encoding@0.1.13)(react@19.3.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/jsonrpc-http-connection': 1.0.8(encoding@0.1.13)
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-types': 1.0.4
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1
-      '@walletconnect/sign-client': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/sign-client': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/types': 2.21.7
-      '@walletconnect/universal-provider': 2.21.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)
-      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/universal-provider': 2.21.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
+      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -8083,7 +8086,7 @@ snapshots:
       '@walletconnect/jsonrpc-types': 1.0.4
       tslib: 1.14.1
 
-  '@walletconnect/jsonrpc-ws-connection@1.0.16(bufferutil@4.1.0)':
+  '@walletconnect/jsonrpc-ws-connection@1.0.16(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
     dependencies:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/safe-json': 1.0.2
@@ -8144,16 +8147,16 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/sign-client@2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/sign-client@2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@walletconnect/core': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/core': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.21.0
-      '@walletconnect/utils': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/utils': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -8180,16 +8183,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/sign-client@2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/sign-client@2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@walletconnect/core': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/core': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.21.7
-      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -8216,9 +8219,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/sign-client@2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/sign-client@2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
-      '@walletconnect/core': 2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/core': 2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
@@ -8343,7 +8346,7 @@ snapshots:
       - ioredis
       - uploadthing
 
-  '@walletconnect/universal-provider@2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/universal-provider@2.21.0(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/jsonrpc-http-connection': 1.0.8(encoding@0.1.13)
@@ -8352,9 +8355,9 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/sign-client': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/sign-client': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/types': 2.21.0
-      '@walletconnect/utils': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/utils': 2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       es-toolkit: 1.33.0
       events: 3.3.0
     transitivePeerDependencies:
@@ -8383,7 +8386,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/universal-provider@2.21.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/universal-provider@2.21.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/jsonrpc-http-connection': 1.0.8(encoding@0.1.13)
@@ -8392,9 +8395,9 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/sign-client': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/sign-client': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/types': 2.21.7
-      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/utils': 2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       es-toolkit: 1.39.3
       events: 3.3.0
     transitivePeerDependencies:
@@ -8423,7 +8426,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/universal-provider@2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/universal-provider@2.23.7(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/jsonrpc-http-connection': 1.0.8(encoding@0.1.13)
@@ -8432,7 +8435,7 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 3.0.2
-      '@walletconnect/sign-client': 2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/sign-client': 2.23.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
       '@walletconnect/types': 2.23.7
       '@walletconnect/utils': 2.23.7(typescript@5.9.3)(zod@3.25.76)
       es-toolkit: 1.44.0
@@ -8463,7 +8466,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/utils@2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/utils@2.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@noble/ciphers': 1.2.1
       '@noble/curves': 1.8.1
@@ -8481,7 +8484,7 @@ snapshots:
       detect-browser: 5.3.0
       query-string: 7.1.3
       uint8arrays: 3.1.0
-      viem: 2.23.2(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.23.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -8507,7 +8510,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/utils@2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)':
+  '@walletconnect/utils@2.21.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)':
     dependencies:
       '@msgpack/msgpack': 3.1.2
       '@noble/ciphers': 1.3.0
@@ -8528,7 +8531,7 @@ snapshots:
       detect-browser: 5.3.0
       query-string: 7.1.3
       uint8arrays: 3.1.1
-      viem: 2.31.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76)
+      viem: 2.31.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -8822,11 +8825,11 @@ snapshots:
 
   commander@9.5.0: {}
 
-  convex@1.45.0(bufferutil@4.1.0)(react@19.3.0):
+  convex@1.45.0(bufferutil@4.1.0)(react@19.3.0)(utf-8-validate@6.0.6):
     dependencies:
       esbuild: 0.27.0
       prettier: 3.9.6
-      ws: 8.21.0(bufferutil@4.1.0)
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       react: 19.3.0
     transitivePeerDependencies:
@@ -9248,17 +9251,17 @@ snapshots:
     dependencies:
       ws: 7.5.13(bufferutil@4.1.0)(utf-8-validate@6.0.6)
 
-  isows@1.0.6(ws@8.18.0(bufferutil@4.1.0)):
+  isows@1.0.6(ws@8.18.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)):
     dependencies:
-      ws: 8.18.0(bufferutil@4.1.0)
+      ws: 8.18.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
 
-  isows@1.0.7(ws@8.18.2(bufferutil@4.1.0)):
+  isows@1.0.7(ws@8.18.2(bufferutil@4.1.0)(utf-8-validate@6.0.6)):
     dependencies:
-      ws: 8.18.2(bufferutil@4.1.0)
+      ws: 8.18.2(bufferutil@4.1.0)(utf-8-validate@6.0.6)
 
-  isows@1.0.7(ws@8.21.0(bufferutil@4.1.0)):
+  isows@1.0.7(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)):
     dependencies:
-      ws: 8.21.0(bufferutil@4.1.0)
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
 
   jayson@4.3.0(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     dependencies:
@@ -10096,16 +10099,16 @@ snapshots:
       '@types/react': 19.3.0
       react: 19.3.0
 
-  viem@2.23.2(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76):
+  viem@2.23.2(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76):
     dependencies:
       '@noble/curves': 1.8.1
       '@noble/hashes': 1.7.1
       '@scure/bip32': 1.6.2
       '@scure/bip39': 1.5.4
       abitype: 1.0.8(typescript@5.9.3)(zod@3.25.76)
-      isows: 1.0.6(ws@8.18.0(bufferutil@4.1.0))
+      isows: 1.0.6(ws@8.18.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))
       ox: 0.6.7(typescript@5.9.3)(zod@3.25.76)
-      ws: 8.18.0(bufferutil@4.1.0)
+      ws: 8.18.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -10113,16 +10116,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  viem@2.31.0(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76):
+  viem@2.31.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76):
     dependencies:
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.0.8(typescript@5.9.3)(zod@3.25.76)
-      isows: 1.0.7(ws@8.18.2(bufferutil@4.1.0))
+      isows: 1.0.7(ws@8.18.2(bufferutil@4.1.0)(utf-8-validate@6.0.6))
       ox: 0.7.1(typescript@5.9.3)(zod@3.25.76)
-      ws: 8.18.2(bufferutil@4.1.0)
+      ws: 8.18.2(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -10130,16 +10133,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.22.4):
+  viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.22.4):
     dependencies:
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.3(typescript@5.9.3)(zod@3.22.4)
-      isows: 1.0.7(ws@8.21.0(bufferutil@4.1.0))
+      isows: 1.0.7(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))
       ox: 0.14.44(typescript@5.9.3)(zod@3.22.4)
-      ws: 8.21.0(bufferutil@4.1.0)
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -10147,16 +10150,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(zod@3.25.76):
+  viem@2.56.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(zod@3.25.76):
     dependencies:
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
-      isows: 1.0.7(ws@8.21.0(bufferutil@4.1.0))
+      isows: 1.0.7(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))
       ox: 0.14.44(typescript@5.9.3)(zod@3.25.76)
-      ws: 8.21.0(bufferutil@4.1.0)
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -10254,17 +10257,20 @@ snapshots:
       bufferutil: 4.1.0
       utf-8-validate: 6.0.6
 
-  ws@8.18.0(bufferutil@4.1.0):
+  ws@8.18.0(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     optionalDependencies:
       bufferutil: 4.1.0
+      utf-8-validate: 6.0.6
 
-  ws@8.18.2(bufferutil@4.1.0):
+  ws@8.18.2(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     optionalDependencies:
       bufferutil: 4.1.0
+      utf-8-validate: 6.0.6
 
-  ws@8.21.0(bufferutil@4.1.0):
+  ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     optionalDependencies:
       bufferutil: 4.1.0
+      utf-8-validate: 6.0.6
 
   ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     optionalDependencies:

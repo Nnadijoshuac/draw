@@ -5,6 +5,17 @@ const nextConfig: NextConfig = {
   // Next compiles them alongside the app.
   transpilePackages: ["@draw/core", "@draw/shared"],
 
+  // Kamino's dependency tree reaches a WASM binary that only resolves from a
+  // real node_modules path. Bundling it rewrites the path and the load fails,
+  // so these stay external and load at runtime.
+  serverExternalPackages: [
+    "@kamino-finance/klend-sdk",
+    "@kamino-finance/kliquidity-sdk",
+    "@kamino-finance/scope-sdk",
+    "@kamino-finance/farms-sdk",
+    "@orca-so/whirlpools-core",
+  ],
+
   async headers() {
     return [
       {

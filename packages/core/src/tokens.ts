@@ -1,4 +1,4 @@
-import {
+﻿import {
   createNoopSigner,
   fetchEncodedAccount,
   type Address,
@@ -13,7 +13,7 @@ import {
 } from "@solana-program/token";
 import { TOKEN_2022_PROGRAM_ADDRESS } from "@solana-program/token-2022";
 import type { TokenProgram } from "@draw/shared";
-import type { SolanaRpc } from "./connection.js";
+import type { SolanaRpc } from "./connection";
 
 /**
  * xStocks are issued under Token-2022 while USDC uses the original token
@@ -42,7 +42,7 @@ export function describeTokenProgram(programAddress: Address): TokenProgram {
     : "spl-token";
 }
 
-/** Look up which token program owns a mint. Cached — mints do not migrate. */
+/** Look up which token program owns a mint. Cached â€” mints do not migrate. */
 export async function getTokenProgram(
   rpc: SolanaRpc,
   mint: Address,
@@ -136,7 +136,7 @@ export async function getTokenBalance(
   return BigInt(balance.value.amount);
 }
 
-/** Test seam — the caches are process-wide and would otherwise leak between runs. */
+/** Test seam â€” the caches are process-wide and would otherwise leak between runs. */
 export function clearTokenCaches(): void {
   programCache.clear();
   mintCache.clear();

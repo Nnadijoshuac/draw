@@ -1,7 +1,7 @@
 ﻿import { address } from "@solana/kit";
 import { createChainClient, loadMarket } from "@draw/core";
 import Decimal from "decimal.js";
-import { env } from "./env.js";
+import { env } from "./env";
 
 /**
  * Print every reserve Kamino will lend against, so we choose the collateral

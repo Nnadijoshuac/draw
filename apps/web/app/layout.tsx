@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Draw — spend against what you own",
+  title: "Draw â€” spend against what you own",
   description:
     "Pay with your portfolio as collateral, without selling it. Built on Solana.",
 };
@@ -14,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
+
