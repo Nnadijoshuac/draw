@@ -1,4 +1,4 @@
-import {
+﻿import {
   address,
   appendTransactionMessageInstructions,
   compileTransaction,
@@ -20,7 +20,7 @@ import {
   getExtendLookupTableInstruction,
 } from "@solana-program/address-lookup-table";
 import { collectSharedDrawAccounts, createChainClient } from "@draw/core";
-import { env } from "./env.js";
+import { env } from "./env";
 
 // Create the lookup table every draw compresses against.
 //

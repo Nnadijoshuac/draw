@@ -1,4 +1,4 @@
-import {
+﻿import {
   createKeyPairSignerFromBytes,
   getBase58Encoder,
   getBase64Encoder,
@@ -14,7 +14,7 @@ import {
   createChainClient,
 } from "@draw/core";
 import Decimal from "decimal.js";
-import { env } from "./env.js";
+import { env } from "./env";
 
 // Full draw, headless: quote, build, sign, co-sign, send.
 //

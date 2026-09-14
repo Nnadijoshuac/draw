@@ -1,6 +1,6 @@
-import { address } from "@solana/kit";
+﻿import { address } from "@solana/kit";
 import { createChainClient, describeTokenProgram, getAta, getTokenProgram } from "@draw/core";
-import { env } from "./env.js";
+import { env } from "./env";
 
 /**
  * Where are the tokens, actually?

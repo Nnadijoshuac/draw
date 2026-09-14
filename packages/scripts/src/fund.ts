@@ -1,12 +1,12 @@
-import { address } from "@solana/kit";
+﻿import { address } from "@solana/kit";
 import { createChainClient, getTokenProgram } from "@draw/core";
-import { env } from "./env.js";
-import { assertSurfnet, setLamports, setTokenBalance } from "./surfnet.js";
+import { env } from "./env";
+import { assertSurfnet, setLamports, setTokenBalance } from "./surfnet";
 
 /**
  * Hand a wallet everything it needs to exercise a draw end to end.
  *
- * Run it again whenever surfnet restarts — the fork keeps no state between
+ * Run it again whenever surfnet restarts â€” the fork keeps no state between
  * runs, and rediscovering that at demo time is a bad afternoon.
  *
  *   pnpm fund <wallet-address> [fee-payer-address]

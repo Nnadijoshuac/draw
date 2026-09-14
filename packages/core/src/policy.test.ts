@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import Decimal from "decimal.js";
 import {
   DEFAULT_POLICY,
@@ -9,7 +9,7 @@ import {
   liquidationPriceUsd,
   priceDropToLiquidationPercent,
   riskBand,
-} from "./policy.js";
+} from "./policy";
 
 const d = (v: string | number) => new Decimal(v);
 

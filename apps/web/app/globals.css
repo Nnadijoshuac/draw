@@ -1,21 +1,70 @@
 @import "tailwindcss";
 
 /*
- * Placeholder tokens only.
- *
- * The visual design is being taken from a reference and has not landed yet —
- * nothing here is a considered choice, and all of it is expected to be
- * replaced. Structure first, surface second.
+ * Restraint is the whole design. Money interfaces earn trust by being quiet:
+ * ink on paper, hairline rules, and blue in four places only — the primary
+ * button, the amount, focus rings, and active PIN dots. If two blue things
+ * compete for attention on a screen, one of them is wrong.
  */
 @theme {
-  --color-ink: #0a0a0a;
+  --color-ink: #0b0d12;
   --color-paper: #ffffff;
-  --color-muted: #6b7280;
-  --color-line: #e5e7eb;
+  --color-surface: #f7f8fa;
+  --color-line: #e5e8ee;
+  --color-muted: #5b6472;
+
+  --color-accent: #1b4dff;
+  --color-accent-ink: #1039c4;
+  --color-accent-bg: #eef2ff;
+
+  --color-positive: #0f8b5f;
+  --color-danger: #d92d20;
+
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-card: 14px;
+  --radius-control: 10px;
 }
 
-html,
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background: var(--color-paper);
   color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/*
+ * Every figure in the product is tabular. Without this, digits change width as
+ * a quote updates and the amount visibly jitters while someone is reading it.
+ */
+.tabular,
+input[inputmode="decimal"] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.amount {
+  font-size: 44px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

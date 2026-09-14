@@ -25,10 +25,10 @@ import {
   MAX_TRANSACTION_BYTES,
   TRANSACTION_SIZE_WARNING_BYTES,
   SETUP_RENT_LAMPORTS,
-} from "./constants.js";
-import type { SolanaRpc } from "./connection.js";
-import { buildDrawInstructions, getUserLookupTable, needsAccountSetup } from "./kamino.js";
-import { createAtaInstruction, getAta, getMintInfo } from "./tokens.js";
+} from "./constants";
+import type { SolanaRpc } from "./connection";
+import { buildDrawInstructions, getUserLookupTable, needsAccountSetup } from "./kamino";
+import { createAtaInstruction, getAta, getMintInfo } from "./tokens";
 
 /**
  * Assembles the whole draw into a single transaction: take the collateral,
