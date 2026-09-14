@@ -6,6 +6,7 @@ import { buildDrawTransaction, buildQuote } from "@draw/core";
 import { chain } from "@/lib/chain";
 import { publicEnv, serverEnv } from "@/lib/env";
 import { getFeePayer } from "@/lib/feePayer";
+import { resolveMerchant } from "@/lib/merchants";
 import { handleApiError, jsonError } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -13,10 +14,11 @@ export const dynamic = "force-dynamic";
 const bodySchema = z.object({
   sessionId: z.string().min(1),
   owner: z.string().min(32),
-  merchant: z.string().min(32),
   amountMinor: z.number().int().positive(),
-  /** Kamino lookup tables, discovered by the client from a prior simulation. */
-  lookupTables: z.array(z.string()).optional(),
+  /** Where the checkout was opened from. The payee is derived from this. */
+  origin: z.string().optional(),
+  /** Pay yourself. Development only, and never when an origin is supplied. */
+  selfPay: z.boolean().optional(),
 });
 
 /**
@@ -36,8 +38,22 @@ export async function POST(request: NextRequest) {
       return jsonError(400, "invalid_request", "That request was malformed.");
     }
 
-    const { sessionId, owner, merchant, amountMinor, lookupTables } = parsed.data;
+    const { sessionId, owner, amountMinor, origin, selfPay } = parsed.data;
     const { rpc } = chain();
+
+    // Never take the payee from the request. Resolve it from the origin so a
+    // crafted checkout URL cannot redirect someone else's payment.
+    const merchantRecord = await resolveMerchant(origin ?? null);
+
+    if (!merchantRecord && !(selfPay && process.env.NODE_ENV !== "production")) {
+      return jsonError(
+        403,
+        "unknown_merchant",
+        "That site isn't set up to take payments with Draw.",
+      );
+    }
+
+    const merchant = merchantRecord?.wallet ?? address(owner);
 
     const { quote, collateralBaseUnits, borrowBaseUnits } = await buildQuote({
       rpc,
@@ -53,14 +69,13 @@ export async function POST(request: NextRequest) {
     const built = await buildDrawTransaction({
       rpc,
       user: address(owner),
-      merchant: address(merchant),
+      merchant,
       collateralMint: publicEnv.collateralMint,
       collateralAmount: collateralBaseUnits,
       debtMint: publicEnv.debtMint,
       borrowAmount: borrowBaseUnits,
       feePayer: feePayer.address,
-      lookupTableAddresses:
-        lookupTables?.map((table) => address(table)) ?? serverEnv.lookupTables,
+      lookupTableAddresses: serverEnv.lookupTables,
       // A first-time user's account setup rides along in the same transaction.
       // It fits once the lookup table is applied, and keeping it in one
       // transaction is the point: the user sees a payment, not a setup step.
