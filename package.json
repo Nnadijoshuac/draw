@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter @draw/web dev",
-    "store": "pnpm --filter @draw/store dev",
+    "shop": "pnpm --filter @draw/store dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",

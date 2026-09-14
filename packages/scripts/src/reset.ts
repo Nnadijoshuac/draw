@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   address,
@@ -113,6 +113,11 @@ async function main(): Promise<void> {
     debtMint: env.debtMint,
   });
   writeEnvValue("DRAW_LOOKUP_TABLE", table);
+
+  // The running server reads this file per request, so a reset does not need
+  // a dev server restart to take effect.
+  mkdirSync(`${REPO_ROOT}.draw`, { recursive: true });
+  writeFileSync(`${REPO_ROOT}.draw/lookup-table`, table, "utf8");
 
   if (walletArg) {
     console.log(`funding ${walletArg}`);

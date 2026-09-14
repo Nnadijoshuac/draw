@@ -40,3 +40,6 @@ coverage/
 
 # surfpool
 .surfpool/
+
+# runtime state written by pnpm reset
+.draw/
