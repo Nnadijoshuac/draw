@@ -1,3 +1,4 @@
+﻿import { address } from "@solana/kit";
 import { createChainClient, loadMarket } from "@draw/core";
 import Decimal from "decimal.js";
 import { env } from "./env.js";
@@ -21,10 +22,20 @@ function formatPercent(value: Decimal): string {
 
 async function main(): Promise<void> {
   const onlyStocks = process.argv.includes("xstock");
+
+  // Kamino runs dozens of separate markets. Allow an override so we can look
+  // at any of them without editing code.
+  const marketArg = process.argv.find((arg) => arg.startsWith("--market="));
+  const marketAddress = marketArg
+    ? address(marketArg.slice("--market=".length))
+    : undefined;
+
   const { rpc } = createChainClient({ rpcUrl: env.rpcUrl });
 
-  console.log(`Loading Kamino main market from ${env.rpcUrl} ...\n`);
-  const { market } = await loadMarket(rpc, { refresh: true });
+  console.log(
+    `Loading Kamino market ${marketAddress ?? "(default: xStocks)"} from ${env.rpcUrl} ...\n`,
+  );
+  const { market } = await loadMarket(rpc, { refresh: true, marketAddress });
 
   const reserves = market.getReserves();
   const rows = reserves
@@ -79,3 +90,4 @@ main().catch((error: unknown) => {
   console.error(`\n${error instanceof Error ? error.message : String(error)}\n`);
   process.exit(1);
 });
+

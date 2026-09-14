@@ -9,10 +9,28 @@ export const KAMINO_PROGRAM_ID = address(
   "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
 );
 
-/** Kamino's main lending market, where the xStocks reserves live. */
+/**
+ * Kamino's main market. Deep and liquid, but stablecoins, BTC, ETH, SOL and
+ * liquid staking tokens only — no tokenized equities.
+ */
 export const KAMINO_MAIN_MARKET = address(
   "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
 );
+
+/**
+ * The xStocks market, which is where tokenized equities actually are.
+ *
+ * Kamino runs more than forty separate lending markets and collateral does not
+ * cross between them. Pointing at the main market and expecting to find NVDAx
+ * gets you forty-one reserves and no stocks, which is exactly the mistake this
+ * constant exists to prevent.
+ */
+export const KAMINO_XSTOCKS_MARKET = address(
+  "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+);
+
+/** Draw lends against tokenized equities, so this is our market. */
+export const KAMINO_DEFAULT_MARKET = KAMINO_XSTOCKS_MARKET;
 
 export const USDC_MINT = address(
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",

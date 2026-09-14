@@ -1,4 +1,4 @@
-import { createNoopSigner, type Address, type Instruction } from "@solana/kit";
+﻿import { createNoopSigner, type Address, type Instruction } from "@solana/kit";
 import {
   KaminoAction,
   KaminoMarket,
@@ -8,7 +8,7 @@ import {
   type KaminoReserve,
 } from "@kamino-finance/klend-sdk";
 import Decimal from "decimal.js";
-import { KAMINO_MAIN_MARKET, KAMINO_PROGRAM_ID } from "./constants.js";
+import { KAMINO_DEFAULT_MARKET, KAMINO_PROGRAM_ID } from "./constants.js";
 import type { SolanaRpc } from "./connection.js";
 
 /**
@@ -38,7 +38,7 @@ export async function loadMarket(
   rpc: SolanaRpc,
   options: { marketAddress?: Address; refresh?: boolean } = {},
 ): Promise<KaminoContext> {
-  const marketAddress = options.marketAddress ?? KAMINO_MAIN_MARKET;
+  const marketAddress = options.marketAddress ?? KAMINO_DEFAULT_MARKET;
 
   if (cachedMarket && !options.refresh) {
     return { market: cachedMarket, marketAddress };
@@ -79,7 +79,7 @@ export interface ReserveSummary {
  * Summarise a reserve into the handful of numbers the product actually needs.
  *
  * The liquidation threshold in particular must be read from the reserve rather
- * than hardcoded — it differs per asset and changes when Kamino reconfigures a
+ * than hardcoded â€” it differs per asset and changes when Kamino reconfigures a
  * market, and a stale copy would put our health factor out of step with the
  * protocol's.
  */
@@ -112,7 +112,7 @@ export async function summariseReserve(
 }
 
 /**
- * A mint can back more than one reserve — Kamino runs float and fixed rate
+ * A mint can back more than one reserve â€” Kamino runs float and fixed rate
  * variants of the same asset. We take the first, which is the float reserve,
  * because that is what the lending UI treats as the default market.
  */
@@ -196,7 +196,7 @@ export async function buildDrawInstructions(
  * Flatten a KaminoAction into a single ordered instruction list.
  *
  * The ordering is not arbitrary. `inBetweenIxs` has to sit between the deposit
- * and the borrow — it carries the obligation refresh that makes the freshly
+ * and the borrow â€” it carries the obligation refresh that makes the freshly
  * deposited collateral visible to the borrow that follows it.
  */
 function collectInstructions(action: KaminoAction): Instruction[] {
@@ -222,3 +222,4 @@ function collectLabels(action: KaminoAction): string[] {
 export function clearMarketCache(): void {
   cachedMarket = null;
 }
+
