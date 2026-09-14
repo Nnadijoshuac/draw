@@ -1,14 +1,22 @@
-import { createNoopSigner, type Address, type Instruction } from "@solana/kit";
+﻿import {
+  createNoopSigner,
+  getAddressEncoder,
+  getProgramDerivedAddress,
+  type Address,
+  type Instruction,
+} from "@solana/kit";
+import { SYSTEM_PROGRAM_ADDRESS } from "@solana-program/system";
 import {
   KaminoAction,
   KaminoMarket,
+  UserMetadata,
   VanillaObligation,
   DEFAULT_RECENT_SLOT_DURATION_MS,
   getCurrentLedgerInstant,
   type KaminoReserve,
 } from "@kamino-finance/klend-sdk";
 import Decimal from "decimal.js";
-import { KAMINO_MAIN_MARKET, KAMINO_PROGRAM_ID } from "./constants.js";
+import { KAMINO_DEFAULT_MARKET, KAMINO_PROGRAM_ID } from "./constants.js";
 import type { SolanaRpc } from "./connection.js";
 
 /**
@@ -38,7 +46,7 @@ export async function loadMarket(
   rpc: SolanaRpc,
   options: { marketAddress?: Address; refresh?: boolean } = {},
 ): Promise<KaminoContext> {
-  const marketAddress = options.marketAddress ?? KAMINO_MAIN_MARKET;
+  const marketAddress = options.marketAddress ?? KAMINO_DEFAULT_MARKET;
 
   if (cachedMarket && !options.refresh) {
     return { market: cachedMarket, marketAddress };
@@ -79,7 +87,7 @@ export interface ReserveSummary {
  * Summarise a reserve into the handful of numbers the product actually needs.
  *
  * The liquidation threshold in particular must be read from the reserve rather
- * than hardcoded — it differs per asset and changes when Kamino reconfigures a
+ * than hardcoded â€” it differs per asset and changes when Kamino reconfigures a
  * market, and a stale copy would put our health factor out of step with the
  * protocol's.
  */
@@ -112,7 +120,7 @@ export async function summariseReserve(
 }
 
 /**
- * A mint can back more than one reserve — Kamino runs float and fixed rate
+ * A mint can back more than one reserve â€” Kamino runs float and fixed rate
  * variants of the same asset. We take the first, which is the float reserve,
  * because that is what the lending UI treats as the default market.
  */
@@ -135,10 +143,20 @@ export interface DrawInstructionsParams {
   marketAddress?: Address;
 }
 
-export interface DrawInstructions {
+export interface InstructionGroup {
   instructions: Instruction[];
   /** Labels in the same order, which make a failed simulation readable. */
   labels: string[];
+}
+
+export interface DrawInstructions {
+  /**
+   * One-time account creation: user metadata, the obligation, farm state and
+   * the user's lookup table. Empty once a user has drawn before.
+   */
+  setup: InstructionGroup;
+  /** The deposit, borrow and their refreshes. Runs on every draw. */
+  draw: InstructionGroup;
 }
 
 /**
@@ -187,38 +205,87 @@ export async function buildDrawInstructions(
   });
 
   return {
-    instructions: collectInstructions(action),
-    labels: collectLabels(action),
+    setup: {
+      instructions: [...action.setupIxs],
+      labels: [...action.setupIxsLabels],
+    },
+    draw: interleaveLendingIxs(action),
   };
 }
 
 /**
- * Flatten a KaminoAction into a single ordered instruction list.
+ * Order the lending instructions the way the program expects.
  *
- * The ordering is not arbitrary. `inBetweenIxs` has to sit between the deposit
- * and the borrow — it carries the obligation refresh that makes the freshly
- * deposited collateral visible to the borrow that follows it.
+ * inBetweenIxs goes *between* the deposit and the borrow, not before both: it
+ * carries the obligation refresh that makes the freshly deposited collateral
+ * visible. Run it first and the refresh sees an empty obligation, which fails
+ * with InvalidAccountInput rather than anything that names the real problem.
  */
-function collectInstructions(action: KaminoAction): Instruction[] {
-  return [
-    ...action.setupIxs,
-    ...action.inBetweenIxs,
-    ...action.lendingIxs,
-    ...action.postLendingIxs,
-    ...action.cleanupIxs,
-  ];
+function interleaveLendingIxs(action: KaminoAction): InstructionGroup {
+  const [deposit, ...rest] = action.lendingIxs;
+  const [depositLabel, ...restLabels] = action.lendingIxsLabels;
+
+  const between = action.inBetweenIxs;
+
+  return {
+    instructions: [
+      ...(deposit ? [deposit] : []),
+      ...between,
+      ...rest,
+      ...action.postLendingIxs,
+      ...action.cleanupIxs,
+    ],
+    labels: [
+      ...(depositLabel ? [depositLabel] : []),
+      ...between.map((_, i) => `inBetween[${i}]`),
+      ...restLabels,
+      ...action.postLendingIxsLabels,
+      ...action.cleanupIxsLabels,
+    ],
+  };
 }
 
-function collectLabels(action: KaminoAction): string[] {
-  return [
-    ...action.setupIxsLabels,
-    ...action.lendingIxsLabels,
-    ...action.postLendingIxsLabels,
-    ...action.cleanupIxsLabels,
-  ];
+/**
+ * The lookup table Kamino created for this user during setup.
+ *
+ * Without it the draw does not fit in a transaction, so this is not an
+ * optimisation. Returns null before the user has been set up.
+ */
+export async function getUserLookupTable(
+  rpc: SolanaRpc,
+  owner: Address,
+): Promise<Address | null> {
+  const [userMetadataAddress] = await getProgramDerivedAddress({
+    programAddress: KAMINO_PROGRAM_ID,
+    seeds: [new TextEncoder().encode("user_meta"), getAddressEncoder().encode(owner)],
+  });
+
+  const metadata = await UserMetadata.fetch(
+    rpc,
+    userMetadataAddress,
+    KAMINO_PROGRAM_ID,
+  );
+  if (!metadata) return null;
+
+  const lut = metadata.userLookupTable;
+  return lut === SYSTEM_PROGRAM_ADDRESS ? null : lut;
+}
+
+/**
+ * Does this user still need their Kamino accounts created?
+ *
+ * Kamino always emits an idempotent create-ATA instruction, so a non-empty
+ * setup group does not by itself mean anything is missing. Only the
+ * account-creating instructions do.
+ */
+export function needsAccountSetup(setupLabels: string[]): boolean {
+  return setupLabels.some((label) =>
+    /^(initUserMetadata|InitObligation|createUserLut)/i.test(label),
+  );
 }
 
 /** Drop the cached market. Used by scripts that switch clusters mid-run. */
 export function clearMarketCache(): void {
   cachedMarket = null;
 }
+

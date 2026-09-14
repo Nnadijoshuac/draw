@@ -66,15 +66,27 @@ export async function setLamports(
  * This is the whole reason the zero-budget build works: we can hold $10,000 of
  * collateral on a forked mainnet and test liquidation edges we could never
  * afford to test with real money.
+ *
+ * The token program must be passed explicitly. Without it the cheatcode
+ * defaults to the legacy program and silently writes the balance into a legacy
+ * account, which for a Token-2022 mint like an xStock means the tokens land at
+ * an address nothing will ever look at — the balance reads zero everywhere and
+ * nothing errors.
  */
 export async function setTokenBalance(
   rpcUrl: string,
-  params: { owner: Address; mint: Address; amount: bigint },
+  params: {
+    owner: Address;
+    mint: Address;
+    amount: bigint;
+    tokenProgram: Address;
+  },
 ): Promise<void> {
   await callCheat(rpcUrl, "surfnet_setTokenAccount", [
     params.owner,
     params.mint,
     { amount: Number(params.amount) },
+    params.tokenProgram,
   ]);
 }
 

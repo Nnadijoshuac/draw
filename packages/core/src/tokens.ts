@@ -106,12 +106,19 @@ export async function createAtaInstruction(
   const { mint, owner, payer } = params;
   const { address, tokenProgram } = await getAta(rpc, mint, owner);
 
+  // tokenProgram is an account this instruction passes through to, not the
+  // program it runs on. Overriding programAddress here points the whole
+  // instruction at the token program and it fails with InvalidArgument.
+  //
   // The payer signs in the relay, not here, so a noop signer carries the
-  // address through instruction construction without needing key material.
-  return getCreateAssociatedTokenIdempotentInstruction(
-    { payer: createNoopSigner(payer), ata: address, owner, mint, tokenProgram },
-    { programAddress: tokenProgram },
-  );
+  // address through without needing key material.
+  return getCreateAssociatedTokenIdempotentInstruction({
+    payer: createNoopSigner(payer),
+    ata: address,
+    owner,
+    mint,
+    tokenProgram,
+  });
 }
 
 /** Read a token balance in base units. Returns 0n when the account is absent. */

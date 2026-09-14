@@ -1,4 +1,5 @@
 import { address } from "@solana/kit";
+import { createChainClient, getTokenProgram } from "@draw/core";
 import { env } from "./env.js";
 import { assertSurfnet, setLamports, setTokenBalance } from "./surfnet.js";
 
@@ -33,19 +34,19 @@ async function main(): Promise<void> {
     console.log(`  SOL      ${feePayerArg} (fee payer)`);
   }
 
-  await setTokenBalance(rpcUrl, {
-    owner: wallet,
-    mint: debtMint,
-    amount: USDC_AMOUNT,
-  });
-  console.log(`  USDC     10,000`);
+  // Resolve each mint's token program from chain rather than assuming. xStocks
+  // are Token-2022 and USDC is not, and the cheatcode writes to whichever
+  // program it is told about.
+  const { rpc } = createChainClient({ rpcUrl });
 
-  await setTokenBalance(rpcUrl, {
-    owner: wallet,
-    mint: collateralMint,
-    amount: COLLATERAL_AMOUNT,
-  });
-  console.log(`  ${collateralMint}`);
+  for (const [label, mint, amount] of [
+    ["USDC", debtMint, USDC_AMOUNT],
+    ["collateral", collateralMint, COLLATERAL_AMOUNT],
+  ] as const) {
+    const tokenProgram = await getTokenProgram(rpc, mint);
+    await setTokenBalance(rpcUrl, { owner: wallet, mint, amount, tokenProgram });
+    console.log(`  ${label.padEnd(11)} ${mint}`);
+  }
 
   console.log(`\nFunded ${wallet} on ${rpcUrl}`);
 }

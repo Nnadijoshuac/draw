@@ -1,18 +1,36 @@
-import { address } from "@solana/kit";
+﻿import { address } from "@solana/kit";
 
 /**
  * Kamino Lend. The program is deployed at the same address on mainnet and
- * devnet, but only mainnet has configured markets and reserves — which is why
+ * devnet, but only mainnet has configured markets and reserves â€” which is why
  * we develop against a mainnet fork rather than devnet.
  */
 export const KAMINO_PROGRAM_ID = address(
   "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
 );
 
-/** Kamino's main lending market, where the xStocks reserves live. */
+/**
+ * Kamino's main market. Deep and liquid, but stablecoins, BTC, ETH, SOL and
+ * liquid staking tokens only â€” no tokenized equities.
+ */
 export const KAMINO_MAIN_MARKET = address(
   "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
 );
+
+/**
+ * The xStocks market, which is where tokenized equities actually are.
+ *
+ * Kamino runs more than forty separate lending markets and collateral does not
+ * cross between them. Pointing at the main market and expecting to find NVDAx
+ * gets you forty-one reserves and no stocks, which is exactly the mistake this
+ * constant exists to prevent.
+ */
+export const KAMINO_XSTOCKS_MARKET = address(
+  "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+);
+
+/** Draw lends against tokenized equities, so this is our market. */
+export const KAMINO_DEFAULT_MARKET = KAMINO_XSTOCKS_MARKET;
 
 export const USDC_MINT = address(
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
@@ -38,3 +56,7 @@ export const MAX_TRANSACTION_BYTES = 1232;
  * expensive.
  */
 export const TRANSACTION_SIZE_WARNING_BYTES = 1100;
+
+/** Rent Draw fronts for a user's Kamino accounts on first draw. */
+export const SETUP_RENT_LAMPORTS = 50_000_000n;
+
