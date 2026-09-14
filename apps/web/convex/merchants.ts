@@ -1,4 +1,4 @@
-import { mutation, query } from "./_generated/server";
+import { internalQuery, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 /**
@@ -62,6 +62,15 @@ export const getPublic = query({
       origin: merchant.origin,
     };
   },
+});
+
+/**
+ * Full merchant row, webhook secret included. Server-side callers only —
+ * `internalQuery` is not reachable from a browser, which is the whole point.
+ */
+export const getInternal = internalQuery({
+  args: { merchantId: v.id("merchants") },
+  handler: async (ctx, { merchantId }) => await ctx.db.get(merchantId),
 });
 
 export const findByOrigin = query({
