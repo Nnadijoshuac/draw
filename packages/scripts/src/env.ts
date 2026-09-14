@@ -29,4 +29,9 @@ export const env = {
     const configured = process.env.NEXT_PUBLIC_USDC_MINT;
     return configured ? address(configured) : USDC_MINT;
   },
+
+  get lookupTables(): Address[] {
+    const configured = process.env.DRAW_LOOKUP_TABLE;
+    return configured ? [address(configured)] : [];
+  },
 };

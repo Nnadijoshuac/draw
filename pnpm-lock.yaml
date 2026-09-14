@@ -158,6 +158,9 @@ importers:
       '@draw/shared':
         specifier: workspace:*
         version: link:../shared
+      '@solana-program/address-lookup-table':
+        specifier: ^0.8.0
+        version: 0.8.0(@solana/kit@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)))
       '@solana/kit':
         specifier: ^2.3.0
         version: 2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.21.3(bufferutil@4.1.0))

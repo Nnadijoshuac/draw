@@ -209,19 +209,39 @@ export async function buildDrawInstructions(
       instructions: [...action.setupIxs],
       labels: [...action.setupIxsLabels],
     },
-    draw: {
-      instructions: [
-        ...action.inBetweenIxs,
-        ...action.lendingIxs,
-        ...action.postLendingIxs,
-        ...action.cleanupIxs,
-      ],
-      labels: [
-        ...action.lendingIxsLabels,
-        ...action.postLendingIxsLabels,
-        ...action.cleanupIxsLabels,
-      ],
-    },
+    draw: interleaveLendingIxs(action),
+  };
+}
+
+/**
+ * Order the lending instructions the way the program expects.
+ *
+ * inBetweenIxs goes *between* the deposit and the borrow, not before both: it
+ * carries the obligation refresh that makes the freshly deposited collateral
+ * visible. Run it first and the refresh sees an empty obligation, which fails
+ * with InvalidAccountInput rather than anything that names the real problem.
+ */
+function interleaveLendingIxs(action: KaminoAction): InstructionGroup {
+  const [deposit, ...rest] = action.lendingIxs;
+  const [depositLabel, ...restLabels] = action.lendingIxsLabels;
+
+  const between = action.inBetweenIxs;
+
+  return {
+    instructions: [
+      ...(deposit ? [deposit] : []),
+      ...between,
+      ...rest,
+      ...action.postLendingIxs,
+      ...action.cleanupIxs,
+    ],
+    labels: [
+      ...(depositLabel ? [depositLabel] : []),
+      ...between.map((_, i) => `inBetween[${i}]`),
+      ...restLabels,
+      ...action.postLendingIxsLabels,
+      ...action.cleanupIxsLabels,
+    ],
   };
 }
 

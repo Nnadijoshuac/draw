@@ -103,17 +103,25 @@ async function main(): Promise<void> {
     console.log(`  landed (${sim.value.unitsConsumed ?? "?"} CU): ${signature}`);
   }
 
-  // First-time users need their Kamino accounts before anything can be drawn.
-  const setup = await buildUserSetupTransaction(common);
-  if (setup) {
-    console.log(`\nsetup: ${setup.labels.length} ixs, ${setup.sizeBytes} bytes`);
-    setup.labels.forEach((label, i) => console.log(`  ${i}. ${label}`));
-    await sendSigned(setup.wireTransaction, "setup");
-  } else {
-    console.log("\nuser already set up");
+  // With a populated lookup table the whole thing fits in one transaction, so
+  // account setup rides along with the draw and Kamino's own instruction
+  // ordering is preserved. Pass --split to send setup separately instead.
+  const split = process.argv.includes("--split");
+
+  if (split) {
+    const setup = await buildUserSetupTransaction(common);
+    if (setup) {
+      console.log(`\nsetup: ${setup.labels.length} ixs, ${setup.sizeBytes} bytes`);
+      await sendSigned(setup.wireTransaction, "setup");
+    }
   }
 
-  const built = await buildDrawTransaction({ ...common, merchant });
+  const built = await buildDrawTransaction({
+    ...common,
+    merchant,
+    lookupTableAddresses: env.lookupTables,
+    skipSetupCheck: !split,
+  });
 
   console.log(`\ndraw: ${built.labels.length} ixs, ${built.sizeBytes}/1232 bytes`);
   built.labels.forEach((label, i) => console.log(`  ${i}. ${label}`));

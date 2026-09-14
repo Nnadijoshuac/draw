@@ -169,8 +169,24 @@ export async function buildDrawTransaction(
     borrowAmount: borrowAmount.toString(),
   });
 
-  if (needsAccountSetup(lending.setup.labels) && !params.skipSetupCheck) {
+  const firstDraw = needsAccountSetup(lending.setup.labels);
+
+  if (firstDraw && !params.skipSetupCheck) {
     throw new UserSetupRequiredError(lending.setup.labels);
+  }
+
+  // Kamino bills the user for rent on their own lookup table, obligation and
+  // metadata. Front it, or a wallet we promised would never need SOL fails on
+  // its first payment.
+  if (firstDraw) {
+    push(
+      getTransferSolInstruction({
+        source: createNoopSigner(feePayer),
+        destination: user,
+        amount: SETUP_RENT_LAMPORTS,
+      }),
+      "sponsorRent",
+    );
   }
 
   // Whatever is left is idempotent account creation, cheap enough to ride along.
@@ -248,6 +264,49 @@ export async function buildDrawTransaction(
     lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
     labels,
   };
+}
+
+/**
+ * Every account a draw touches, for building a lookup table.
+ *
+ * Two users are built and intersected so only the shared accounts survive:
+ * programs, the market, reserves, oracles, mints. Anything user-specific — a
+ * wallet, its token accounts, its obligation — differs between the two and
+ * drops out, which is what makes the resulting table reusable by everyone.
+ */
+export async function collectSharedDrawAccounts(params: {
+  rpc: SolanaRpc;
+  userA: Address;
+  userB: Address;
+  merchant: Address;
+  collateralMint: Address;
+  collateralAmount: bigint;
+  debtMint: Address;
+  borrowAmount: bigint;
+  feePayer: Address;
+}): Promise<Address[]> {
+  const { rpc, userA, userB, ...rest } = params;
+
+  const forUser = async (user: Address): Promise<Set<Address>> => {
+    const lending = await buildDrawInstructions({
+      rpc,
+      owner: user,
+      collateralMint: rest.collateralMint,
+      depositAmount: rest.collateralAmount.toString(),
+      debtMint: rest.debtMint,
+      borrowAmount: rest.borrowAmount.toString(),
+    });
+
+    const addresses = new Set<Address>();
+    for (const ix of [...lending.setup.instructions, ...lending.draw.instructions]) {
+      addresses.add(ix.programAddress);
+      for (const account of ix.accounts ?? []) addresses.add(account.address);
+    }
+    return addresses;
+  };
+
+  const [a, b] = await Promise.all([forUser(userA), forUser(userB)]);
+  return [...a].filter((addr) => b.has(addr));
 }
 
 /**
