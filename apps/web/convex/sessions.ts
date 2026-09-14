@@ -1,4 +1,5 @@
-import { mutation, query } from "./_generated/server";
+import { internalQuery, mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
 import { sessionStatus } from "./schema";
 
@@ -102,7 +103,23 @@ export const setStatus = mutation({
       ...(signature ? { signature } : {}),
       ...(error ? { error } : {}),
     });
+
+    // Tell the merchant's server, out of band. Their page will already have
+    // updated from the live query, but a browser is not something to ship
+    // goods on.
+    if (status === "paid" || status === "failed") {
+      await ctx.scheduler.runAfter(0, internal.webhooks.dispatch, {
+        sessionId,
+        attempt: 0,
+      });
+    }
   },
+});
+
+/** Full row including merchant id. Server-side callers only. */
+export const getInternal = internalQuery({
+  args: { sessionId: v.id("sessions") },
+  handler: async (ctx, { sessionId }) => await ctx.db.get(sessionId),
 });
 
 /** Sweep sessions nobody finished. Scheduled, not called from the client. */

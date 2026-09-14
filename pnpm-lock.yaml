@@ -175,6 +175,16 @@ importers:
         specifier: ^5.6.3
         version: 5.9.3
 
+  packages/sdk:
+    dependencies:
+      '@draw/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+
   packages/shared:
     devDependencies:
       typescript:
