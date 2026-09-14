@@ -62,3 +62,35 @@ export function formatUsd(value: DecimalString): string {
     maximumFractionDigits: 2,
   });
 }
+
+/** Format minor units ($40.00 arrives as 4000) for display. */
+export function formatMinor(minor: number): string {
+  return formatUsd((minor / 100).toFixed(2));
+}
+
+/**
+ * Format a token quantity.
+ *
+ * Trailing zeros are trimmed because "500" reads better than "500.000000",
+ * but a fractional holding keeps enough precision to be honest about what is
+ * actually owned.
+ */
+export function formatTokenAmount(
+  value: DecimalString,
+  maxDecimals = 4,
+): string {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return "0";
+
+  return amount.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: maxDecimals,
+  });
+}
+
+/** Percentages come off chain as plain decimal strings. */
+export function formatPercent(value: DecimalString, decimals = 2): string {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return "0%";
+  return `${amount.toFixed(decimals)}%`;
+}
