@@ -1,4 +1,8 @@
-import { address } from "@solana/kit";
+import {
+  address,
+  createKeyPairSignerFromBytes,
+  getBase58Encoder,
+} from "@solana/kit";
 import { createChainClient, getTokenProgram } from "@draw/core";
 import { env } from "./env";
 import { assertSurfnet, setLamports, setTokenBalance } from "./surfnet";
@@ -6,7 +10,7 @@ import { assertSurfnet, setLamports, setTokenBalance } from "./surfnet";
 /**
  * Hand a wallet everything it needs to exercise a draw end to end.
  *
- * Run it again whenever surfnet restarts â€” the fork keeps no state between
+ * Run it again whenever surfnet restarts — the fork keeps no state between
  * runs, and rediscovering that at demo time is a bad afternoon.
  *
  *   pnpm fund <wallet-address> [fee-payer-address]
@@ -17,10 +21,10 @@ const COLLATERAL_AMOUNT = 50_000_000_000n; // generous; exact decimals vary by a
 const FEE_PAYER_LAMPORTS = 100_000_000_000; // 100 SOL
 
 async function main(): Promise<void> {
-  const [walletArg, feePayerArg] = process.argv.slice(2);
+  const [walletArg] = process.argv.slice(2);
 
   if (!walletArg) {
-    console.error("Usage: pnpm fund <wallet-address> [fee-payer-address]");
+    console.error("Usage: pnpm fund <wallet-address>");
     process.exit(1);
   }
 
@@ -29,9 +33,15 @@ async function main(): Promise<void> {
 
   await assertSurfnet(rpcUrl);
 
-  if (feePayerArg) {
-    await setLamports(rpcUrl, address(feePayerArg), FEE_PAYER_LAMPORTS);
-    console.log(`  SOL      ${feePayerArg} (fee payer)`);
+  // The fee payer is whoever FEE_PAYER_SECRET_KEY belongs to, so nobody has to
+  // remember its address. It needs SOL on every fresh fork.
+  const secret = process.env.FEE_PAYER_SECRET_KEY;
+  if (secret) {
+    const feePayer = await createKeyPairSignerFromBytes(
+      new Uint8Array(getBase58Encoder().encode(secret)),
+    );
+    await setLamports(rpcUrl, feePayer.address, FEE_PAYER_LAMPORTS);
+    console.log(`  SOL         ${feePayer.address} (fee payer)`);
   }
 
   // Resolve each mint's token program from chain rather than assuming. xStocks

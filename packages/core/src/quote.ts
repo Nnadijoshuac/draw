@@ -58,7 +58,7 @@ export async function getPortfolio(params: PortfolioParams): Promise<Portfolio> 
 
   const valueUsd = valueInUsd(balance, price);
 
-  // Existing debt is not yet read from the obligation â€” a user who has never
+  // Existing debt is not yet read from the obligation — a user who has never
   // drawn has none, which covers every path through the current product.
   const debtUsd = new Decimal(0);
 
@@ -213,7 +213,7 @@ export async function buildQuote(params: QuoteParams): Promise<QuoteResult> {
   return { quote, collateralBaseUnits, borrowBaseUnits };
 }
 
-/** A quote past its expiry must never be signed â€” prices move. */
+/** A quote past its expiry must never be signed — prices move. */
 export function isQuoteExpired(quote: Quote): boolean {
   return new Date(quote.expiresAt).getTime() < Date.now();
 }

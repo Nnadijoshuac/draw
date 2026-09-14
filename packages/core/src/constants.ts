@@ -2,7 +2,7 @@ import { address } from "@solana/kit";
 
 /**
  * Kamino Lend. The program is deployed at the same address on mainnet and
- * devnet, but only mainnet has configured markets and reserves â€” which is why
+ * devnet, but only mainnet has configured markets and reserves — which is why
  * we develop against a mainnet fork rather than devnet.
  */
 export const KAMINO_PROGRAM_ID = address(
@@ -11,7 +11,7 @@ export const KAMINO_PROGRAM_ID = address(
 
 /**
  * Kamino's main market. Deep and liquid, but stablecoins, BTC, ETH, SOL and
- * liquid staking tokens only â€” no tokenized equities.
+ * liquid staking tokens only — no tokenized equities.
  */
 export const KAMINO_MAIN_MARKET = address(
   "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",

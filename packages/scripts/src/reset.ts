@@ -1,0 +1,136 @@
+import { spawn } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import {
+  address,
+  createKeyPairSignerFromBytes,
+  getBase58Encoder,
+} from "@solana/kit";
+import { createChainClient, getTokenProgram } from "@draw/core";
+import { env } from "./env";
+import { createDrawLookupTable } from "./lut";
+import { setLamports, setTokenBalance } from "./surfnet";
+
+/**
+ * Put the fork back into a state where a payment works.
+ *
+ * Kamino refuses to borrow against stale oracle prices, and a fork's cloned
+ * oracles go stale after roughly half an hour. Restarting re-clones them, but
+ * that wipes the lookup table and every funded wallet too, so all three steps
+ * have to happen together.
+ *
+ *   pnpm reset [wallet-to-fund]
+ */
+
+const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
+const ENV_FILE = `${REPO_ROOT}.env.local`;
+const USDC_AMOUNT = 10_000_000_000n;
+const COLLATERAL_AMOUNT = 50_000_000_000n;
+const FEE_PAYER_LAMPORTS = 100_000_000_000;
+
+const isWindows = process.platform === "win32";
+
+function run(command: string, args: string[]): Promise<void> {
+  return new Promise((resolve) => {
+    const child = spawn(command, args, { stdio: "ignore", shell: false });
+    child.on("close", () => resolve());
+    child.on("error", () => resolve());
+  });
+}
+
+async function restartFork(): Promise<void> {
+  const script = `${REPO_ROOT}packages/scripts/start-surfnet.sh`.replace(
+    /^([A-Za-z]):/,
+    (_m, drive: string) => `/mnt/${drive.toLowerCase()}`,
+  );
+  const unixScript = script.replace(/\\/g, "/");
+
+  if (isWindows) {
+    await run("wsl", ["-d", "Ubuntu", "--", "bash", "-lc", "pkill -f surfpool || true"]);
+    spawn("wsl", ["-d", "Ubuntu", "--", "bash", unixScript], {
+      detached: true,
+      stdio: "ignore",
+    }).unref();
+  } else {
+    await run("pkill", ["-f", "surfpool"]);
+    spawn("bash", [`${REPO_ROOT}packages/scripts/start-surfnet.sh`], {
+      detached: true,
+      stdio: "ignore",
+    }).unref();
+  }
+}
+
+async function waitForRpc(rpcUrl: string, attempts = 60): Promise<void> {
+  for (let i = 0; i < attempts; i += 1) {
+    try {
+      const res = await fetch(rpcUrl, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getHealth" }),
+      });
+      if (res.ok) return;
+    } catch {
+      /* not up yet */
+    }
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+  throw new Error(`surfnet never answered on ${rpcUrl}`);
+}
+
+function writeEnvValue(key: string, value: string): void {
+  const current = readFileSync(ENV_FILE, "utf8");
+  const line = `${key}=${value}`;
+  const pattern = new RegExp(`^${key}=.*$`, "m");
+
+  writeFileSync(
+    ENV_FILE,
+    pattern.test(current) ? current.replace(pattern, line) : `${current}\n${line}\n`,
+    "utf8",
+  );
+}
+
+async function main(): Promise<void> {
+  const [walletArg] = process.argv.slice(2);
+
+  console.log("restarting the fork");
+  await restartFork();
+  await waitForRpc(env.rpcUrl);
+  console.log("  fork up with fresh oracle prices");
+
+  const { rpc } = createChainClient({ rpcUrl: env.rpcUrl });
+
+  const feePayer = await createKeyPairSignerFromBytes(
+    new Uint8Array(getBase58Encoder().encode(process.env.FEE_PAYER_SECRET_KEY ?? "")),
+  );
+  await setLamports(env.rpcUrl, feePayer.address, FEE_PAYER_LAMPORTS);
+  console.log(`  fee payer funded ${feePayer.address}`);
+
+  console.log("rebuilding the lookup table");
+  const table = await createDrawLookupTable({
+    rpc,
+    authority: feePayer,
+    collateralMint: env.collateralMint,
+    debtMint: env.debtMint,
+  });
+  writeEnvValue("DRAW_LOOKUP_TABLE", table);
+
+  if (walletArg) {
+    console.log(`funding ${walletArg}`);
+    const wallet = address(walletArg);
+    for (const [mint, amount] of [
+      [env.debtMint, USDC_AMOUNT],
+      [env.collateralMint, COLLATERAL_AMOUNT],
+    ] as const) {
+      const tokenProgram = await getTokenProgram(rpc, mint);
+      await setTokenBalance(env.rpcUrl, { owner: wallet, mint, amount, tokenProgram });
+    }
+    console.log("  10,000 USDC and 500 shares");
+  }
+
+  console.log("\nReady. Restart the dev server so it picks up the new lookup table.");
+}
+
+main().catch((error: unknown) => {
+  console.error(`\n${error instanceof Error ? error.message : String(error)}\n`);
+  process.exit(1);
+});

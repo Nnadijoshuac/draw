@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { DrawNotAllowedError, PriceUnavailableError, TransactionTooLargeError } from "@draw/core";
+import {
+  DrawNotAllowedError,
+  PriceUnavailableError,
+  TransactionTooLargeError,
+  UserSetupRequiredError,
+} from "@draw/core";
 
 /**
  * One place that turns an internal failure into something a person can read.
@@ -64,6 +69,15 @@ export function handleApiError(error: unknown): NextResponse<ApiError> {
       500,
       "transaction_too_large",
       "We couldn't prepare that payment. Please try again.",
+      { sizeBytes: String(error.sizeBytes) },
+    );
+  }
+
+  if (error instanceof UserSetupRequiredError) {
+    return jsonError(
+      500,
+      "setup_required",
+      "We couldn't set up your account for this payment. Please try again.",
     );
   }
 
@@ -75,5 +89,17 @@ export function handleApiError(error: unknown): NextResponse<ApiError> {
     );
   }
 
-  return jsonError(500, "internal", "Something went wrong. Please try again.");
+  // A bare "something went wrong" hides the cause from whoever is debugging,
+  // so outside production the real message comes through.
+  const detail =
+    process.env.NODE_ENV === "production"
+      ? undefined
+      : { cause: error instanceof Error ? error.message : String(error) };
+
+  return jsonError(
+    500,
+    "internal",
+    "Something went wrong. Please try again.",
+    detail,
+  );
 }

@@ -25,7 +25,7 @@ export interface ChainClientOptions {
 /**
  * Derive the websocket endpoint from the http one.
  *
- * Validators â€” surfpool included â€” serve subscriptions on the RPC port plus
+ * Validators — surfpool included — serve subscriptions on the RPC port plus
  * one. Hosted providers usually accept the same host over wss.
  */
 export function deriveSubscriptionsUrl(rpcUrl: string): string {

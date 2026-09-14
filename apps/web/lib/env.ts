@@ -35,4 +35,13 @@ export const serverEnv = {
   get feePayerSecretKey(): string {
     return required("FEE_PAYER_SECRET_KEY");
   },
+
+  /**
+   * The shared lookup table every draw compresses against. Without it the
+   * transaction is a few hundred bytes over the limit and nothing can pay.
+   */
+  get lookupTables(): Address[] {
+    const configured = process.env.DRAW_LOOKUP_TABLE;
+    return configured ? [address(configured)] : [];
+  },
 };

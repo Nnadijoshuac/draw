@@ -3,8 +3,10 @@ node_modules/
 .pnpm-store/
 
 # builds
-dist/
-build/
+# Unanchored patterns match at any depth, and "build/" was quietly excluding
+# the app/api/tx/build route. Keep these rooted.
+/dist/
+packages/*/dist/
 .next/
 out/
 *.tsbuildinfo
