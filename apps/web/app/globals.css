@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/*
+ * Placeholder tokens only.
+ *
+ * The visual design is being taken from a reference and has not landed yet —
+ * nothing here is a considered choice, and all of it is expected to be
+ * replaced. Structure first, surface second.
+ */
+@theme {
+  --color-ink: #0a0a0a;
+  --color-paper: #ffffff;
+  --color-muted: #6b7280;
+  --color-line: #e5e7eb;
+}
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}

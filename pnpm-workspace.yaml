@@ -5,6 +5,8 @@ packages:
 # esbuild backs vitest, bigint-buffer speeds up web3.js account decoding.
 # The websocket extras are optional native builds we do not need.
 allowBuilds:
+  # Pulled in transitively by Privy; its postinstall is not needed here.
+  "@reown/appkit": false
   bigint-buffer: true
   bufferutil: false
   esbuild: true
