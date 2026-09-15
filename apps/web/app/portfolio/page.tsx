@@ -243,7 +243,7 @@ export default function PortfolioPage() {
               To my wallet
             </Choice>
             <Choice active={elsewhere} onClick={() => setElsewhere(true)}>
-              To another wallet
+              To Solana wallet
             </Choice>
           </div>
 
