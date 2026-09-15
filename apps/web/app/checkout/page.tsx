@@ -33,8 +33,28 @@ function Checkout() {
 
   const [phase, setPhase] = useState<Phase>("loading");
   const [quote, setQuote] = useState<Quote | null>(null);
+  const [merchantName, setMerchantName] = useState<string | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Who is being paid, so the user sees a shop name rather than an address.
+  useEffect(() => {
+    if (!merchantOrigin) return;
+
+    let cancelled = false;
+    void fetch(`/api/merchant?origin=${encodeURIComponent(merchantOrigin)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body) => {
+        if (!cancelled && body?.name) setMerchantName(body.name as string);
+      })
+      .catch(() => {
+        /* the name is a nicety; the payment does not depend on it */
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [merchantOrigin]);
 
   // Price the draw as soon as we know who is paying.
   useEffect(() => {
@@ -92,8 +112,11 @@ function Checkout() {
         body: JSON.stringify({
           sessionId: reference ?? "checkout",
           owner: wallet.address,
-          merchant: params.get("merchant") ?? wallet.address,
           amountMinor,
+          origin: merchantOrigin ?? undefined,
+          // Opened directly rather than from a shop: pay yourself so the flow
+          // can still be exercised in development.
+          selfPay: !merchantOrigin,
         }),
       });
       const built = await buildRes.json();
@@ -160,7 +183,9 @@ function Checkout() {
     return (
       <Shell>
         <div className="flex flex-1 flex-col justify-center">
-          <p className="text-[13px] text-[var(--color-muted)]">Paying</p>
+          <p className="text-[13px] text-[var(--color-muted)]">
+            {merchantName ? `Paying ${merchantName}` : "Paying"}
+          </p>
           <p className="amount mt-1">{formatMinor(amountMinor)}</p>
           <p className="mt-6 text-[15px] text-[var(--color-muted)]">
             Sign in to pay with the shares you already own.

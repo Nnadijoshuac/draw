@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { address, type Address } from "@solana/kit";
 import { SURFNET_RPC_URL, USDC_MINT } from "@draw/core";
 
@@ -14,6 +16,17 @@ function required(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error(`Missing required environment variable: ${name}`);
   return value;
+}
+
+/** Written by `pnpm reset`, which mints a new table on every fork restart. */
+function readRuntimeLookupTable(): string | null {
+  try {
+    const file = join(process.cwd(), "..", "..", ".draw", "lookup-table");
+    const value = readFileSync(file, "utf8").trim();
+    return value.length > 0 ? value : null;
+  } catch {
+    return null;
+  }
 }
 
 export const publicEnv = {
@@ -39,8 +52,16 @@ export const serverEnv = {
   /**
    * The shared lookup table every draw compresses against. Without it the
    * transaction is a few hundred bytes over the limit and nothing can pay.
+   *
+   * Read from disk on each call rather than from the environment, because a
+   * fork reset mints a new table and environment variables are fixed when the
+   * server boots. Needing a restart after every reset is the kind of thing
+   * that fails during a demo.
    */
   get lookupTables(): Address[] {
+    const fromFile = readRuntimeLookupTable();
+    if (fromFile) return [address(fromFile)];
+
     const configured = process.env.DRAW_LOOKUP_TABLE;
     return configured ? [address(configured)] : [];
   },
