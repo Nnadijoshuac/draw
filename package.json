@@ -16,6 +16,7 @@
     "test": "pnpm -r test",
     "chain": "pnpm --filter @draw/scripts chain",
     "reset": "pnpm --filter @draw/scripts reset",
+    "refresh": "pnpm --filter @draw/scripts refresh",
     "fund": "pnpm --filter @draw/scripts fund",
     "probe": "pnpm --filter @draw/scripts probe",
     "keygen": "pnpm --filter @draw/scripts keygen"

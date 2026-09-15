@@ -64,13 +64,19 @@ export async function sendAs(
   return rpc.sendTransaction(wire, { encoding: "base64", skipPreflight: true }).send();
 }
 
+export interface DrawLookupTable {
+  table: Address;
+  /** The accounts it holds, which are also the ones worth keeping fresh. */
+  accounts: Address[];
+}
+
 export async function createDrawLookupTable(params: {
   rpc: SolanaRpc;
   authority: KeyPairSigner;
   collateralMint: Address;
   debtMint: Address;
   quiet?: boolean;
-}): Promise<Address> {
+}): Promise<DrawLookupTable> {
   const { rpc, authority, collateralMint, debtMint, quiet } = params;
   const log = (line: string) => {
     if (!quiet) console.log(line);
@@ -118,5 +124,5 @@ export async function createDrawLookupTable(params: {
   }
 
   log(`  lookup table ${table}`);
-  return table;
+  return { table, accounts: shared };
 }

@@ -9,7 +9,12 @@ import {
 import { createChainClient, getTokenProgram } from "@draw/core";
 import { env } from "./env";
 import { createDrawLookupTable } from "./lut";
-import { setLamports, setTokenBalance } from "./surfnet";
+import {
+  isRefreshable,
+  setLamports,
+  setTokenBalance,
+  streamAccount,
+} from "./surfnet";
 
 /**
  * Put the fork back into a state where a payment works.
@@ -30,12 +35,27 @@ const FEE_PAYER_LAMPORTS = 100_000_000_000;
 
 const isWindows = process.platform === "win32";
 
+// shell: true. Without it the backgrounding operators in the command below are
+// passed to wsl as literal arguments and nothing starts.
 function run(command: string, args: string[]): Promise<void> {
   return new Promise((resolve) => {
-    const child = spawn(command, args, { stdio: "ignore", shell: false });
+    const child = spawn(command, args, { stdio: "ignore", shell: true });
     child.on("close", () => resolve());
     child.on("error", () => resolve());
   });
+}
+
+async function isForkHealthy(rpcUrl: string): Promise<boolean> {
+  try {
+    const res = await fetch(rpcUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getHealth" }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 async function restartFork(): Promise<void> {
@@ -46,17 +66,22 @@ async function restartFork(): Promise<void> {
   const unixScript = script.replace(/\\/g, "/");
 
   if (isWindows) {
-    await run("wsl", ["-d", "Ubuntu", "--", "bash", "-lc", "pkill -f surfpool || true"]);
-    spawn("wsl", ["-d", "Ubuntu", "--", "bash", unixScript], {
-      detached: true,
-      stdio: "ignore",
-    }).unref();
+    // nohup and disown, not a detached spawn. WSL tears down the processes it
+    // started as soon as the launching invocation exits, so a plain spawn
+    // gives you a fork that dies the moment this script finishes.
+    await run("wsl", [
+      "-d",
+      "Ubuntu",
+      "--",
+      "bash",
+      "-lc",
+      `pkill -f surfpool || true; sleep 1; nohup bash ${unixScript} > /tmp/surfpool.log 2>&1 & disown; sleep 2`,
+    ]);
   } else {
-    await run("pkill", ["-f", "surfpool"]);
-    spawn("bash", [`${REPO_ROOT}packages/scripts/start-surfnet.sh`], {
-      detached: true,
-      stdio: "ignore",
-    }).unref();
+    await run("bash", [
+      "-lc",
+      `pkill -f surfpool || true; sleep 1; nohup bash ${REPO_ROOT}packages/scripts/start-surfnet.sh > /tmp/surfpool.log 2>&1 & disown; sleep 2`,
+    ]);
   }
 }
 
@@ -92,10 +117,17 @@ function writeEnvValue(key: string, value: string): void {
 async function main(): Promise<void> {
   const [walletArg] = process.argv.slice(2);
 
-  console.log("restarting the fork");
-  await restartFork();
-  await waitForRpc(env.rpcUrl);
-  console.log("  fork up with fresh oracle prices");
+  // Streaming keeps the oracles current, so a running fork does not need to be
+  // torn down. Restarting would throw away the lookup table and every funded
+  // wallet for no benefit.
+  if (await isForkHealthy(env.rpcUrl)) {
+    console.log("fork already running, keeping it");
+  } else {
+    console.log("starting the fork");
+    await restartFork();
+    await waitForRpc(env.rpcUrl);
+    console.log("  fork up");
+  }
 
   const { rpc } = createChainClient({ rpcUrl: env.rpcUrl });
 
@@ -106,13 +138,27 @@ async function main(): Promise<void> {
   console.log(`  fee payer funded ${feePayer.address}`);
 
   console.log("rebuilding the lookup table");
-  const table = await createDrawLookupTable({
+  const { table, accounts } = await createDrawLookupTable({
     rpc,
     authority: feePayer,
     collateralMint: env.collateralMint,
     debtMint: env.debtMint,
   });
   writeEnvValue("DRAW_LOOKUP_TABLE", table);
+
+  // Keep the reserves and their oracles synced with mainnet. Without this the
+  // prices age past Kamino's max_age after about half an hour and every borrow
+  // is refused, which during a demo looks like a broken product.
+  let streamed = 0;
+  for (const account of accounts.filter(isRefreshable)) {
+    try {
+      await streamAccount(env.rpcUrl, account);
+      streamed += 1;
+    } catch {
+      /* best effort; the oracles are what matter */
+    }
+  }
+  console.log(`  streaming ${streamed} accounts from mainnet`);
 
   // The running server reads this file per request, so a reset does not need
   // a dev server restart to take effect.

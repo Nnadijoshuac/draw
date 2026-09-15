@@ -90,6 +90,48 @@ export async function setTokenBalance(
   ]);
 }
 
+/**
+ * Keep a cloned account in sync with mainnet.
+ *
+ * This is what stops Kamino refusing to lend an hour into a session. A fork
+ * clones an oracle once, the local clock keeps moving, and the price ages past
+ * the protocol's max_age even though nothing is wrong. Streaming re-pulls it in
+ * the background so it stays current.
+ */
+export async function streamAccount(
+  rpcUrl: string,
+  account: Address,
+): Promise<void> {
+  await callCheat(rpcUrl, "surfnet_streamAccount", [account]);
+}
+
+/**
+ * Which accounts are safe to stream or re-pull.
+ *
+ * Sysvars are maintained by the runtime, not cloned from mainnet, and asking
+ * surfpool to overwrite one kills the process outright: "Failed to set account
+ * SysvarRent111...: Invalid Rent sysvar data". Programs never change either, so
+ * both are skipped. What is left is the reserves, oracles and mints, which are
+ * the accounts that actually go stale.
+ */
+export function isRefreshable(account: Address): boolean {
+  const value = account.toString();
+  if (value.startsWith("Sysvar")) return false;
+  if (value === "11111111111111111111111111111111") return false;
+  // Program ids in this set are recognisable by their vanity prefixes.
+  return !/^(Token|ATokenGPvb|KLend|Farms|ComputeBudget|AddressLookupTab1e)/.test(
+    value,
+  );
+}
+
+/** Re-pull an account from mainnet once. The immediate fix for a stale price. */
+export async function resetAccount(
+  rpcUrl: string,
+  account: Address,
+): Promise<void> {
+  await callCheat(rpcUrl, "surfnet_resetAccount", [account]);
+}
+
 /** Confirm we are actually talking to a surfnet before trying to cheat on it. */
 export async function assertSurfnet(rpcUrl: string): Promise<void> {
   try {

@@ -6,6 +6,7 @@
   "scripts": {
     "chain": "bash start-surfnet.sh",
     "reset": "tsx src/reset.ts",
+    "refresh": "tsx src/refresh.ts",
     "fund": "tsx src/fund.ts",
     "probe": "tsx src/probe.ts",
     "keygen": "tsx src/keygen.ts",
