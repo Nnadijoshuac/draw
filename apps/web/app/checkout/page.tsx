@@ -2,7 +2,13 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { formatMinor, formatPercent, formatTokenAmount, formatUsd, type Quote } from "@draw/shared";
+import {
+  formatMinor,
+  formatPercent,
+  formatTokenAmount,
+  formatUsd,
+  type Quote,
+} from "@draw/shared";
 import { useDrawWallet } from "@/lib/useDrawWallet";
 import { PinSheet } from "@/components/PinSheet";
 
@@ -10,14 +16,14 @@ import { PinSheet } from "@/components/PinSheet";
 // transaction deposits collateral, borrows against it and pays the merchant.
 //
 // Amount comes from the query string rather than a session lookup so the
-// checkout works with nothing but the embed — fewer moving parts between a
+// checkout works with nothing but the embed: fewer moving parts between a
 // click and a payment.
 
 type Phase = "loading" | "ready" | "pin" | "signing" | "paid" | "failed";
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<Shell><Centered>Loading…</Centered></Shell>}>
+    <Suspense fallback={<Shell><Centered>Loading</Centered></Shell>}>
       <Checkout />
     </Suspense>
   );
@@ -40,8 +46,8 @@ function Checkout() {
   // Who is being paid, so the user sees a shop name rather than an address.
   useEffect(() => {
     if (!merchantOrigin) return;
-
     let cancelled = false;
+
     void fetch(`/api/merchant?origin=${encodeURIComponent(merchantOrigin)}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((body) => {
@@ -142,7 +148,7 @@ function Checkout() {
       setSignature(submitted.signature);
       setPhase("paid");
 
-      // Tell the merchant page. Exact origin only — a wildcard would hand the
+      // Tell the merchant page. Exact origin only; a wildcard would hand the
       // result to any page listening.
       if (merchantOrigin && window.opener) {
         window.opener.postMessage(
@@ -159,7 +165,7 @@ function Checkout() {
       setError(e instanceof Error ? e.message : "Payment failed");
       setPhase("failed");
     }
-  }, [wallet, quote, amountMinor, reference, merchantOrigin, params]);
+  }, [wallet, quote, amountMinor, reference, merchantOrigin]);
 
   const cancel = useCallback(() => {
     if (merchantOrigin && window.opener) {
@@ -172,84 +178,90 @@ function Checkout() {
   }, [merchantOrigin, reference]);
 
   if (!amountMinor) {
-    return <Shell><Centered>No amount to pay.</Centered></Shell>;
+    return <Shell><Centered>There is no amount to pay.</Centered></Shell>;
   }
 
   if (!wallet.ready) {
-    return <Shell><Centered>Loading…</Centered></Shell>;
+    return <Shell><Centered>Loading</Centered></Shell>;
   }
 
   if (!wallet.authenticated) {
     return (
       <Shell>
-        <div className="flex flex-1 flex-col justify-center">
-          <p className="text-[13px] text-[var(--color-muted)]">
-            {merchantName ? `Paying ${merchantName}` : "Paying"}
-          </p>
-          <p className="amount mt-1">{formatMinor(amountMinor)}</p>
-          <p className="mt-6 text-[15px] text-[var(--color-muted)]">
-            Sign in to pay with the shares you already own.
+        <div className="rise flex flex-1 flex-col justify-center">
+          <Payee name={merchantName} />
+          <p className="amount amount-lg mt-2">{formatMinor(amountMinor)}</p>
+          <p className="mt-7 max-w-[30ch] text-[15px] leading-relaxed text-[var(--color-muted)]">
+            Sign in to pay with shares you already own. You keep every one.
           </p>
         </div>
-        <PrimaryButton onClick={wallet.login}>Continue</PrimaryButton>
+        <Primary onClick={wallet.login}>Continue</Primary>
       </Shell>
     );
   }
 
   if (phase === "paid" && quote) {
-    return <Receipt amountMinor={amountMinor} quote={quote} signature={signature} onDone={cancel} />;
+    return (
+      <Receipt
+        amountMinor={amountMinor}
+        merchantName={merchantName}
+        quote={quote}
+        signature={signature}
+        onDone={cancel}
+      />
+    );
   }
+
+  const pricing = phase === "loading";
 
   return (
     <Shell>
-      <div className="flex-1">
-        <p className="text-[13px] text-[var(--color-muted)]">Paying</p>
-        <p className="amount mt-1">{formatMinor(amountMinor)}</p>
+      <div className="rise flex-1">
+        <Payee name={merchantName} />
+        <p className="amount amount-lg mt-2">{formatMinor(amountMinor)}</p>
 
-        {phase === "loading" && (
-          <p className="mt-8 text-[15px] text-[var(--color-muted)]">
-            Checking what you can spend…
-          </p>
-        )}
+        <div className="mt-8">
+          {pricing ? (
+            <QuoteSkeleton />
+          ) : quote ? (
+            <div className="rounded-[var(--radius-card)] bg-[var(--color-surface)] p-4">
+              <Row
+                label="Funded by"
+                value={`${formatTokenAmount(quote.collateral.amountRequired)} ${quote.collateral.symbol}`}
+              />
+              <Row label="Interest" value={`${formatPercent(quote.borrow.aprPercent)} a year`} />
+              <Row label="Network fee" value="Free" />
 
-        {quote && phase !== "loading" && (
-          <div className="mt-8 rounded-[var(--radius-card)] bg-[var(--color-surface)] p-4">
-            <Row
-              label="Funded by"
-              value={`${formatTokenAmount(quote.collateral.amountRequired)} ${quote.collateral.symbol}`}
-            />
-            <Row label="Interest" value={`${formatPercent(quote.borrow.aprPercent)} APR`} />
-            <Row label="Network fee" value="Free" />
-
-            <p className="mt-4 border-t border-[var(--color-line)] pt-4 text-[13px] leading-relaxed text-[var(--color-muted)]">
-              You keep every share. Part of your position may be sold if{" "}
-              {quote.collateral.symbol} falls below{" "}
-              <span className="tabular text-[var(--color-ink)]">
-                {formatUsd(quote.after.liquidationPriceUsd)}
-              </span>
-              .
-            </p>
-          </div>
-        )}
+              <p className="mt-4 border-t border-[var(--color-line)] pt-4 text-[13px] leading-relaxed text-[var(--color-muted)]">
+                Your shares are held as security, not sold. Some may be sold only
+                if {quote.collateral.symbol} falls below{" "}
+                <span className="tabular font-medium text-[var(--color-ink)]">
+                  {formatUsd(quote.after.liquidationPriceUsd)}
+                </span>
+                .
+              </p>
+            </div>
+          ) : null}
+        </div>
 
         {error && (
-          <p className="mt-6 text-[14px] text-[var(--color-danger)]" role="alert">
+          <p
+            className="mt-6 rounded-[var(--radius-control)] bg-[rgb(217_45_32_/_0.06)] px-3.5 py-3 text-[14px] leading-relaxed text-[var(--color-danger)]"
+            role="alert"
+          >
             {error}
           </p>
         )}
       </div>
 
-      <PrimaryButton
-        onClick={() => setPhase("pin")}
-        disabled={phase !== "ready"}
-      >
-        {phase === "signing" ? "Paying…" : `Pay ${formatMinor(amountMinor)}`}
-      </PrimaryButton>
+      <Primary onClick={() => setPhase("pin")} disabled={phase !== "ready"}>
+        {pricing ? "Checking what you can spend" : `Pay ${formatMinor(amountMinor)}`}
+      </Primary>
 
       <button
         type="button"
         onClick={cancel}
-        className="mt-3 w-full py-2 text-[13px] text-[var(--color-muted)]"
+        className="mt-2 w-full rounded-[var(--radius-control)] py-2.5 text-[13px] text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
       >
         Cancel
       </button>
@@ -257,7 +269,7 @@ function Checkout() {
       <PinSheet
         open={phase === "pin" || phase === "signing"}
         title={`Confirm ${formatMinor(amountMinor)}`}
-        subtitle="Enter your PIN"
+        subtitle={merchantName ? `to ${merchantName}` : "Enter your PIN"}
         busy={phase === "signing"}
         error={null}
         onConfirm={pay}
@@ -269,53 +281,106 @@ function Checkout() {
 
 function Receipt({
   amountMinor,
+  merchantName,
   quote,
   signature,
   onDone,
 }: {
   amountMinor: number;
+  merchantName: string | null;
   quote: Quote;
   signature: string | null;
   onDone: () => void;
 }) {
   return (
     <Shell>
-      <div className="flex-1">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-positive)]/10">
-          <span className="text-[var(--color-positive)]">✓</span>
-        </div>
+      <div className="rise flex-1">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-positive-bg)]">
+          <Tick />
+        </span>
 
-        <p className="mt-5 text-[13px] text-[var(--color-muted)]">Paid</p>
-        <p className="amount mt-1">{formatMinor(amountMinor)}</p>
+        <p className="mt-6 text-[13px] text-[var(--color-muted)]">
+          {merchantName ? `Paid ${merchantName}` : "Paid"}
+        </p>
+        <p className="amount amount-lg mt-1">{formatMinor(amountMinor)}</p>
 
         {/* The whole product, in one line. */}
-        <p className="mt-6 text-[17px] font-medium leading-snug">
+        <p className="mt-7 max-w-[26ch] text-[19px] font-medium leading-snug tracking-[-0.01em]">
           You still own all{" "}
-          {formatTokenAmount(quote.collateral.amountRequired)}{" "}
+          <span className="tabular">
+            {formatTokenAmount(quote.collateral.amountRequired)}
+          </span>{" "}
           {quote.collateral.symbol} you put up.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-card)] bg-[var(--color-surface)] p-4">
+        <div className="mt-7 rounded-[var(--radius-card)] bg-[var(--color-surface)] p-4">
           <Row label="Borrowed" value={formatMinor(amountMinor)} />
-          <Row label="Against" value={quote.collateral.symbol} />
+          <Row label="Held as security" value={quote.collateral.symbol} />
           <Row label="Network fee" value="Free" />
         </div>
 
         {signature && (
-          <p className="mt-4 break-all font-mono text-[11px] text-[var(--color-muted)]">
-            {signature}
-          </p>
+          <div className="mt-5">
+            <p className="text-[12px] text-[var(--color-muted)]">Transaction</p>
+            <p className="mt-1 break-all font-mono text-[11px] leading-relaxed text-[var(--color-muted)]">
+              {signature}
+            </p>
+          </div>
         )}
       </div>
 
-      <PrimaryButton onClick={onDone}>Done</PrimaryButton>
+      <Primary onClick={onDone}>Done</Primary>
     </Shell>
+  );
+}
+
+function Payee({ name }: { name: string | null }) {
+  return (
+    <p className="text-[13px] text-[var(--color-muted)]">
+      {name ? `Paying ${name}` : "Paying"}
+    </p>
+  );
+}
+
+function QuoteSkeleton() {
+  return (
+    <div
+      className="rounded-[var(--radius-card)] bg-[var(--color-surface)] p-4"
+      aria-hidden
+    >
+      {[68, 54, 46].map((width, i) => (
+        <div key={i} className="flex items-center justify-between py-2">
+          <span
+            className="h-3 rounded-full bg-[var(--color-line)]"
+            style={{ width: `${width}px` }}
+          />
+          <span
+            className="h-3 rounded-full bg-[var(--color-line)]"
+            style={{ width: `${width + 24}px` }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Tick() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
+      <path
+        d="M4 9.5 7.2 12.6 14 5.8"
+        stroke="var(--color-positive)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6 py-8">
+    <main className="mx-auto flex min-h-screen w-full max-w-[420px] flex-col px-6 pb-7 pt-9">
       {children}
     </main>
   );
@@ -333,12 +398,12 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between py-1.5">
       <span className="text-[13px] text-[var(--color-muted)]">{label}</span>
-      <span className="tabular text-[14px]">{value}</span>
+      <span className="tabular text-[14px] font-medium">{value}</span>
     </div>
   );
 }
 
-function PrimaryButton({
+function Primary({
   children,
   onClick,
   disabled,
@@ -352,10 +417,9 @@ function PrimaryButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full rounded-[var(--radius-control)] bg-[var(--color-accent)] py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-[var(--color-accent-ink)] disabled:opacity-40"
+      className="w-full rounded-[var(--radius-control)] bg-[var(--color-accent)] py-3.5 text-[15px] font-medium text-white transition-colors duration-150 hover:bg-[var(--color-accent-ink)] disabled:cursor-not-allowed disabled:bg-[var(--color-line)] disabled:text-[var(--color-muted)]"
     >
       {children}
     </button>
   );
 }
-
