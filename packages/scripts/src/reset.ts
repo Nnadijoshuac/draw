@@ -6,15 +6,11 @@ import {
   createKeyPairSignerFromBytes,
   getBase58Encoder,
 } from "@solana/kit";
-import { createChainClient, getTokenProgram } from "@draw/core";
+import { createChainClient, getTokenProgram, loadMarket } from "@draw/core";
 import { env } from "./env";
 import { createDrawLookupTable } from "./lut";
-import {
-  isRefreshable,
-  setLamports,
-  setTokenBalance,
-  streamAccount,
-} from "./surfnet";
+import { oracleAccountsFor } from "./oracles";
+import { setLamports, setTokenBalance, streamAccount } from "./surfnet";
 
 /**
  * Put the fork back into a state where a payment works.
@@ -146,19 +142,20 @@ async function main(): Promise<void> {
   });
   writeEnvValue("DRAW_LOOKUP_TABLE", table);
 
-  // Keep the reserves and their oracles synced with mainnet. Without this the
-  // prices age past Kamino's max_age after about half an hour and every borrow
-  // is refused, which during a demo looks like a broken product.
+  // Oracles only. Streaming a reserve or a vault would overwrite it with
+  // mainnet state and erase every deposit made on this fork.
+  const { market } = await loadMarket(rpc, { refresh: true });
+  const oracles = oracleAccountsFor(market);
   let streamed = 0;
-  for (const account of accounts.filter(isRefreshable)) {
+  for (const oracle of oracles) {
     try {
-      await streamAccount(env.rpcUrl, account);
+      await streamAccount(env.rpcUrl, oracle);
       streamed += 1;
     } catch {
-      /* best effort; the oracles are what matter */
+      /* best effort */
     }
   }
-  console.log(`  streaming ${streamed} accounts from mainnet`);
+  console.log(`  streaming ${streamed} price accounts`);
 
   // The running server reads this file per request, so a reset does not need
   // a dev server restart to take effect.

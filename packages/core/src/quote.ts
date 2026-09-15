@@ -2,7 +2,7 @@ import type { Address } from "@solana/kit";
 import Decimal from "decimal.js";
 import type { Portfolio, Quote, RiskBand } from "@draw/shared";
 import type { SolanaRpc } from "./connection";
-import { loadMarket, summariseReserve } from "./kamino";
+import { getObligationSummary, loadMarket, summariseReserve } from "./kamino";
 import { baseUnitsForUsd, getAssetPrice, valueInUsd } from "./prices";
 import {
   DEFAULT_POLICY,
@@ -39,6 +39,7 @@ export interface PortfolioParams {
   rpc: SolanaRpc;
   owner: Address;
   collateralMint: Address;
+  debtMint: Address;
   policy?: RiskPolicy;
 }
 
@@ -50,17 +51,19 @@ export interface PortfolioParams {
  * maximum would be showing them a number we will refuse to honour.
  */
 export async function getPortfolio(params: PortfolioParams): Promise<Portfolio> {
-  const { rpc, owner, collateralMint, policy = DEFAULT_POLICY } = params;
+  const { rpc, owner, collateralMint, debtMint, policy = DEFAULT_POLICY } = params;
 
   const { market } = await loadMarket(rpc, { refresh: true });
   const price = getAssetPrice(market, collateralMint);
   const balance = await getTokenBalance(rpc, collateralMint, owner);
 
-  const valueUsd = valueInUsd(balance, price);
+  const walletValueUsd = valueInUsd(balance, price);
 
-  // Existing debt is not yet read from the obligation — a user who has never
-  // drawn has none, which covers every path through the current product.
-  const debtUsd = new Decimal(0);
+  // Collateral already posted still belongs to the user, so it counts toward
+  // what they hold. Debt is what is actually outstanding on chain.
+  const obligation = await getObligationSummary(rpc, owner, debtMint);
+  const valueUsd = walletValueUsd.add(obligation.depositedUsd);
+  const debtUsd = obligation.borrowedUsd;
 
   const available = availableToSpendUsd(valueUsd, debtUsd, policy);
   const reserve = await summariseReserve(rpc, market, collateralMint);

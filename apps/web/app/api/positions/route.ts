@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
       rpc: chain().rpc,
       owner: address(owner),
       collateralMint: publicEnv.collateralMint,
+      debtMint: publicEnv.debtMint,
     });
 
     return NextResponse.json(portfolio);

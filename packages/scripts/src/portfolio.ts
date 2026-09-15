@@ -28,6 +28,7 @@ async function main(): Promise<void> {
     rpc,
     owner,
     collateralMint: env.collateralMint,
+    debtMint: env.debtMint,
   });
 
   console.log("\nPortfolio");
