@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { HoldingsField } from "@/components/HoldingsField";
+import { TransactionDiagram } from "@/components/TransactionDiagram";
 
 // The live site. Everything here is true: the numbers come from the forked
 // mainnet runs, and the transaction signature is real.
@@ -67,7 +69,10 @@ function Nav() {
 
 function Hero() {
   return (
-    <Section>
+    <section className="relative overflow-hidden">
+      <HoldingsField />
+
+      <div className="relative mx-auto max-w-5xl px-6 py-24 md:py-32">
       <Label>Spend against what you own</Label>
 
       <h1 className="mt-6 max-w-[16ch] text-[clamp(2.75rem,7vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.035em]">
@@ -93,12 +98,13 @@ function Hero() {
         </Link>
         <a
           href={REPO}
-          className="rounded-[var(--radius-control)] border border-[var(--color-line)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-ink)]"
+          className="rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-paper)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-ink)]"
         >
           Read the source
         </a>
       </div>
-    </Section>
+      </div>
+    </section>
   );
 }
 
@@ -191,6 +197,8 @@ function Mechanism() {
           </div>
         ))}
       </div>
+
+      <TransactionDiagram />
     </Section>
   );
 }
