@@ -8,14 +8,24 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // something being drawn rather than a smear. Only the closing section gets it:
 // one flourish, in the place where there is nothing left to read.
 
-const CELL = 22;
+const CELL = 10;
 const LIFETIME = 3000;
 /** Oldest are dropped past this, so a fast scribble cannot flood the DOM. */
-const MAX_PIXELS = 140;
+const MAX_PIXELS = 260;
 
 type Pixel = { id: number; x: number; y: number };
 
-export function PixelTrail({ children }: { children: React.ReactNode }) {
+export function PixelTrail({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  /**
+   * Any background belongs here, on the wrapper. Put it on a child and that
+   * child paints over the pixels, which look like they never drew at all.
+   */
+  className?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const nextId = useRef(0);
   const lastCell = useRef("");
@@ -73,7 +83,7 @@ export function PixelTrail({ children }: { children: React.ReactNode }) {
       onPointerLeave={() => {
         lastCell.current = "";
       }}
-      className="relative"
+      className={`relative overflow-hidden ${className}`}
     >
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         {pixels.map((pixel) => (

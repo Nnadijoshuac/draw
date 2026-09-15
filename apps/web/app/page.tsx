@@ -274,8 +274,8 @@ function Proof() {
 
 function Outro() {
   return (
-    <PixelTrail>
-      <section className="border-t border-[var(--color-line)] bg-[var(--color-surface)]">
+    <PixelTrail className="border-t border-[var(--color-line)] bg-[var(--color-surface)]">
+      <section>
       <div className="mx-auto max-w-5xl px-6 py-28 text-center">
         <h2 className="mx-auto max-w-[18ch] text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
           Get the value.

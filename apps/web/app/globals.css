@@ -104,10 +104,10 @@ input[inputmode="decimal"] {
  */
 @keyframes pixel-fade {
   0% {
-    opacity: 0.22;
+    opacity: 0.85;
   }
-  22% {
-    opacity: 0.16;
+  20% {
+    opacity: 0.55;
   }
   100% {
     opacity: 0;
