@@ -276,8 +276,10 @@ function Outro() {
     <section className="border-t border-[var(--color-line)] bg-[var(--color-surface)]">
       <div className="mx-auto max-w-5xl px-6 py-24 text-center">
         <h2 className="mx-auto max-w-[18ch] text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
-          Stop selling what you
-          <span className="italic font-normal"> wanted to keep</span>
+          Take the money.
+          <span className="block font-normal italic text-[var(--color-muted)]">
+            Don&apos;t give up the gains.
+          </span>
         </h2>
 
         <div className="mt-9 flex justify-center">
