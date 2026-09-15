@@ -47,6 +47,12 @@ export const SURFNET_RPC_URL = "http://127.0.0.1:8899";
 export const DEFAULT_COMPUTE_UNIT_LIMIT = 600_000;
 export const DEFAULT_COMPUTE_UNIT_PRICE = 1_000;
 
+/**
+ * A plain token transfer is nothing like a draw. Requesting the draw's budget
+ * for one would have the user's fee payer reserving compute it cannot use.
+ */
+export const TRANSFER_COMPUTE_UNIT_LIMIT = 60_000;
+
 /** A transaction must serialize below this to be accepted by the network. */
 export const MAX_TRANSACTION_BYTES = 1232;
 

@@ -4,10 +4,17 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatTokenAmount, formatUsd, type Portfolio } from "@draw/shared";
 import { useDrawWallet } from "@/lib/useDrawWallet";
+import {
+  AddressField,
+  EMPTY_RECIPIENT,
+  type RecipientState,
+} from "@/components/AddressField";
 
-// What you hold, and what you can spend against it. The headline figure is
-// what Draw will actually lend, well under what the protocol would allow,
-// because showing a number we would refuse to honour is worse than useless.
+// What you own, what you hold, what you owe, and what it costs to get out.
+//
+// Four separate figures, never netted into one. Holdings minus debt reads as a
+// loss to someone whose shares are still entirely theirs, and "you didn't lose
+// your shares" is the only thing this product actually promises.
 export default function PortfolioPage() {
   const wallet = useDrawWallet();
   const router = useRouter();
@@ -16,7 +23,12 @@ export default function PortfolioPage() {
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [copied, setCopied] = useState(false);
+
   const [amount, setAmount] = useState("");
+  const [elsewhere, setElsewhere] = useState(false);
+  const [to, setTo] = useState("");
+  const [recipient, setRecipient] = useState<RecipientState>(EMPTY_RECIPIENT);
+
   const [repaying, setRepaying] = useState(false);
   const [repayError, setRepayError] = useState<string | null>(null);
 
@@ -87,9 +99,25 @@ export default function PortfolioPage() {
   }, [wallet.address]);
 
   const available = Number(portfolio?.availableToSpendUsd ?? 0);
+  const cash = Number(portfolio?.cashUsd ?? 0);
+  const owed = Number(portfolio?.costToCloseUsd ?? 0);
+  const shortfall = Number(portfolio?.repayShortfallUsd ?? 0);
+
   const requested = Number(amount || 0);
   const tooMuch = requested > available;
-  const canPay = requested > 0 && !tooMuch;
+  const destinationReady = !elsewhere || recipient.address !== null;
+  const canDraw = requested > 0 && !tooMuch && destinationReady;
+
+  const startDraw = useCallback(() => {
+    const minor = Math.round(requested * 100);
+    const target = elsewhere && recipient.address ? recipient.address : null;
+
+    router.push(
+      target
+        ? `/checkout?amount=${minor}&to=${encodeURIComponent(target)}`
+        : `/checkout?amount=${minor}`,
+    );
+  }, [requested, elsewhere, recipient.address, router]);
 
   if (!wallet.ready) {
     return (
@@ -132,7 +160,7 @@ export default function PortfolioPage() {
 
       <section className="rise mt-9">
         <div className="flex items-baseline justify-between">
-          <p className="text-[13px] text-[var(--color-muted)]">Available to spend</p>
+          <p className="text-[13px] text-[var(--color-muted)]">Available to draw</p>
           <button
             type="button"
             onClick={() => void load()}
@@ -168,10 +196,10 @@ export default function PortfolioPage() {
         </p>
       )}
 
-      {/* Spend */}
+      {/* Draw */}
       <section className="mt-8 rounded-[var(--radius-card)] border border-[var(--color-line)] p-4">
         <label htmlFor="amount" className="text-[13px] text-[var(--color-muted)]">
-          Pay an amount
+          Draw an amount
         </label>
 
         <div className="mt-2.5 flex items-center gap-1.5">
@@ -202,24 +230,44 @@ export default function PortfolioPage() {
 
         {tooMuch && (
           <p className="mt-3.5 text-[13px] text-[var(--color-danger)]">
-            You can spend up to {formatUsd(String(available))} right now.
+            You can draw up to {formatUsd(String(available))} right now.
           </p>
         )}
 
-        <Primary
-          className="mt-4"
-          disabled={!canPay}
-          onClick={() =>
-            router.push(`/checkout?amount=${Math.round(requested * 100)}`)
-          }
-        >
+        {/* Where it goes. Defaults to the user's own wallet, because that is
+            the answer most of the time and typing an address you already own
+            is a strange thing to ask of someone. */}
+        <div className="mt-5 border-t border-[var(--color-line)] pt-4">
+          <div className="flex gap-2">
+            <Choice active={!elsewhere} onClick={() => setElsewhere(false)}>
+              To my wallet
+            </Choice>
+            <Choice active={elsewhere} onClick={() => setElsewhere(true)}>
+              To another wallet
+            </Choice>
+          </div>
+
+          {elsewhere && (
+            <div className="mt-4">
+              <AddressField
+                label="Solana wallet address"
+                value={to}
+                owner={wallet.address}
+                onChange={setTo}
+                onResolved={setRecipient}
+              />
+            </div>
+          )}
+        </div>
+
+        <Primary className="mt-4" disabled={!canDraw} onClick={startDraw}>
           Continue
         </Primary>
       </section>
 
-      {/* Holdings */}
+      {/* Balances */}
       <section className="mt-10">
-        <p className="text-[13px] text-[var(--color-muted)]">Your shares</p>
+        <p className="text-[13px] text-[var(--color-muted)]">Your balances</p>
 
         <div className="mt-3 divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
           {portfolio?.positions.length ? (
@@ -249,22 +297,59 @@ export default function PortfolioPage() {
                   : "Setting up your account"}
             </p>
           )}
+
+          {/* Cash on hand. Only worth a line once it can actually sit here —
+              before drawing to your own wallet it never did. */}
+          {portfolio && (
+            <div className="flex items-baseline justify-between py-4">
+              <div>
+                <p className="text-[15px] font-medium">Cash</p>
+                <p className="mt-0.5 text-[13px] text-[var(--color-muted)]">
+                  Ready to spend or send
+                </p>
+              </div>
+              <div className="flex items-baseline gap-3">
+                <p className="tabular text-[15px] font-medium">
+                  {formatUsd(portfolio.cashUsd)}
+                </p>
+                {cash > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => router.push("/send")}
+                    className="rounded px-1 text-[13px] font-medium text-[var(--color-accent)]"
+                  >
+                    Send
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {portfolio && Number(portfolio.debtUsd) > 0 && (
+        {portfolio && owed > 0 && (
           <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--color-surface)] p-4">
             <div className="flex items-baseline justify-between">
-              <span className="text-[13px] text-[var(--color-muted)]">
-                You owe
-              </span>
+              <span className="text-[13px] text-[var(--color-muted)]">You owe</span>
               <span className="tabular text-[15px] font-medium">
-                {formatUsd(portfolio.debtUsd)}
+                {formatUsd(portfolio.costToCloseUsd)}
               </span>
             </div>
 
             <p className="mt-2 text-[13px] leading-relaxed text-[var(--color-muted)]">
               Clear this and the shares held as security are released.
             </p>
+
+            {/* The state that would otherwise look broken: money drawn and sent
+                somewhere else, so there is a debt and nothing to clear it with. */}
+            {shortfall > 0 && (
+              <p className="mt-3 rounded-[var(--radius-control)] bg-[var(--color-paper)] px-3.5 py-3 text-[13px] leading-relaxed text-[var(--color-muted)]">
+                You&apos;re holding {formatUsd(portfolio.cashUsd)}. Add{" "}
+                <span className="tabular font-medium text-[var(--color-ink)]">
+                  {formatUsd(portfolio.repayShortfallUsd)}
+                </span>{" "}
+                more to your wallet to clear it in full.
+              </p>
+            )}
 
             {repayError && (
               <p className="mt-3 text-[13px] text-[var(--color-danger)]" role="alert">
@@ -275,30 +360,44 @@ export default function PortfolioPage() {
             <button
               type="button"
               onClick={() => void repay()}
-              disabled={repaying}
-              className="mt-3.5 w-full rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-paper)] py-3 text-[14px] font-medium transition-colors hover:border-[var(--color-ink)] disabled:cursor-not-allowed disabled:text-[var(--color-muted)]"
+              disabled={repaying || shortfall > 0}
+              className="mt-3.5 w-full rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-paper)] py-3 text-[14px] font-medium transition-colors hover:border-[var(--color-ink)] disabled:cursor-not-allowed disabled:text-[var(--color-muted)] disabled:hover:border-[var(--color-line)]"
             >
-              {repaying ? "Repaying" : `Repay ${formatUsd(portfolio.debtUsd)}`}
+              {repaying
+                ? "Repaying"
+                : `Repay ${formatUsd(portfolio.costToCloseUsd)}`}
             </button>
           </div>
         )}
       </section>
 
-      <footer className="mt-12 border-t border-[var(--color-line)] pt-5">
-        <p className="max-w-[40ch] text-[13px] leading-relaxed text-[var(--color-muted)]">
-          Paying with Draw borrows against these shares and holds them as
-          security. You keep them.
-        </p>
-
-        {wallet.address && (
+      {/* Receive */}
+      {wallet.address && (
+        <section className="mt-10">
+          <p className="text-[13px] text-[var(--color-muted)]">
+            Your wallet address
+          </p>
+          <p className="mt-2 break-all font-mono text-[12px] leading-relaxed text-[var(--color-muted)]">
+            {wallet.address}
+          </p>
           <button
             type="button"
             onClick={copyAddress}
-            className="mt-3 block max-w-full truncate rounded text-left font-mono text-[11px] text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+            className="mt-2.5 rounded-[var(--radius-control)] border border-[var(--color-line)] px-3.5 py-2 text-[13px] font-medium transition-colors hover:border-[var(--color-ink)]"
           >
-            {copied ? "Copied to clipboard" : wallet.address}
+            {copied ? "Copied" : "Copy address"}
           </button>
-        )}
+          <p className="mt-3 max-w-[40ch] text-[13px] leading-relaxed text-[var(--color-muted)]">
+            Send USDC here from any Solana wallet. Only Solana.
+          </p>
+        </section>
+      )}
+
+      <footer className="mt-12 border-t border-[var(--color-line)] pt-5">
+        <p className="max-w-[40ch] text-[13px] leading-relaxed text-[var(--color-muted)]">
+          Drawing borrows against these shares and holds them as security. You
+          keep them.
+        </p>
       </footer>
     </Page>
   );
@@ -307,6 +406,31 @@ export default function PortfolioPage() {
 function Page({ children }: { children: React.ReactNode }) {
   return (
     <main className="mx-auto w-full max-w-[440px] px-6 pb-16 pt-10">{children}</main>
+  );
+}
+
+function Choice({
+  children,
+  active,
+  onClick,
+}: {
+  children: React.ReactNode;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`flex-1 rounded-[var(--radius-control)] border py-2.5 text-[13px] font-medium transition-colors ${
+        active
+          ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-white"
+          : "border-[var(--color-line)] text-[var(--color-muted)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 

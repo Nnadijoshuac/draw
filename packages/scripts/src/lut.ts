@@ -91,7 +91,7 @@ export async function createDrawLookupTable(params: {
     rpc,
     userA: userA.address,
     userB: userB.address,
-    merchant: authority.address,
+    destination: authority.address,
     collateralMint,
     collateralAmount: 100_000_000n,
     debtMint,

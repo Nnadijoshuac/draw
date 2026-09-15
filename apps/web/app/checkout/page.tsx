@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   formatMinor,
   formatPercent,
@@ -11,9 +11,15 @@ import {
 } from "@draw/shared";
 import { useDrawWallet } from "@/lib/useDrawWallet";
 import { PinSheet } from "@/components/PinSheet";
+import { shortAddress } from "@/components/AddressField";
 
-// The product. A merchant opens this in a popup, the user confirms, and one
-// transaction deposits collateral, borrows against it and pays the merchant.
+// The product. One transaction deposits collateral, borrows against it, and
+// sends the money where it is going.
+//
+// Three destinations, one screen. `origin` means a merchant opened this in a
+// popup and the payee is resolved server side from that origin. `to` means the
+// user started the draw themselves and named a wallet. Neither means they are
+// keeping it.
 //
 // Amount comes from the query string rather than a session lookup so the
 // checkout works with nothing but the embed: fewer moving parts between a
@@ -31,11 +37,15 @@ export default function CheckoutPage() {
 
 function Checkout() {
   const params = useSearchParams();
+  const router = useRouter();
   const wallet = useDrawWallet();
 
   const amountMinor = Number(params.get("amount") ?? 0);
   const merchantOrigin = params.get("origin");
   const reference = params.get("reference") ?? undefined;
+  // Only honoured when there is no merchant origin. The server enforces that;
+  // this is just what we show.
+  const to = merchantOrigin ? null : params.get("to");
 
   const [phase, setPhase] = useState<Phase>("loading");
   const [quote, setQuote] = useState<Quote | null>(null);
@@ -120,9 +130,9 @@ function Checkout() {
           owner: wallet.address,
           amountMinor,
           origin: merchantOrigin ?? undefined,
-          // Opened directly rather than from a shop: pay yourself so the flow
-          // can still be exercised in development.
-          selfPay: !merchantOrigin,
+          // Ignored when an origin is present. Omitted entirely, the money
+          // stays with the user.
+          to: to ?? undefined,
         }),
       });
       const built = await buildRes.json();
@@ -165,7 +175,19 @@ function Checkout() {
       setError(e instanceof Error ? e.message : "Payment failed");
       setPhase("failed");
     }
-  }, [wallet, quote, amountMinor, reference, merchantOrigin]);
+  }, [wallet, quote, amountMinor, reference, merchantOrigin, to]);
+
+  // A merchant checkout is a popup and closing it is the whole exit. A draw the
+  // user started themselves is an ordinary page, and window.close() does
+  // nothing to a tab the script did not open — so it goes back to where it
+  // came from instead.
+  const close = useCallback(() => {
+    if (merchantOrigin && window.opener) {
+      window.close();
+      return;
+    }
+    router.push("/portfolio");
+  }, [merchantOrigin, router]);
 
   const cancel = useCallback(() => {
     if (merchantOrigin && window.opener) {
@@ -174,8 +196,8 @@ function Checkout() {
         merchantOrigin,
       );
     }
-    window.close();
-  }, [merchantOrigin, reference]);
+    close();
+  }, [merchantOrigin, reference, close]);
 
   if (!amountMinor) {
     return <Shell><Centered>There is no amount to pay.</Centered></Shell>;
@@ -189,7 +211,7 @@ function Checkout() {
     return (
       <Shell>
         <div className="rise flex flex-1 flex-col justify-center">
-          <Payee name={merchantName} />
+          <Destination name={merchantName} to={to} />
           <p className="amount amount-lg mt-2">{formatMinor(amountMinor)}</p>
           <p className="mt-7 max-w-[30ch] text-[15px] leading-relaxed text-[var(--color-muted)]">
             Sign in to pay with shares you already own. You keep every one.
@@ -205,9 +227,10 @@ function Checkout() {
       <Receipt
         amountMinor={amountMinor}
         merchantName={merchantName}
+        to={to}
         quote={quote}
         signature={signature}
-        onDone={cancel}
+        onDone={close}
       />
     );
   }
@@ -217,8 +240,19 @@ function Checkout() {
   return (
     <Shell>
       <div className="rise flex-1">
-        <Payee name={merchantName} />
+        <Destination name={merchantName} to={to} />
         <p className="amount amount-lg mt-2">{formatMinor(amountMinor)}</p>
+
+        {/* The address in full, before the PIN. A transfer is final and a
+            shortened address hides exactly the characters a typo changes. */}
+        {to && (
+          <div className="mt-7 rounded-[var(--radius-card)] border border-[var(--color-line)] p-4">
+            <p className="text-[13px] text-[var(--color-muted)]">Going to</p>
+            <p className="mt-1.5 break-all font-mono text-[13px] leading-relaxed">
+              {to}
+            </p>
+          </div>
+        )}
 
         <div className="mt-8">
           {pricing ? (
@@ -255,7 +289,9 @@ function Checkout() {
       </div>
 
       <Primary onClick={() => setPhase("pin")} disabled={phase !== "ready"}>
-        {pricing ? "Checking what you can spend" : `Pay ${formatMinor(amountMinor)}`}
+        {pricing
+          ? "Checking what you can spend"
+          : `${merchantName ? "Pay" : "Draw"} ${formatMinor(amountMinor)}`}
       </Primary>
 
       <button
@@ -269,7 +305,15 @@ function Checkout() {
       <PinSheet
         open={phase === "pin" || phase === "signing"}
         title={`Confirm ${formatMinor(amountMinor)}`}
-        subtitle={merchantName ? `to ${merchantName}` : "Enter your PIN"}
+        // The destination is the thing worth checking twice, so it goes here
+        // rather than a generic instruction to enter a PIN.
+        subtitle={
+          merchantName
+            ? `to ${merchantName}`
+            : to
+              ? `to ${shortAddress(to)}`
+              : "to your wallet"
+        }
         busy={phase === "signing"}
         error={null}
         onConfirm={pay}
@@ -282,16 +326,23 @@ function Checkout() {
 function Receipt({
   amountMinor,
   merchantName,
+  to,
   quote,
   signature,
   onDone,
 }: {
   amountMinor: number;
   merchantName: string | null;
+  to: string | null;
   quote: Quote;
   signature: string | null;
   onDone: () => void;
 }) {
+  const headline = merchantName
+    ? `Paid ${merchantName}`
+    : to
+      ? `Sent to ${shortAddress(to)}`
+      : "Drawn to your wallet";
   return (
     <Shell>
       <div className="rise flex-1">
@@ -299,9 +350,7 @@ function Receipt({
           <Tick />
         </span>
 
-        <p className="mt-6 text-[13px] text-[var(--color-muted)]">
-          {merchantName ? `Paid ${merchantName}` : "Paid"}
-        </p>
+        <p className="mt-6 text-[13px] text-[var(--color-muted)]">{headline}</p>
         <p className="amount amount-lg mt-1">{formatMinor(amountMinor)}</p>
 
         {/* The whole product, in one line. */}
@@ -317,6 +366,10 @@ function Receipt({
           <Row label="Borrowed" value={formatMinor(amountMinor)} />
           <Row label="Held as security" value={quote.collateral.symbol} />
           <Row label="Network fee" value="Free" />
+          <p className="mt-3.5 border-t border-[var(--color-line)] pt-3.5 text-[13px] leading-relaxed text-[var(--color-muted)]">
+            You owe {formatMinor(amountMinor)}. Repay it and the{" "}
+            {quote.collateral.symbol} comes back to you.
+          </p>
         </div>
 
         {signature && (
@@ -334,12 +387,21 @@ function Receipt({
   );
 }
 
-function Payee({ name }: { name: string | null }) {
-  return (
-    <p className="text-[13px] text-[var(--color-muted)]">
-      {name ? `Paying ${name}` : "Paying"}
-    </p>
-  );
+/**
+ * Where the money is going, in the user's words.
+ *
+ * A merchant gets a name because the user recognises it. A wallet gets a
+ * shortened address because there is nothing else honest to call it, and the
+ * full address is shown again on the confirmation before they sign.
+ */
+function Destination({ name, to }: { name: string | null; to: string | null }) {
+  const label = name
+    ? `Paying ${name}`
+    : to
+      ? `Drawing to ${shortAddress(to)}`
+      : "Drawing to your wallet";
+
+  return <p className="text-[13px] text-[var(--color-muted)]">{label}</p>;
 }
 
 function QuoteSkeleton() {

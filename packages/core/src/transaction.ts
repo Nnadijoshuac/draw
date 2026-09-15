@@ -22,6 +22,7 @@ import { fetchAllAddressLookupTable } from "@solana-program/address-lookup-table
 import {
   DEFAULT_COMPUTE_UNIT_LIMIT,
   DEFAULT_COMPUTE_UNIT_PRICE,
+  TRANSFER_COMPUTE_UNIT_LIMIT,
   MAX_TRANSACTION_BYTES,
   TRANSACTION_SIZE_WARNING_BYTES,
   SETUP_RENT_LAMPORTS,
@@ -37,20 +38,27 @@ import { createAtaInstruction, getAta, getMintInfo } from "./tokens";
 
 /**
  * Assembles the whole draw into a single transaction: take the collateral,
- * borrow against it, and pay the merchant.
+ * borrow against it, and send the money where it is going.
  *
  * Doing all three in one transaction is the product, not an optimisation. It
  * is what lets the user see a payment instead of a loan application followed
  * by a transfer, and it means there is no state where the borrow succeeded but
  * the payment did not.
+ *
+ * The destination is a merchant, another wallet, or the user's own. Only the
+ * last of those changes the shape of the transaction, and only by removing an
+ * instruction: the borrow already lands in the user's own account.
  */
 
 export interface BuildDrawTransactionParams {
   rpc: SolanaRpc;
   /** Wallet spending. Signs in the browser; never signs here. */
   user: Address;
-  /** Who gets paid. */
-  merchant: Address;
+  /**
+   * Where the borrowed stablecoin goes. Pass the user's own address to leave
+   * it with them.
+   */
+  destination: Address;
   collateralMint: Address;
   /** Collateral to lock, in base units. */
   collateralAmount: bigint;
@@ -103,7 +111,7 @@ export class TransactionTooLargeError extends Error {
   ) {
     super(
       `Draw transaction is ${sizeBytes} bytes, over the ${MAX_TRANSACTION_BYTES} byte limit. ` +
-        `Supply more lookup tables, pre-create the merchant token account, or split the draw into two transactions.`,
+        `Supply more lookup tables, pre-create the destination token account, or split the draw into two transactions.`,
     );
     this.name = "TransactionTooLargeError";
   }
@@ -115,13 +123,18 @@ export async function buildDrawTransaction(
   const {
     rpc,
     user,
-    merchant,
+    destination,
     collateralMint,
     collateralAmount,
     debtMint,
     borrowAmount,
     feePayer,
   } = params;
+
+  // Drawing to yourself is the same transaction minus its last instruction.
+  // Kamino borrows into the user's own token account, so forwarding it to
+  // themselves would be two account lookups and a no-op transfer.
+  const keepingIt = destination === user;
 
   const instructions: Instruction[] = [];
   const labels: string[] = [];
@@ -146,21 +159,26 @@ export async function buildDrawTransaction(
     "computeUnitPrice",
   );
 
-  // Only create the merchant's token account when it is actually missing.
+  // Only create the destination's token account when it is actually missing.
   // Including it unconditionally is simpler but costs accounts we cannot
   // spare, and the bundle is already close to the size limit.
-  const merchantAta = await getAta(rpc, debtMint, merchant);
-  const merchantAtaExists = await fetchEncodedAccount(rpc, merchantAta.address);
+  //
+  // Kamino creates the user's own account as part of the borrow, so this is
+  // skipped entirely when they are keeping the money.
+  const destinationAta = keepingIt ? null : await getAta(rpc, debtMint, destination);
 
-  if (!merchantAtaExists.exists) {
-    push(
-      await createAtaInstruction(rpc, {
-        mint: debtMint,
-        owner: merchant,
-        payer: feePayer,
-      }),
-      "createMerchantTokenAccount",
-    );
+  if (destinationAta) {
+    const exists = await fetchEncodedAccount(rpc, destinationAta.address);
+    if (!exists.exists) {
+      push(
+        await createAtaInstruction(rpc, {
+          mint: debtMint,
+          owner: destination,
+          payer: feePayer,
+        }),
+        "createDestinationTokenAccount",
+      );
+    }
   }
 
   // Deposit the collateral and borrow against it. Kamino exposes this as one
@@ -203,26 +221,28 @@ export async function buildDrawTransaction(
     push(instruction, lending.draw.labels[index] ?? `kamino[${index}]`);
   });
 
-  // Forward the borrowed stablecoin to the merchant.
-  const [source, mintInfo] = await Promise.all([
-    getAta(rpc, debtMint, user),
-    getMintInfo(rpc, debtMint),
-  ]);
+  // Forward the borrowed stablecoin, unless it is already where it belongs.
+  if (destinationAta) {
+    const [source, mintInfo] = await Promise.all([
+      getAta(rpc, debtMint, user),
+      getMintInfo(rpc, debtMint),
+    ]);
 
-  push(
-    getTransferCheckedInstruction(
-      {
-        source: source.address,
-        mint: debtMint,
-        destination: merchantAta.address,
-        authority: createNoopSigner(user),
-        amount: borrowAmount,
-        decimals: mintInfo.decimals,
-      },
-      { programAddress: source.tokenProgram },
-    ),
-    "payMerchant",
-  );
+    push(
+      getTransferCheckedInstruction(
+        {
+          source: source.address,
+          mint: debtMint,
+          destination: destinationAta.address,
+          authority: createNoopSigner(user),
+          amount: borrowAmount,
+          decimals: mintInfo.decimals,
+        },
+        { programAddress: source.tokenProgram },
+      ),
+      "payDestination",
+    );
+  }
 
   // Fall back to the user's own Kamino lookup table. The draw does not fit
   // without one, and callers should not have to know that.
@@ -343,6 +363,99 @@ export async function buildRepayTransaction(params: {
 }
 
 /**
+ * Move stablecoin the user already holds.
+ *
+ * No collateral, no borrowing, no risk policy — none of it applies to money
+ * that is already theirs. It exists because a balance you cannot move is not a
+ * balance, and after drawing to their own wallet that is exactly what the user
+ * would be left with.
+ *
+ * The fee payer still covers fees and any account rent, so sending stays
+ * possible for a wallet holding no SOL.
+ */
+export async function buildSendTransaction(params: {
+  rpc: SolanaRpc;
+  /** Wallet sending. Signs in the browser. */
+  from: Address;
+  to: Address;
+  mint: Address;
+  /** Base units to send. */
+  amount: bigint;
+  feePayer: Address;
+}): Promise<BuiltTransaction> {
+  const { rpc, from, to, mint, amount, feePayer } = params;
+
+  if (from === to) {
+    throw new Error("Sending to yourself would do nothing");
+  }
+
+  const instructions: Instruction[] = [
+    getSetComputeUnitLimitInstruction({ units: TRANSFER_COMPUTE_UNIT_LIMIT }),
+    getSetComputeUnitPriceInstruction({ microLamports: DEFAULT_COMPUTE_UNIT_PRICE }),
+  ];
+  const labels = ["computeUnitLimit", "computeUnitPrice"];
+
+  const [source, recipient, mintInfo] = await Promise.all([
+    getAta(rpc, mint, from),
+    getAta(rpc, mint, to),
+    getMintInfo(rpc, mint),
+  ]);
+
+  // A recipient who has never held this token has no account for it. Create it
+  // rather than fail — "they haven't used USDC before" is not a reason a
+  // payment should bounce, and the rent is a fraction of a cent.
+  const recipientExists = await fetchEncodedAccount(rpc, recipient.address);
+  if (!recipientExists.exists) {
+    instructions.push(
+      await createAtaInstruction(rpc, { mint, owner: to, payer: feePayer }),
+    );
+    labels.push("createRecipientTokenAccount");
+  }
+
+  instructions.push(
+    getTransferCheckedInstruction(
+      {
+        source: source.address,
+        mint,
+        destination: recipient.address,
+        authority: createNoopSigner(from),
+        amount,
+        decimals: mintInfo.decimals,
+      },
+      { programAddress: source.tokenProgram },
+    ),
+  );
+  labels.push("transfer");
+
+  const { value: latestBlockhash } = await rpc
+    .getLatestBlockhash({ commitment: "confirmed" })
+    .send();
+
+  const message = pipe(
+    createTransactionMessage({ version: 0 }),
+    (m) => setTransactionMessageFeePayer(feePayer, m),
+    (m) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+    (m) => appendTransactionMessageInstructions(instructions, m),
+  );
+
+  const transaction = compileTransaction(message);
+  const wireTransaction = getBase64EncodedWireTransaction(transaction);
+  const sizeBytes = Buffer.from(wireTransaction, "base64").length;
+
+  if (sizeBytes > MAX_TRANSACTION_BYTES) {
+    throw new TransactionTooLargeError(sizeBytes, labels);
+  }
+
+  return {
+    wireTransaction,
+    sizeBytes,
+    blockhash: latestBlockhash.blockhash,
+    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+    labels,
+  };
+}
+
+/**
  * Every account a draw touches, for building a lookup table.
  *
  * Two users are built and intersected so only the shared accounts survive:
@@ -354,7 +467,7 @@ export async function collectSharedDrawAccounts(params: {
   rpc: SolanaRpc;
   userA: Address;
   userB: Address;
-  merchant: Address;
+  destination: Address;
   collateralMint: Address;
   collateralAmount: bigint;
   debtMint: Address;

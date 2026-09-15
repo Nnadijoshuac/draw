@@ -65,6 +65,11 @@ export async function getPortfolio(params: PortfolioParams): Promise<Portfolio> 
   const valueUsd = walletValueUsd.add(obligation.depositedUsd);
   const debtUsd = obligation.borrowedUsd;
 
+  // Cash on hand. Priced from the same oracle as everything else rather than
+  // assumed to be a dollar, so a depegged stablecoin shows as one.
+  const debtPrice = getAssetPrice(market, debtMint);
+  const cashUsd = valueInUsd(await getTokenBalance(rpc, debtMint, owner), debtPrice);
+
   const available = availableToSpendUsd(valueUsd, debtUsd, policy);
   const reserve = await summariseReserve(rpc, market, collateralMint);
   const threshold = reserve?.liquidationThreshold ?? new Decimal("0.7");
@@ -92,6 +97,10 @@ export async function getPortfolio(params: PortfolioParams): Promise<Portfolio> 
     availableToSpendUsd: available.toFixed(2),
     healthFactor: health ? health.toFixed(2) : null,
     riskBand: riskBand(health, policy),
+
+    cashUsd: cashUsd.toFixed(2),
+    costToCloseUsd: debtUsd.toFixed(2),
+    repayShortfallUsd: Decimal.max(debtUsd.sub(cashUsd), 0).toFixed(2),
   };
 }
 

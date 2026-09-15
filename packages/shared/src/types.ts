@@ -38,6 +38,25 @@ export interface Portfolio {
   availableToSpendUsd: DecimalString;
   healthFactor: DecimalString | null;
   riskBand: RiskBand;
+
+  /**
+   * Stablecoin sitting in the wallet.
+   *
+   * Only meaningful once a user can draw to themselves — before that it existed
+   * for a few hundred milliseconds inside a transaction on its way elsewhere.
+   */
+  cashUsd: DecimalString;
+  /**
+   * What it costs to clear the debt and release the collateral. Zero when
+   * nothing is owed.
+   *
+   * Deliberately not a net figure. Holdings minus debt reads as a loss to
+   * someone whose shares are still entirely theirs, which is the one thing this
+   * product must never imply.
+   */
+  costToCloseUsd: DecimalString;
+  /** How much more stablecoin is needed to cover that. Zero when cash covers it. */
+  repayShortfallUsd: DecimalString;
 }
 
 /** How close the position is to liquidation. */

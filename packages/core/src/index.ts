@@ -1,6 +1,7 @@
 export * from "./constants";
 export * from "./connection";
 export * from "./tokens";
+export * from "./recipient";
 export * from "./policy";
 export * from "./kamino";
 export * from "./prices";

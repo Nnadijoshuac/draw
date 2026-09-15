@@ -118,7 +118,7 @@ async function main(): Promise<void> {
 
   const built = await buildDrawTransaction({
     ...common,
-    merchant,
+    destination: merchant,
     lookupTableAddresses: env.lookupTables,
     skipSetupCheck: !split,
   });

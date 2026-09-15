@@ -2,7 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { address } from "@solana/kit";
 import Decimal from "decimal.js";
 import { z } from "zod";
-import { buildDrawTransaction, buildQuote } from "@draw/core";
+import {
+  buildDrawTransaction,
+  buildQuote,
+  checkRecipient,
+  describeProblem,
+} from "@draw/core";
 import { chain } from "@/lib/chain";
 import { publicEnv, serverEnv } from "@/lib/env";
 import { getFeePayer } from "@/lib/feePayer";
@@ -17,8 +22,11 @@ const bodySchema = z.object({
   amountMinor: z.number().int().positive(),
   /** Where the checkout was opened from. The payee is derived from this. */
   origin: z.string().optional(),
-  /** Pay yourself. Development only, and never when an origin is supplied. */
-  selfPay: z.boolean().optional(),
+  /**
+   * Where to send the money, for a draw the user started themselves. Ignored
+   * entirely when an origin is present. Omit to keep it.
+   */
+  to: z.string().min(32).optional(),
 });
 
 /**
@@ -28,8 +36,21 @@ const bodySchema = z.object({
  *
  * The quote is recomputed here rather than accepted from the request. A client
  * that could hand us its own collateral and borrow amounts could hand us
- * favourable ones, so the only thing we take on trust is the amount the
- * merchant is charging.
+ * favourable ones, so the only thing we take on trust is the amount being
+ * charged.
+ *
+ * Where the money goes has two different answers, and they rest on different
+ * arguments:
+ *
+ *   - A merchant checkout resolves the payee from the origin. The user is not
+ *     naming the destination and has no way to check it, so a client-supplied
+ *     one would let a crafted URL redirect someone else's payment.
+ *   - A draw the user started themselves takes the destination from the
+ *     request, because the user typed it, saw it, and signed for it. It is
+ *     still checked against the chain before anything is built.
+ *
+ * An origin always wins. A merchant checkout cannot be redirected by adding a
+ * parameter to it.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -38,14 +59,13 @@ export async function POST(request: NextRequest) {
       return jsonError(400, "invalid_request", "That request was malformed.");
     }
 
-    const { sessionId, owner, amountMinor, origin, selfPay } = parsed.data;
+    const { sessionId, owner, amountMinor, origin, to } = parsed.data;
     const { rpc } = chain();
+    const user = address(owner);
 
-    // Never take the payee from the request. Resolve it from the origin so a
-    // crafted checkout URL cannot redirect someone else's payment.
-    const merchantRecord = await resolveMerchant(origin ?? null);
+    const merchantRecord = origin ? await resolveMerchant(origin) : null;
 
-    if (!merchantRecord && !(selfPay && process.env.NODE_ENV !== "production")) {
+    if (origin && !merchantRecord) {
       return jsonError(
         403,
         "unknown_merchant",
@@ -53,12 +73,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const merchant = merchantRecord?.wallet ?? address(owner);
+    let destination = user;
+
+    if (merchantRecord) {
+      destination = merchantRecord.wallet;
+    } else if (to) {
+      const recipient = await checkRecipient(rpc, to, user);
+      if (!recipient.ok) {
+        return jsonError(400, "bad_recipient", describeProblem(recipient.problem));
+      }
+      destination = recipient.address;
+    }
 
     const { quote, collateralBaseUnits, borrowBaseUnits } = await buildQuote({
       rpc,
       sessionId,
-      owner: address(owner),
+      owner: user,
       collateralMint: publicEnv.collateralMint,
       debtMint: publicEnv.debtMint,
       amountUsd: new Decimal(amountMinor).div(100),
@@ -68,8 +98,8 @@ export async function POST(request: NextRequest) {
 
     const built = await buildDrawTransaction({
       rpc,
-      user: address(owner),
-      merchant,
+      user,
+      destination,
       collateralMint: publicEnv.collateralMint,
       collateralAmount: collateralBaseUnits,
       debtMint: publicEnv.debtMint,
@@ -89,6 +119,12 @@ export async function POST(request: NextRequest) {
       lastValidBlockHeight: built.lastValidBlockHeight.toString(),
       labels: built.labels,
       quote,
+      // Echo where this is actually going, so the confirmation shows the
+      // destination the server resolved rather than the one the client asked
+      // for. They differ for a merchant checkout, which is the point.
+      destination,
+      destinationName: merchantRecord?.name ?? null,
+      keeping: destination === user,
     });
   } catch (error) {
     return handleApiError(error);

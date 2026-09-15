@@ -85,7 +85,7 @@ async function main(): Promise<void> {
     rpc,
     userA: userA.address,
     userB: userB.address,
-    merchant: authority.address,
+    destination: authority.address,
     collateralMint: env.collateralMint,
     collateralAmount: 100_000_000n,
     debtMint: env.debtMint,
