@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { HoldingsField } from "@/components/HoldingsField";
+import { Hero } from "@/components/Hero";
 import { TransactionDiagram } from "@/components/TransactionDiagram";
 
 // The live site. Everything here is true: the numbers come from the forked
@@ -13,7 +12,7 @@ export default function LandingPage() {
       <Banner />
       <Nav />
 
-      <Hero />
+      <Hero repo={REPO} />
       <Problem />
       <Mechanism />
       <WhySolana />
@@ -28,16 +27,13 @@ export default function LandingPage() {
 function Banner() {
   return (
     <div className="border-b border-[var(--color-line)] bg-[var(--color-accent-bg)]">
-      <div className="mx-auto flex max-w-5xl items-center justify-center gap-3 px-6 py-2.5 text-[13px]">
+      <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 px-6 py-2.5 text-[13px]">
         <span className="text-[var(--color-ink)]">
           Built for the Stocklana hackathon
         </span>
-        <Link
-          href="/portfolio"
-          className="font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
-        >
-          Open the app
-        </Link>
+        <span className="text-[var(--color-muted)]">
+          — running against a forked Solana mainnet
+        </span>
       </div>
     </div>
   );
@@ -55,58 +51,12 @@ function Nav() {
           >
             Source
           </a>
-          <Link
-            href="/portfolio"
-            className="rounded-[var(--radius-control)] bg-[var(--color-accent)] px-4 py-2 font-medium text-white transition-colors hover:bg-[var(--color-accent-ink)]"
-          >
-            Try it
-          </Link>
         </nav>
       </div>
     </header>
   );
 }
 
-function Hero() {
-  return (
-    <section className="relative overflow-hidden">
-      <HoldingsField />
-
-      <div className="relative mx-auto max-w-5xl px-6 py-24 md:py-32">
-      <Label>Spend against what you own</Label>
-
-      <h1 className="mt-6 max-w-[16ch] text-[clamp(2.75rem,7vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.035em]">
-        Pay without selling.
-        <span className="block font-normal italic text-[var(--color-muted)]">
-          Your shares stay yours.
-        </span>
-      </h1>
-
-      <p className="mt-8 max-w-[52ch] text-[18px] leading-relaxed text-[var(--color-muted)]">
-        You own $200 of Nvidia. You need $40 today. Right now your only option is
-        to sell — settlement delay, a taxable event, and the upside gone. Draw
-        borrows against the shares instead and pays the merchant, in one
-        transaction, while you keep every share.
-      </p>
-
-      <div className="mt-10 flex flex-wrap items-center gap-3">
-        <Link
-          href="/portfolio"
-          className="rounded-[var(--radius-control)] bg-[var(--color-accent)] px-6 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-[var(--color-accent-ink)]"
-        >
-          Open the app
-        </Link>
-        <a
-          href={REPO}
-          className="rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-paper)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-ink)]"
-        >
-          Read the source
-        </a>
-      </div>
-      </div>
-    </section>
-  );
-}
 
 function Problem() {
   return (
@@ -330,16 +280,10 @@ function Outro() {
           <span className="italic font-normal"> wanted to keep</span>
         </h2>
 
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/portfolio"
-            className="rounded-[var(--radius-control)] bg-[var(--color-accent)] px-6 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-[var(--color-accent-ink)]"
-          >
-            Open the app
-          </Link>
+        <div className="mt-9 flex justify-center">
           <a
             href={REPO}
-            className="rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-paper)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-ink)]"
+            className="rounded-[var(--radius-control)] bg-[var(--color-ink)] px-6 py-3.5 text-[15px] font-medium text-white transition-opacity hover:opacity-90"
           >
             Read the source
           </a>
