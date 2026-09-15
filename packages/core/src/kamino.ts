@@ -214,6 +214,62 @@ export async function buildDrawInstructions(
 }
 
 /**
+ * Repay debt and release the collateral behind it.
+ *
+ * The other half of the product. Borrowing against shares you cannot get back
+ * is not credit, it is a sale with extra steps.
+ */
+export async function buildRepayInstructions(params: {
+  rpc: SolanaRpc;
+  owner: Address;
+  debtMint: Address;
+  /** Base units to repay. */
+  amount: string;
+  marketAddress?: Address;
+}): Promise<InstructionGroup> {
+  const { rpc, owner, debtMint, amount } = params;
+
+  const { market } = await loadMarket(rpc, {
+    marketAddress: params.marketAddress,
+    refresh: true,
+  });
+
+  const debtReserve = findReserveByMint(market, debtMint);
+  if (!debtReserve) {
+    throw new Error(`No Kamino reserve for debt mint ${debtMint}`);
+  }
+
+  const action = await KaminoAction.buildRepayTxns({
+    kaminoMarket: market,
+    amount,
+    reserveAddress: debtReserve.address,
+    owner: createNoopSigner(owner),
+    obligation: new VanillaObligation(KAMINO_PROGRAM_ID),
+    useV2Ixs: true,
+    scopeRefreshConfig: undefined,
+    currentLedgerInstant: await getCurrentLedgerInstant(rpc),
+    includeAtaIxs: true,
+    requestElevationGroup: false,
+  });
+
+  return {
+    instructions: [
+      ...action.setupIxs,
+      ...action.inBetweenIxs,
+      ...action.lendingIxs,
+      ...action.postLendingIxs,
+      ...action.cleanupIxs,
+    ],
+    labels: [
+      ...action.setupIxsLabels,
+      ...action.lendingIxsLabels,
+      ...action.postLendingIxsLabels,
+      ...action.cleanupIxsLabels,
+    ],
+  };
+}
+
+/**
  * Order the lending instructions the way the program expects.
  *
  * inBetweenIxs goes *between* the deposit and the borrow, not before both: it
@@ -242,6 +298,61 @@ function interleaveLendingIxs(action: KaminoAction): InstructionGroup {
       ...action.postLendingIxsLabels,
       ...action.cleanupIxsLabels,
     ],
+  };
+}
+
+export interface ObligationSummary {
+  /** Collateral currently posted, in USD. */
+  depositedUsd: Decimal;
+  /** Outstanding debt, in USD. */
+  borrowedUsd: Decimal;
+  /** Debt in the debt mint's base units, for building a repayment. */
+  borrowedBaseUnits: bigint;
+}
+
+/**
+ * What the user currently owes.
+ *
+ * Read from chain rather than assumed. A product that can lend but cannot tell
+ * you what you owe is not a credit product.
+ */
+export async function getObligationSummary(
+  rpc: SolanaRpc,
+  owner: Address,
+  debtMint: Address,
+  marketAddress?: Address,
+): Promise<ObligationSummary> {
+  const empty: ObligationSummary = {
+    depositedUsd: new Decimal(0),
+    borrowedUsd: new Decimal(0),
+    borrowedBaseUnits: 0n,
+  };
+
+  const { market } = await loadMarket(rpc, { marketAddress, refresh: true });
+
+  const obligation = await market.getObligationByWallet(
+    owner,
+    new VanillaObligation(KAMINO_PROGRAM_ID),
+  );
+  if (!obligation) return empty;
+
+  const debtReserve = findReserveByMint(market, debtMint);
+  const borrow = obligation
+    .getBorrows()
+    .find((position) => position.mintAddress === debtMint);
+
+  if (!borrow || !debtReserve) {
+    return { ...empty, depositedUsd: obligation.getDepositedValue() };
+  }
+
+  // Round up. Repaying a hair less than owed leaves dust debt behind and the
+  // position stays open, which is a confusing place to leave someone.
+  const borrowedBaseUnits = BigInt(borrow.amount.ceil().toFixed(0));
+
+  return {
+    depositedUsd: obligation.getDepositedValue(),
+    borrowedUsd: borrow.marketValueRefreshed,
+    borrowedBaseUnits,
   };
 }
 

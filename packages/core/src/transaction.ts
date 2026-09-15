@@ -27,7 +27,12 @@ import {
   SETUP_RENT_LAMPORTS,
 } from "./constants";
 import type { SolanaRpc } from "./connection";
-import { buildDrawInstructions, getUserLookupTable, needsAccountSetup } from "./kamino";
+import {
+  buildDrawInstructions,
+  buildRepayInstructions,
+  getUserLookupTable,
+  needsAccountSetup,
+} from "./kamino";
 import { createAtaInstruction, getAta, getMintInfo } from "./tokens";
 
 /**
@@ -263,6 +268,77 @@ export async function buildDrawTransaction(
     blockhash: latestBlockhash.blockhash,
     lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
     labels,
+  };
+}
+
+/**
+ * Repay debt so the collateral is released.
+ *
+ * Same signing path as a draw: the user signs, the fee payer co-signs, and
+ * they never need SOL to get their shares back.
+ */
+export async function buildRepayTransaction(params: {
+  rpc: SolanaRpc;
+  user: Address;
+  debtMint: Address;
+  /** Base units to repay. */
+  amount: bigint;
+  feePayer: Address;
+  lookupTableAddresses?: Address[];
+}): Promise<BuiltTransaction> {
+  const { rpc, user, debtMint, amount, feePayer } = params;
+
+  const repay = await buildRepayInstructions({
+    rpc,
+    owner: user,
+    debtMint,
+    amount: amount.toString(),
+  });
+
+  const instructions: Instruction[] = [
+    getSetComputeUnitLimitInstruction({ units: DEFAULT_COMPUTE_UNIT_LIMIT }),
+    getSetComputeUnitPriceInstruction({ microLamports: DEFAULT_COMPUTE_UNIT_PRICE }),
+    ...repay.instructions,
+  ];
+
+  const lookupTables = await loadLookupTables(
+    rpc,
+    params.lookupTableAddresses ??
+      (await getUserLookupTable(rpc, user).then((lut) => (lut ? [lut] : []))),
+  );
+
+  const { value: latestBlockhash } = await rpc
+    .getLatestBlockhash({ commitment: "confirmed" })
+    .send();
+
+  const message = pipe(
+    createTransactionMessage({ version: 0 }),
+    (m) => setTransactionMessageFeePayer(feePayer, m),
+    (m) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+    (m) => appendTransactionMessageInstructions(instructions, m),
+    (m) =>
+      lookupTables.size > 0
+        ? compressTransactionMessageUsingAddressLookupTables(
+            m,
+            Object.fromEntries(lookupTables),
+          )
+        : m,
+  );
+
+  const transaction = compileTransaction(message);
+  const wireTransaction = getBase64EncodedWireTransaction(transaction);
+  const sizeBytes = Buffer.from(wireTransaction, "base64").length;
+
+  if (sizeBytes > MAX_TRANSACTION_BYTES) {
+    throw new TransactionTooLargeError(sizeBytes, repay.labels);
+  }
+
+  return {
+    wireTransaction,
+    sizeBytes,
+    blockhash: latestBlockhash.blockhash,
+    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+    labels: ["computeUnitLimit", "computeUnitPrice", ...repay.labels],
   };
 }
 

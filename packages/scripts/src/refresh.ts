@@ -1,58 +1,39 @@
-import { createKeyPairSignerFromBytes, getBase58Encoder } from "@solana/kit";
-import { collectSharedDrawAccounts, createChainClient } from "@draw/core";
+import { createChainClient, loadMarket } from "@draw/core";
 import { env } from "./env";
-import { isRefreshable, resetAccount, streamAccount } from "./surfnet";
+import { oracleAccountsFor } from "./oracles";
+import { streamAccount } from "./surfnet";
 
 /**
- * Re-pull the reserves and oracles from mainnet.
+ * Keep oracle prices current.
  *
  * A fork clones an oracle once and the local clock keeps moving, so after
- * about half an hour Kamino rejects every borrow with ReserveStale. This fixes
- * that in seconds without restarting the fork, which means the lookup table
- * and every funded wallet survive.
+ * about half an hour Kamino rejects every borrow with ReserveStale.
+ *
+ * Only the price accounts are touched. Re-pulling a reserve or its vaults
+ * would overwrite them with mainnet state and erase every deposit made on the
+ * fork, which looks exactly like data loss because it is.
  *
  *   pnpm refresh
  */
 
 async function main(): Promise<void> {
   const { rpc } = createChainClient({ rpcUrl: env.rpcUrl });
+  const { market } = await loadMarket(rpc, { refresh: true });
 
-  const feePayer = await createKeyPairSignerFromBytes(
-    new Uint8Array(getBase58Encoder().encode(process.env.FEE_PAYER_SECRET_KEY ?? "")),
-  );
+  const oracles = oracleAccountsFor(market);
 
-  const accounts = await collectSharedDrawAccounts({
-    rpc,
-    userA: feePayer.address,
-    userB: feePayer.address,
-    merchant: feePayer.address,
-    collateralMint: env.collateralMint,
-    debtMint: env.debtMint,
-    collateralAmount: 100_000_000n,
-    borrowAmount: 1_000_000n,
-    feePayer: feePayer.address,
-  });
-
-  let refreshed = 0;
   let streaming = 0;
-
-  for (const account of accounts.filter(isRefreshable)) {
+  for (const oracle of oracles) {
     try {
-      await resetAccount(env.rpcUrl, account);
-      refreshed += 1;
-    } catch {
-      /* best effort */
-    }
-    try {
-      await streamAccount(env.rpcUrl, account);
+      await streamAccount(env.rpcUrl, oracle);
       streaming += 1;
     } catch {
       /* best effort */
     }
   }
 
-  console.log(`re-pulled ${refreshed} accounts, streaming ${streaming}`);
-  console.log("Prices are current again. No restart needed.");
+  console.log(`streaming ${streaming} of ${oracles.length} oracle accounts`);
+  console.log("Prices stay current from here. No restart needed.");
 }
 
 main().catch((error: unknown) => {

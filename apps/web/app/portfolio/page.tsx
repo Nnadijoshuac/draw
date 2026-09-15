@@ -17,6 +17,8 @@ export default function PortfolioPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [amount, setAmount] = useState("");
+  const [repaying, setRepaying] = useState(false);
+  const [repayError, setRepayError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!wallet.address) return;
@@ -42,6 +44,40 @@ export default function PortfolioPage() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Repay in full. The server reads what is actually owed from chain, so the
+  // client never decides the amount.
+  const repay = useCallback(async () => {
+    if (!wallet.address) return;
+    setRepaying(true);
+    setRepayError(null);
+
+    try {
+      const buildRes = await fetch("/api/repay", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ owner: wallet.address }),
+      });
+      const built = await buildRes.json();
+      if (!buildRes.ok) throw new Error(built.error ?? "Could not prepare repayment");
+
+      const signed = await wallet.signTransaction(built.transaction);
+
+      const submitRes = await fetch("/api/tx/submit", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sessionId: "repay", transaction: signed }),
+      });
+      const submitted = await submitRes.json();
+      if (!submitRes.ok) throw new Error(submitted.error ?? "Repayment failed");
+
+      await load();
+    } catch (e) {
+      setRepayError(e instanceof Error ? e.message : "Repayment failed");
+    } finally {
+      setRepaying(false);
+    }
+  }, [wallet, load]);
 
   const copyAddress = useCallback(() => {
     if (!wallet.address) return;
@@ -216,11 +252,34 @@ export default function PortfolioPage() {
         </div>
 
         {portfolio && Number(portfolio.debtUsd) > 0 && (
-          <div className="mt-4 flex items-baseline justify-between text-[13px]">
-            <span className="text-[var(--color-muted)]">Borrowed</span>
-            <span className="tabular font-medium">
-              {formatUsd(portfolio.debtUsd)}
-            </span>
+          <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--color-surface)] p-4">
+            <div className="flex items-baseline justify-between">
+              <span className="text-[13px] text-[var(--color-muted)]">
+                You owe
+              </span>
+              <span className="tabular text-[15px] font-medium">
+                {formatUsd(portfolio.debtUsd)}
+              </span>
+            </div>
+
+            <p className="mt-2 text-[13px] leading-relaxed text-[var(--color-muted)]">
+              Clear this and the shares held as security are released.
+            </p>
+
+            {repayError && (
+              <p className="mt-3 text-[13px] text-[var(--color-danger)]" role="alert">
+                {repayError}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => void repay()}
+              disabled={repaying}
+              className="mt-3.5 w-full rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-paper)] py-3 text-[14px] font-medium transition-colors hover:border-[var(--color-ink)] disabled:cursor-not-allowed disabled:text-[var(--color-muted)]"
+            >
+              {repaying ? "Repaying" : `Repay ${formatUsd(portfolio.debtUsd)}`}
+            </button>
           </div>
         )}
       </section>
