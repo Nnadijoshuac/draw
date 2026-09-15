@@ -181,7 +181,7 @@ function WhySolana() {
             ],
             [
               "Collateral nobody has to approve",
-              "xStocks are Token-2022 with no freeze authority. Anyone can post them.",
+              "No whitelist to hold an xStock, and no application to borrow against one.",
             ],
             [
               "No credit file required",

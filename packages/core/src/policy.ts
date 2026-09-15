@@ -5,8 +5,8 @@ import type { RiskBand } from "@draw/shared";
  * Draw's own risk rules, which are deliberately stricter than the lending
  * protocol's.
  *
- * Kamino may permit something like 65% loan-to-value on a given reserve. We
- * expose roughly half of that. The gap is the user's margin for a bad week,
+ * Kamino permits 55% loan-to-value on NVDAx, and liquidates at 65%. We expose
+ * 35%. The gap is the user's margin for a bad week,
  * and it exists because of something specific to this asset class: tokenized
  * equities trade 24/7 but the underlying market does not, so a position opened
  * on Saturday can gap hard at Monday's open with no chance to react.

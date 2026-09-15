@@ -89,9 +89,13 @@ anything. It requires a private bank, a six-figure minimum, days of paperwork,
 and market hours.
 
 **The asset became programmable before the credit product did.** xStocks are
-Token-2022 mints with no freeze authority and no whitelist. Kamino will already
-lend against them. Nothing between those two facts and a checkout button existed,
-which is the entire reason this repository does.
+Token-2022 mints that anyone can hold without being whitelisted, and Kamino will
+already lend against them. Nothing between those two facts and a checkout button
+existed, which is the entire reason this repository does.
+
+They are not bearer assets, and this README is not going to pretend otherwise —
+see [the issuer keeps the keys](#the-issuer-keeps-the-keys) for what the mint
+authority can still do to collateral Draw is holding.
 
 ---
 
@@ -306,6 +310,36 @@ somebody else, sometimes it stays with you.
 **Solana addresses only.** There is no fiat offramp and this README will not
 imply one. Getting dollars out to a bank is somebody else's licence.
 
+<a id="the-issuer-keeps-the-keys"></a>
+
+### The issuer keeps the keys
+
+An earlier version of this README called xStocks "permissionless, no freeze
+authority, no whitelist." One of those three is true. Read off the NVDAx mint
+(`Xsc9qvGR…x9qEh`) on a mainnet fork:
+
+| Extension | Value | What it means |
+| :--- | :--- | :--- |
+| `defaultAccountState` | `initialized` | **No whitelist.** Anyone can receive and hold one. |
+| `freezeAuthority` | `JDq14BWv…xJNs` | The issuer can freeze any account holding one. |
+| `permanentDelegate` | `5aMNNLQJ…HFvEq` | The issuer can move them out of any account, without the holder. |
+| `pausableConfig` | authority set, `paused: false` | The whole mint can be halted. |
+| `transferHook` | authority set, `programId: null` | No hook today. One can be added. |
+
+So the accurate claim is narrow: **nobody has to approve you to hold an xStock,
+and nobody has to approve you to borrow against one.** That is the part Draw
+depends on, and it is genuinely different from a bank. It is not the same as the
+asset being unstoppable.
+
+**The risk Draw inherits.** Collateral in a Kamino obligation is still an xStock.
+A freeze or a permanent-delegate seizure of the underlying would hit a position
+Draw opened, and neither Draw nor Kamino could prevent it. Nothing in this
+repository mitigates that — a real deployment would need issuer-risk disclosure
+in the checkout, and probably a per-issuer exposure cap.
+
+Saying this out loud costs a line of marketing copy and buys the only thing that
+matters when the numbers are checkable.
+
 <details>
 <summary><strong>Keeping it is the same transaction, minus an instruction</strong></summary>
 
@@ -438,14 +472,15 @@ is the only file in the repository allowed to decide whether a draw may happen.
 
 | Rule | Value | Why |
 | :--- | :---: | :--- |
-| `maxLtv` | **0.35** | Kamino may permit 65%. Draw exposes roughly half. |
+| `maxLtv` | **0.35** | Kamino permits 55% on NVDAx and liquidates at 65%. Draw exposes 35%. |
 | `warnHealthFactor` | 1.6 | The UI turns amber here. |
 | `dangerHealthFactor` | 1.25 | New draws are refused here. |
 | `minDrawUsd` | 1 | Below this the network cost stops making sense. |
 | `quoteTtlSeconds` | 30 | A quote stays signable this long, then it is re-priced. |
 
-**The gap between 35% and 65% is the user's margin, and it exists because of
-something specific to this asset class.** Tokenized equities trade 24 hours a
+**The gap between where Draw lends and where Kamino liquidates — 35% against
+65% — is the user's margin, and it exists because of something specific to this
+asset class.** Tokenized equities trade 24 hours a
 day; the underlying market does not. A position opened on Saturday can gap hard
 at Monday's open with no chance for anyone to react. That is a product decision,
 not a technical constraint, and it is written down as one.
