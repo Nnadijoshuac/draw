@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { PixelTrail } from "@/components/PixelTrail";
 import { TransactionDiagram } from "@/components/TransactionDiagram";
 
 // The live site. Everything here is true: the numbers come from the forked
@@ -273,10 +274,11 @@ function Proof() {
 
 function Outro() {
   return (
-    <section className="border-t border-[var(--color-line)] bg-[var(--color-surface)]">
-      <div className="mx-auto max-w-5xl px-6 py-24 text-center">
+    <PixelTrail>
+      <section className="border-t border-[var(--color-line)] bg-[var(--color-surface)]">
+      <div className="mx-auto max-w-5xl px-6 py-28 text-center">
         <h2 className="mx-auto max-w-[18ch] text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
-          Take the money.
+          Get the value.
           <span className="block font-normal italic text-[var(--color-muted)]">
             Don&apos;t give up the gains.
           </span>
@@ -291,7 +293,8 @@ function Outro() {
           </a>
         </div>
       </div>
-    </section>
+      </section>
+    </PixelTrail>
   );
 }
 

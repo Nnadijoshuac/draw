@@ -97,6 +97,27 @@ input[inputmode="decimal"] {
   animation: rise 420ms var(--ease-out) both;
 }
 
+/*
+ * Cursor trail. Squares, no radius: the point is that it looks drawn rather
+ * than rendered. Holds briefly at full strength so a fast move still leaves a
+ * readable line, then falls away.
+ */
+@keyframes pixel-fade {
+  0% {
+    opacity: 0.22;
+  }
+  22% {
+    opacity: 0.16;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.pixel {
+  animation: pixel-fade 3s linear forwards;
+}
+
 .sheet-up {
   animation: sheet-up 280ms var(--ease-out) both;
 }
