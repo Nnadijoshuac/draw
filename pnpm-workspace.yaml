@@ -10,4 +10,6 @@ allowBuilds:
   bigint-buffer: true
   bufferutil: false
   esbuild: true
+  # Native module resolver behind the ESLint TypeScript import plugin.
+  unrs-resolver: true
   utf-8-validate: false

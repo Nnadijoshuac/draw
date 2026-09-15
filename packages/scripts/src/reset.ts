@@ -54,6 +54,22 @@ async function isForkHealthy(rpcUrl: string): Promise<boolean> {
   }
 }
 
+/**
+ * Kamino rejects a price older than max_age, and it measures that against the
+ * fork's clock rather than ours. Surfpool produces slots slightly faster than
+ * mainnet's real average, so a fork left running for a day ends up minutes
+ * ahead — and a freshly streamed mainnet oracle is then born already expired.
+ *
+ * Streaming cannot fix that. Only a restart resets the clock.
+ */
+const MAX_CLOCK_DRIFT_SECONDS = 120;
+
+async function clockDriftSeconds(rpc: ReturnType<typeof createChainClient>["rpc"]) {
+  const slot = await rpc.getSlot().send();
+  const blockTime = await rpc.getBlockTime(slot).send();
+  return Number(blockTime) - Math.floor(Date.now() / 1000);
+}
+
 async function restartFork(): Promise<void> {
   const script = `${REPO_ROOT}packages/scripts/start-surfnet.sh`.replace(
     /^([A-Za-z]):/,
@@ -65,18 +81,30 @@ async function restartFork(): Promise<void> {
     // nohup and disown, not a detached spawn. WSL tears down the processes it
     // started as soon as the launching invocation exits, so a plain spawn
     // gives you a fork that dies the moment this script finishes.
+    //
+    // Two things here are load-bearing and neither is obvious.
+    //
+    // -u root: surfpool installs to /root/.local and runs as root, so as the
+    // default user pkill matches nothing and the old fork keeps serving — a
+    // restart that appears to succeed and changes nothing.
+    //
+    // pkill -x, matching the process name, not -f, matching the whole command
+    // line. This shell's own command line contains the word surfpool, so -f
+    // kills the shell mid-command and the restart never runs.
     await run("wsl", [
       "-d",
       "Ubuntu",
+      "-u",
+      "root",
       "--",
       "bash",
       "-lc",
-      `pkill -f surfpool || true; sleep 1; nohup bash ${unixScript} > /tmp/surfpool.log 2>&1 & disown; sleep 2`,
+      `pkill -x surfpool || true; sleep 2; nohup bash ${unixScript} > /tmp/surfpool.log 2>&1 & disown; sleep 3`,
     ]);
   } else {
     await run("bash", [
       "-lc",
-      `pkill -f surfpool || true; sleep 1; nohup bash ${REPO_ROOT}packages/scripts/start-surfnet.sh > /tmp/surfpool.log 2>&1 & disown; sleep 2`,
+      `pkill -x surfpool || true; sleep 2; nohup bash ${REPO_ROOT}packages/scripts/start-surfnet.sh > /tmp/surfpool.log 2>&1 & disown; sleep 3`,
     ]);
   }
 }
@@ -113,12 +141,27 @@ function writeEnvValue(key: string, value: string): void {
 async function main(): Promise<void> {
   const [walletArg] = process.argv.slice(2);
 
-  // Streaming keeps the oracles current, so a running fork does not need to be
-  // torn down. Restarting would throw away the lookup table and every funded
-  // wallet for no benefit.
-  if (await isForkHealthy(env.rpcUrl)) {
-    console.log("fork already running, keeping it");
-  } else {
+  // Streaming keeps the oracles current, so a running fork usually does not
+  // need to be torn down — restarting throws away every funded wallet. The
+  // exception is clock drift, which streaming cannot help with at all.
+  let running = await isForkHealthy(env.rpcUrl);
+
+  if (running) {
+    const drift = await clockDriftSeconds(
+      createChainClient({ rpcUrl: env.rpcUrl }).rpc,
+    );
+
+    if (drift > MAX_CLOCK_DRIFT_SECONDS) {
+      console.log(`fork clock is ${drift}s ahead of real time`);
+      console.log("  every streamed price would arrive already expired");
+      console.log("  restarting, which clears funded wallets");
+      running = false;
+    } else {
+      console.log(`fork already running, keeping it (clock ${drift}s off)`);
+    }
+  }
+
+  if (!running) {
     console.log("starting the fork");
     await restartFork();
     await waitForRpc(env.rpcUrl);
