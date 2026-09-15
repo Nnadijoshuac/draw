@@ -24,8 +24,10 @@ const LEGS = [
 export function TransactionDiagram() {
   return (
     <figure className="mt-12">
-      <div className="rounded-[var(--radius-card)] border border-[var(--color-line)] p-6 md:p-8">
-        <div className="flex items-start justify-between gap-6">
+      <div className="rounded-[var(--radius-card)] border border-[var(--color-line)] p-5 md:p-8">
+        {/* Side by side is the whole point: the same number twice. Too narrow
+            for that and they stack, with the pairing carried by the labels. */}
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <Endpoint
             label="Before"
             value="500.00 NVDAx"
@@ -35,7 +37,6 @@ export function TransactionDiagram() {
             label="After"
             value="500.00 NVDAx"
             caption="0.52 held as security"
-            align="right"
           />
         </div>
 
@@ -82,17 +83,15 @@ function Endpoint({
   label,
   value,
   caption,
-  align,
 }: {
   label: string;
   value: string;
   caption: string;
-  align?: "right";
 }) {
   return (
-    <div className={align === "right" ? "text-right" : undefined}>
+    <div>
       <p className="text-[12px] text-[var(--color-muted)]">{label}</p>
-      <p className="tabular mt-1 text-[20px] font-semibold tracking-[-0.02em]">
+      <p className="tabular mt-1 text-[19px] font-semibold tracking-[-0.02em] sm:text-[20px]">
         {value}
       </p>
       <p className="mt-0.5 text-[13px] text-[var(--color-muted)]">{caption}</p>

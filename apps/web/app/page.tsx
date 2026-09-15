@@ -1,5 +1,5 @@
 import { Hero } from "@/components/Hero";
-import { PixelTrail } from "@/components/PixelTrail";
+import { InkTrail } from "@/components/InkTrail";
 import { TransactionDiagram } from "@/components/TransactionDiagram";
 
 // The live site. Everything here is true: the numbers come from the forked
@@ -28,12 +28,14 @@ export default function LandingPage() {
 function Banner() {
   return (
     <div className="border-b border-[var(--color-line)] bg-[var(--color-accent-bg)]">
-      <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 px-6 py-2.5 text-[13px]">
+      <div className="mx-auto max-w-5xl px-6 py-2.5 text-center text-[12px] sm:text-[13px]">
         <span className="text-[var(--color-ink)]">
           Built for the Stocklana hackathon
         </span>
-        <span className="text-[var(--color-muted)]">
-          — running against a forked Solana mainnet
+        {/* The qualifier is useful context, not essential. It goes first when
+            there is no room for it. */}
+        <span className="hidden text-[var(--color-muted)] sm:inline">
+          {" — running against a forked Solana mainnet"}
         </span>
       </div>
     </div>
@@ -215,13 +217,7 @@ function ForMerchants() {
         integration:
       </p>
 
-      <pre className="mt-7 overflow-x-auto rounded-[var(--radius-card)] bg-[var(--color-ink)] p-5 text-[13px] leading-relaxed text-white">
-        <code>{`<script src="https://js.draw.fi/v1"></script>
-
-<button onclick="Draw.checkout({ amount: 4000 })">
-  Pay with Draw
-</button>`}</code>
-      </pre>
+      <CodeBlock />
 
       <p className="mt-5 max-w-[52ch] text-[15px] leading-relaxed text-[var(--color-muted)]">
         The payee is resolved from the site&apos;s own origin, never from the
@@ -230,6 +226,80 @@ function ForMerchants() {
       </p>
     </Section>
   );
+}
+
+/**
+ * The integration, highlighted by hand.
+ *
+ * Four lines does not justify pulling in a syntax highlighter, and shipping one
+ * for a static snippet would cost more than the snippet.
+ */
+function CodeBlock() {
+  return (
+    <div className="mt-7 overflow-hidden rounded-[var(--radius-card)] bg-[var(--color-ink)]">
+      <div className="flex items-center gap-2 border-b border-white/10 px-5 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <span className="ml-2 font-mono text-[12px] text-[var(--color-code-punct)]">
+          checkout.html
+        </span>
+      </div>
+
+      <pre className="overflow-x-auto px-4 py-4 font-mono text-[11.5px] leading-[1.75] sm:px-5 sm:py-5 sm:text-[13px]">
+        <code>
+          <Punct>&lt;</Punct>
+          <Tag>script</Tag> <Attr>src</Attr>
+          <Punct>=</Punct>
+          <Str>&quot;https://js.draw.fi/v1&quot;</Str>
+          <Punct>&gt;&lt;/</Punct>
+          <Tag>script</Tag>
+          <Punct>&gt;</Punct>
+          {"\n\n"}
+          <Punct>&lt;</Punct>
+          <Tag>button</Tag> <Attr>onclick</Attr>
+          <Punct>=</Punct>
+          <Str>&quot;</Str>
+          <span className="text-white">Draw</span>
+          <Punct>.</Punct>
+          <Tag>checkout</Tag>
+          <Punct>({"{"} </Punct>
+          <Attr>amount</Attr>
+          <Punct>: </Punct>
+          <Num>4000</Num>
+          <Punct> {"}"})</Punct>
+          <Str>&quot;</Str>
+          <Punct>&gt;</Punct>
+          {"\n  "}
+          <span className="text-white">Pay with Draw</span>
+          {"\n"}
+          <Punct>&lt;/</Punct>
+          <Tag>button</Tag>
+          <Punct>&gt;</Punct>
+        </code>
+      </pre>
+    </div>
+  );
+}
+
+function Tag({ children }: { children: React.ReactNode }) {
+  return <span className="text-[var(--color-code-tag)]">{children}</span>;
+}
+
+function Attr({ children }: { children: React.ReactNode }) {
+  return <span className="text-[var(--color-code-attr)]">{children}</span>;
+}
+
+function Str({ children }: { children: React.ReactNode }) {
+  return <span className="text-[var(--color-code-string)]">{children}</span>;
+}
+
+function Num({ children }: { children: React.ReactNode }) {
+  return <span className="text-[var(--color-code-number)]">{children}</span>;
+}
+
+function Punct({ children }: { children: React.ReactNode }) {
+  return <span className="text-[var(--color-code-punct)]">{children}</span>;
 }
 
 function Proof() {
@@ -274,7 +344,7 @@ function Proof() {
 
 function Outro() {
   return (
-    <PixelTrail className="border-t border-[var(--color-line)] bg-[var(--color-surface)]">
+    <InkTrail className="border-t border-[var(--color-line)] bg-[var(--color-surface)]">
       <section>
       <div className="mx-auto max-w-5xl px-6 py-28 text-center">
         <h2 className="mx-auto max-w-[18ch] text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
@@ -294,7 +364,7 @@ function Outro() {
         </div>
       </div>
       </section>
-    </PixelTrail>
+    </InkTrail>
   );
 }
 
@@ -322,7 +392,7 @@ function Section({
     <section
       className={bordered ? "border-t border-[var(--color-line)]" : undefined}
     >
-      <div className="mx-auto max-w-5xl px-6 py-20 md:py-24">{children}</div>
+      <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20 md:py-24">{children}</div>
     </section>
   );
 }

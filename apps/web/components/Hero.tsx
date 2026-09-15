@@ -1,11 +1,14 @@
 import { HoldingsField } from "@/components/HoldingsField";
 
+// Full height only where the card field exists to fill it. On a phone the field
+// is hidden, and a viewport of empty space around three lines of text reads as
+// a loading state.
 export function Hero({ repo }: { repo: string }) {
   return (
-    <section className="relative flex min-h-[calc(100vh-7rem)] items-center overflow-hidden">
+    <section className="relative flex items-center overflow-hidden lg:min-h-[calc(100vh-7rem)]">
       <HoldingsField />
 
-      <div className="relative mx-auto w-full max-w-2xl px-6 py-20 text-center">
+      <div className="relative mx-auto w-full max-w-2xl px-6 py-20 text-center sm:py-24 lg:py-20">
         <h1 className="mx-auto max-w-[14ch] text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
           Pay without selling{" "}
           <span className="font-normal italic text-[var(--color-muted)]">

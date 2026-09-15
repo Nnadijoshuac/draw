@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Draw — spend against what you own",
@@ -15,9 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen antialiased">
-        <Providers>{children}</Providers>
-      </body>
+      <body className="min-h-screen antialiased">{children}</body>
     </html>
   );
 }
