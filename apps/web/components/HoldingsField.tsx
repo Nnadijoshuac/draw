@@ -59,9 +59,13 @@ const CARDS: Card[] = [
 const NODE_DX = 5.5;
 const NODE_DY = 5.5;
 
+/** Nudges the whole field across. One dial rather than eight. */
+const SHIFT_X = 4;
+
 export function HoldingsField() {
   const path = CARDS.map(
-    (card, i) => `${i === 0 ? "M" : "L"} ${card.x + NODE_DX} ${card.y + NODE_DY}`,
+    (card, i) =>
+      `${i === 0 ? "M" : "L"} ${card.x + SHIFT_X + NODE_DX} ${card.y + NODE_DY}`,
   ).join(" ");
 
   return (
@@ -90,7 +94,7 @@ export function HoldingsField() {
           key={card.title}
           className="absolute w-[176px] rounded-[12px] border border-[var(--color-line)] bg-[var(--color-paper)] p-3 shadow-[var(--shadow-raise)]"
           style={{
-            left: `${card.x}%`,
+            left: `${card.x + SHIFT_X}%`,
             top: `${card.y}%`,
             opacity: card.opacity,
             transform: `rotate(${card.rotate}deg)`,
