@@ -17,7 +17,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
       config={{
         loginMethods: ["email", "sms"],
         embeddedWallets: {
-          createOnLogin: "users-without-wallets",
+          // Must be nested under solana. The top-level createOnLogin is
+          // deprecated and only creates an Ethereum wallet, which leaves us
+          // authenticated with nothing to sign Solana transactions.
+          // all-users rather than users-without-wallets: an account that
+          // already has an Ethereum wallet counts as "has wallet" and would
+          // never get a Solana one.
+          solana: { createOnLogin: "all-users" },
+          ethereum: { createOnLogin: "off" },
         },
         appearance: {
           theme: "light",

@@ -3,7 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Draw â€” spend against what you own",
+  title: "Draw — spend against what you own",
   description:
     "Pay with your portfolio as collateral, without selling it. Built on Solana.",
 };

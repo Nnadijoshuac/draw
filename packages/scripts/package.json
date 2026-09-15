@@ -1,26 +1,27 @@
 {
-    "name": "@draw/scripts",
-    "version": "0.1.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "chain": "surfpool start",
-        "fund": "tsx src/fund.ts",
-        "probe": "tsx src/probe.ts",
-        "typecheck": "tsc --noEmit",
-        "keygen": "tsx src/keygen.ts"
-    },
-    "dependencies": {
-        "@draw/core": "workspace:*",
-        "@draw/shared": "workspace:*",
-        "@solana-program/address-lookup-table": "^0.8.0",
-        "@solana/kit": "^2.3.0",
-        "decimal.js": "^10.4.3",
-        "dotenv": "^16.4.5"
-    },
-    "devDependencies": {
-        "@types/node": "^22.9.0",
-        "tsx": "^4.19.2",
-        "typescript": "^5.6.3"
-    }
+  "name": "@draw/scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "chain": "bash start-surfnet.sh",
+    "reset": "tsx src/reset.ts",
+    "fund": "tsx src/fund.ts",
+    "probe": "tsx src/probe.ts",
+    "keygen": "tsx src/keygen.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@draw/core": "workspace:*",
+    "@draw/shared": "workspace:*",
+    "@solana-program/address-lookup-table": "^0.8.0",
+    "@solana/kit": "^2.3.0",
+    "decimal.js": "^10.4.3",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
 }

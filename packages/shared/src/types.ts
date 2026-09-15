@@ -113,7 +113,7 @@ export interface CheckoutResult {
 
 /**
  * Server-to-server notification. This, not the postMessage, is the source of
- * truth â€” a browser can claim anything.
+ * truth — a browser can claim anything.
  */
 export interface WebhookEvent {
   id: string;

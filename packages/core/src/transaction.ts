@@ -143,7 +143,7 @@ export async function buildDrawTransaction(
 
   // Only create the merchant's token account when it is actually missing.
   // Including it unconditionally is simpler but costs accounts we cannot
-  // spare â€” the bundle is already close to the size limit.
+  // spare, and the bundle is already close to the size limit.
   const merchantAta = await getAta(rpc, debtMint, merchant);
   const merchantAtaExists = await fetchEncodedAccount(rpc, merchantAta.address);
 
@@ -253,7 +253,7 @@ export async function buildDrawTransaction(
   }
   if (sizeBytes > TRANSACTION_SIZE_WARNING_BYTES) {
     console.warn(
-      `[draw] transaction is ${sizeBytes}/${MAX_TRANSACTION_BYTES} bytes â€” close to the limit`,
+      `[draw] transaction is ${sizeBytes}/${MAX_TRANSACTION_BYTES} bytes, close to the limit`,
     );
   }
 

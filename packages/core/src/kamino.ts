@@ -87,7 +87,7 @@ export interface ReserveSummary {
  * Summarise a reserve into the handful of numbers the product actually needs.
  *
  * The liquidation threshold in particular must be read from the reserve rather
- * than hardcoded â€” it differs per asset and changes when Kamino reconfigures a
+ * than hardcoded — it differs per asset and changes when Kamino reconfigures a
  * market, and a stale copy would put our health factor out of step with the
  * protocol's.
  */
@@ -120,7 +120,7 @@ export async function summariseReserve(
 }
 
 /**
- * A mint can back more than one reserve â€” Kamino runs float and fixed rate
+ * A mint can back more than one reserve — Kamino runs float and fixed rate
  * variants of the same asset. We take the first, which is the float reserve,
  * because that is what the lending UI treats as the default market.
  */

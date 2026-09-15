@@ -42,7 +42,7 @@ export function describeTokenProgram(programAddress: Address): TokenProgram {
     : "spl-token";
 }
 
-/** Look up which token program owns a mint. Cached â€” mints do not migrate. */
+/** Look up which token program owns a mint. Cached — mints do not migrate. */
 export async function getTokenProgram(
   rpc: SolanaRpc,
   mint: Address,
@@ -136,7 +136,7 @@ export async function getTokenBalance(
   return BigInt(balance.value.amount);
 }
 
-/** Test seam â€” the caches are process-wide and would otherwise leak between runs. */
+/** Test seam — the caches are process-wide and would otherwise leak between runs. */
 export function clearTokenCaches(): void {
   programCache.clear();
   mintCache.clear();
