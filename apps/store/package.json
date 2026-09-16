@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@draw/sdk": "workspace:*",
+    "server-only": "^0.0.1",
     "dotenv": "^17.4.2",
     "next": "^16.0.0",
     "react": "^19.0.0",

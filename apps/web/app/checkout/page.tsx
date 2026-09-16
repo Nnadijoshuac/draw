@@ -150,6 +150,12 @@ function Checkout() {
         body: JSON.stringify({
           sessionId: reference ?? "checkout",
           transaction: signed,
+          // So the server knows who to notify. It re-resolves the merchant
+          // from this origin rather than trusting anything else we send.
+          origin: merchantOrigin ?? undefined,
+          amountMinor,
+          currency: "USD",
+          reference,
         }),
       });
       const submitted = await submitRes.json();
