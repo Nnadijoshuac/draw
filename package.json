@@ -19,7 +19,10 @@
     "refresh": "pnpm --filter @draw/scripts refresh",
     "fund": "pnpm --filter @draw/scripts fund",
     "probe": "pnpm --filter @draw/scripts probe",
-    "keygen": "pnpm --filter @draw/scripts keygen"
+    "keygen": "pnpm --filter @draw/scripts keygen",
+    "portfolio": "pnpm --filter @draw/scripts exec tsx src/portfolio.ts",
+    "e2e-webhook": "pnpm --filter @draw/scripts exec tsx src/e2e-webhook.ts",
+    "e2e-wallet": "pnpm --filter @draw/scripts exec tsx src/e2e-wallet.ts"
   },
   "devDependencies": {
     "typescript": "^5.6.3"
