@@ -1,9 +1,24 @@
+import { Fragment } from "react";
+
 import { HoldingsField } from "@/components/HoldingsField";
 
 // Full height only where the card field spreads out to fill it. A phone gets
 // the field's edge cards instead, and the taller padding there is what keeps
 // them clear of the copy — the band above the headline and below the button is
 // the room they hang in.
+//
+// The copy's entrance is cut against the field's, in `HoldingsField`. The claim
+// resolves first and alone; the cards are still arriving behind it, and the
+// line that threads them lands last, after everything has settled.
+const CUE = {
+  claim: 120,
+  shares: 500,
+  /** Between one word of the headline and the next. */
+  word: 95,
+  sub: 900,
+  action: 1120,
+} as const;
+
 export function Hero({ repo }: { repo: string }) {
   return (
     <section className="relative flex items-center overflow-hidden lg:min-h-[calc(100vh-7rem)]">
@@ -11,18 +26,28 @@ export function Hero({ repo }: { repo: string }) {
 
       <div className="relative mx-auto w-full max-w-2xl px-6 py-32 text-center sm:py-36 lg:py-20">
         <h1 className="mx-auto max-w-[14ch] text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
-          Pay without selling{" "}
-          <span className="font-normal italic text-[var(--color-muted)]">
-            your shares
-          </span>
+          <Words text="Pay without selling" from={CUE.claim} />{" "}
+          {/* Held back on its own beat. It is the half of the sentence that
+              carries the product, and it should land after the setup. */}
+          <Words
+            text="your shares"
+            from={CUE.shares}
+            className="font-normal italic text-[var(--color-muted)]"
+          />
         </h1>
 
-        <p className="mx-auto mt-5 max-w-[32ch] text-[16px] leading-relaxed text-[var(--color-muted)]">
+        <p
+          className="settle mx-auto mt-5 max-w-[32ch] text-[16px] leading-relaxed text-[var(--color-muted)]"
+          style={{ animationDelay: `${CUE.sub}ms` }}
+        >
           Borrow against your portfolio at the checkout. One transaction, no
           credit check.
         </p>
 
-        <div className="mt-8 flex justify-center">
+        <div
+          className="settle mt-8 flex justify-center"
+          style={{ animationDelay: `${CUE.action}ms` }}
+        >
           <a
             href={repo}
             className="inline-flex items-center gap-2.5 rounded-[var(--radius-control)] bg-[var(--color-ink)] px-6 py-3.5 text-[15px] font-medium text-white transition-opacity hover:opacity-90"
@@ -34,6 +59,36 @@ export function Hero({ repo }: { repo: string }) {
       </div>
     </section>
   );
+}
+
+/**
+ * One word at a time, each on its own beat.
+ *
+ * Per word rather than per phrase because `settle` moves and blurs, and neither
+ * applies to a plain inline element — the span has to be inline-block, and an
+ * inline-block phrase cannot break across lines. Words can. The spaces stay
+ * outside the spans so the headline wraps exactly where it always did.
+ */
+function Words({
+  text,
+  from,
+  className = "",
+}: {
+  text: string;
+  from: number;
+  className?: string;
+}) {
+  return text.split(" ").map((word, i) => (
+    <Fragment key={`${word}-${i}`}>
+      {i > 0 && " "}
+      <span
+        className={`settle inline-block ${className}`}
+        style={{ animationDelay: `${from + i * CUE.word}ms` }}
+      >
+        {word}
+      </span>
+    </Fragment>
+  ));
 }
 
 function GitHubMark() {

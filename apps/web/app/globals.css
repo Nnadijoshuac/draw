@@ -38,6 +38,10 @@
   --shadow-raise: 0 1px 2px rgb(11 13 18 / 0.04), 0 8px 24px -12px rgb(11 13 18 / 0.12);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Slower off the mark and longer to stop than --ease-out. Reserved for the
+     hero, where the whole point is that nothing looks like it snapped. */
+  --ease-cine: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 html {
@@ -89,6 +93,40 @@ input[inputmode="decimal"] {
   }
 }
 
+/*
+ * The hero's entrance, and the only place on the site that gets one this long.
+ * Everything arrives out of focus and resolves: a little blur, a fraction of
+ * scale, on a slow decelerate, staggered in the order the eye should read it.
+ *
+ * Both declare `from` only, so each element lands on the opacity and rotation
+ * it already carries. A keyframed `to` would flatten the field's depth and
+ * straighten every card.
+ */
+@keyframes fall {
+  from {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.965);
+    filter: blur(7px);
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+    filter: blur(9px);
+  }
+}
+
+/* The line that threads the cards draws itself on. `pathLength="1"` normalises
+   the path so one dash covers all of it whatever the viewBox is scaled to, and
+   the resting state — offset 0 — is a plain solid line. */
+@keyframes thread {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
 @keyframes sheet-up {
   from {
     transform: translateY(100%);
@@ -103,6 +141,18 @@ input[inputmode="decimal"] {
 
 .rise {
   animation: rise 420ms var(--ease-out) both;
+}
+
+.fall {
+  animation: fall 1100ms var(--ease-cine) both;
+}
+
+.settle {
+  animation: settle 1000ms var(--ease-cine) both;
+}
+
+.thread {
+  animation: thread 1500ms var(--ease-out) both;
 }
 
 

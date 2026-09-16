@@ -104,6 +104,25 @@ const NODE_DY = 5.5;
 /** Nudges the whole field across. One dial rather than eight. */
 const SHIFT_X = 4;
 
+/*
+ * The field's cues, in milliseconds. The headline in `Hero` opens on its own;
+ * the field starts under it and the line closes the sequence, drawing itself
+ * through cards that are already there. Nothing arrives at the same time as
+ * anything else, which is the whole of what makes it read as a sequence.
+ */
+
+/** The field holds until the claim has landed. */
+const FIELD_LEAD = 340;
+
+/** Between one card starting and the next. Cards fall in the line's order. */
+const STAGGER = 95;
+
+/** The line starts while the last cards are still settling. */
+const LINE_DELAY = FIELD_LEAD + (CARDS.length - 1) * STAGGER + 620;
+
+/** Matches `.thread` in globals.css — the nodes are timed against the draw. */
+const DRAW_MS = 1500;
+
 export function HoldingsField() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -111,6 +130,26 @@ export function HoldingsField() {
       <WideField />
     </div>
   );
+}
+
+/**
+ * Where each node sits along the path, 0 at the first card and 1 at the last,
+ * so a node can be timed to the moment the line reaches it. Measured in viewBox
+ * units — the viewBox is stretched to the field, so this is an approximation of
+ * the on-screen distance, and close enough that nothing looks early or late.
+ */
+function progressAlong(points: { x: number; y: number }[]) {
+  const steps = points.map((p, i) => {
+    if (i === 0) return 0;
+    const prev = points[i - 1]!;
+    return Math.hypot(p.x - prev.x, p.y - prev.y);
+  });
+
+  let run = 0;
+  const cumulative = steps.map((s) => (run += s));
+  const total = run || 1;
+
+  return cumulative.map((c) => c / total);
 }
 
 /** The full constellation, threaded. Needs the width to make sense. */
@@ -126,6 +165,8 @@ function WideField() {
     .map((n, i) => `${i === 0 ? "M" : "L"} ${n.x} ${n.y}`)
     .join(" ");
 
+  const reached = progressAlong(nodes);
+
   return (
     <div className="absolute inset-0 hidden lg:block">
       <svg
@@ -134,6 +175,8 @@ function WideField() {
         preserveAspectRatio="none"
       >
         <path
+          className="thread"
+          style={{ animationDelay: `${LINE_DELAY}ms` }}
           d={path}
           fill="none"
           stroke="var(--color-line)"
@@ -141,28 +184,37 @@ function WideField() {
           strokeLinejoin="round"
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
+          pathLength="1"
+          strokeDasharray="1"
         />
       </svg>
 
-      {/* The joints of the line, drawn unstretched so they stay round. */}
-      {nodes.map((n) => (
+      {/* The joints of the line, drawn unstretched so they stay round. Each one
+          lights as the draw passes through it. */}
+      {nodes.map((n, i) => (
         <span
           key={n.key}
-          className="absolute h-[5px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-paper)] ring-1 ring-[var(--color-accent)]/30"
-          style={{ left: `${n.x}%`, top: `${n.y}%`, opacity: n.opacity }}
+          className="veil absolute h-[5px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-paper)] ring-1 ring-[var(--color-accent)]/30"
+          style={{
+            left: `${n.x}%`,
+            top: `${n.y}%`,
+            opacity: n.opacity,
+            animationDelay: `${Math.round(LINE_DELAY + reached[i]! * DRAW_MS)}ms`,
+          }}
         />
       ))}
 
-      {CARDS.map((card) => (
+      {CARDS.map((card, i) => (
         <FieldCard
           key={card.title}
           card={card}
           className="w-[176px]"
+          rotate={card.rotate}
+          delay={FIELD_LEAD + i * STAGGER}
           style={{
             left: `${card.x + SHIFT_X}%`,
             top: `${card.y}%`,
             opacity: card.opacity,
-            transform: `rotate(${card.rotate}deg)`,
           }}
         />
       ))}
@@ -174,18 +226,19 @@ function WideField() {
 function PhoneField() {
   return (
     <div className="absolute inset-0 lg:hidden">
-      {CARDS.filter((card) => card.phone).map((card) => {
+      {CARDS.filter((card) => card.phone).map((card, i) => {
         const p = card.phone!;
         return (
           <FieldCard
             key={card.title}
             card={card}
             className="w-[158px]"
+            rotate={p.rotate}
+            delay={FIELD_LEAD + i * STAGGER}
             style={{
               [p.side]: `${p.inset}px`,
               [p.from]: `${p.offset}%`,
               opacity: p.opacity,
-              transform: `rotate(${p.rotate}deg)`,
             }}
           />
         );
@@ -194,51 +247,66 @@ function PhoneField() {
   );
 }
 
+/**
+ * Two elements, on purpose. The wrapper owns the position and the fall, the
+ * card owns its rotation. On one element the animation's translate and the
+ * card's rotate would interpolate as one matrix and every card would twist as
+ * it landed.
+ */
 function FieldCard({
   card,
   className,
   style,
+  rotate,
+  delay,
 }: {
   card: Card;
   className: string;
   style: React.CSSProperties;
+  rotate: number;
+  delay: number;
 }) {
   return (
-    <article
-      className={`absolute overflow-hidden rounded-[12px] border border-[var(--color-line)] bg-[var(--color-paper)] shadow-[var(--shadow-raise)] ${className}`}
-      style={style}
+    <div
+      className={`fall absolute ${className}`}
+      style={{ ...style, animationDelay: `${delay}ms` }}
     >
-      {/* Top rail: solid on the card being acted on, fading on the rest. */}
-      <span
-        className={
-          card.kind === "pay" || card.kind === "paid"
-            ? "block h-[2px] bg-[var(--color-accent)]"
-            : "block h-[2px] bg-gradient-to-r from-[var(--color-accent)]/45 to-transparent"
-        }
-      />
+      <article
+        className="overflow-hidden rounded-[12px] border border-[var(--color-line)] bg-[var(--color-paper)] shadow-[var(--shadow-raise)]"
+        style={{ transform: `rotate(${rotate}deg)` }}
+      >
+        {/* Top rail: solid on the card being acted on, fading on the rest. */}
+        <span
+          className={
+            card.kind === "pay" || card.kind === "paid"
+              ? "block h-[2px] bg-[var(--color-accent)]"
+              : "block h-[2px] bg-gradient-to-r from-[var(--color-accent)]/45 to-transparent"
+          }
+        />
 
-      <div className="p-3">
-        <div className="flex items-center gap-2">
-          <Glyph kind={card.kind} />
-          <span className="truncate text-[12px] font-medium">{card.title}</span>
-          {card.kind === "holding" && <Ticks />}
-        </div>
+        <div className="p-3">
+          <div className="flex items-center gap-2">
+            <Glyph kind={card.kind} />
+            <span className="truncate text-[12px] font-medium">{card.title}</span>
+            {card.kind === "holding" && <Ticks />}
+          </div>
 
-        <p className="mt-1.5 truncate text-[11px] text-[var(--color-muted)]">
-          {card.detail}
-        </p>
-
-        {card.meta && (
-          <p className="tabular mt-1.5 text-[13px] font-medium tracking-[-0.01em]">
-            {card.meta}
+          <p className="mt-1.5 truncate text-[11px] text-[var(--color-muted)]">
+            {card.detail}
           </p>
-        )}
 
-        {card.spark && <Spark points={card.spark} />}
+          {card.meta && (
+            <p className="tabular mt-1.5 text-[13px] font-medium tracking-[-0.01em]">
+              {card.meta}
+            </p>
+          )}
 
-        {card.fill !== undefined && <FillBar fill={card.fill} />}
-      </div>
-    </article>
+          {card.spark && <Spark points={card.spark} />}
+
+          {card.fill !== undefined && <FillBar fill={card.fill} />}
+        </div>
+      </article>
+    </div>
   );
 }
 
