@@ -1,7 +1,7 @@
 import { createChainClient, loadMarket } from "@draw/core";
 import { env } from "./env";
 import { oracleAccountsFor } from "./oracles";
-import { streamAccount } from "./surfnet";
+import { resetAccount, streamAccount } from "./surfnet";
 
 /**
  * Keep oracle prices current.
@@ -25,6 +25,16 @@ async function main(): Promise<void> {
   let streaming = 0;
   for (const oracle of oracles) {
     try {
+      // Reset first, then stream. Streaming alone keeps the account current
+      // for RPC reads but does not put it in the bank the runtime executes
+      // against, so the lending program reads an empty account and panics
+      // with "range end index 8 out of range for slice of length 0" — which
+      // names neither the oracle nor the fork.
+      //
+      // Safe here because these are price accounts. Doing the same to a
+      // reserve or a vault would overwrite it with mainnet state and erase
+      // every deposit on the fork.
+      await resetAccount(env.rpcUrl, oracle);
       await streamAccount(env.rpcUrl, oracle);
       streaming += 1;
     } catch {
@@ -32,7 +42,7 @@ async function main(): Promise<void> {
     }
   }
 
-  console.log(`streaming ${streaming} of ${oracles.length} oracle accounts`);
+  console.log(`refreshed ${streaming} of ${oracles.length} oracle accounts`);
   console.log("Prices stay current from here. No restart needed.");
 }
 

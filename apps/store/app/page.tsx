@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 /**
  * A deliberately ordinary shop.
@@ -25,8 +25,12 @@ const PRODUCT = {
   sku: "KTU-CC-04",
 };
 
+const REFERENCE = "order_1042";
+
 type Status =
   | { state: "idle" }
+  /** The browser says it paid. We haven't heard it from our own server yet. */
+  | { state: "confirming" }
   | { state: "paid"; signature: string }
   | { state: "cancelled" }
   | { state: "error"; message: string };
@@ -34,12 +38,49 @@ type Status =
 export default function StorePage() {
   const [status, setStatus] = useState<Status>({ state: "idle" });
 
+  /**
+   * Wait for the webhook.
+   *
+   * The popup told us the payment worked, and we are deliberately not taking
+   * its word for it. A page can claim anything. The order is only confirmed
+   * once our own server has verified a signed event from Draw — which is what
+   * the Draw SDK docs say to do, so the demo should do it.
+   */
+  const waitForWebhook = useCallback(async () => {
+    setStatus({ state: "confirming" });
+
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      try {
+        const res = await fetch(
+          `/api/draw/status?reference=${encodeURIComponent(REFERENCE)}`,
+          { cache: "no-store" },
+        );
+        const body = await res.json();
+
+        if (body.paid && body.order) {
+          setStatus({ state: "paid", signature: body.order.signature });
+          return;
+        }
+      } catch {
+        /* keep waiting — the shop's server may just be slow */
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    setStatus({
+      state: "error",
+      message:
+        "We couldn't confirm that payment with our server. Nothing has been shipped — contact support with your order number.",
+    });
+  }, []);
+
   function pay() {
     window.Draw?.checkout({
       amount: PRODUCT.priceMinor,
       currency: "USD",
-      reference: "order_1042",
-      onSuccess: ({ signature }) => setStatus({ state: "paid", signature }),
+      reference: REFERENCE,
+      onSuccess: () => void waitForWebhook(),
       onCancel: () => setStatus({ state: "cancelled" }),
       onError: ({ message }) => setStatus({ state: "error", message }),
     });
@@ -139,6 +180,14 @@ export default function StorePage() {
 
             {status.state === "paid" ? (
               <Confirmation signature={status.signature} price={price} />
+            ) : status.state === "confirming" ? (
+              <div className="mt-8 rounded-xl border border-[var(--color-line)] bg-[var(--color-card)] p-5">
+                <p className="text-[15px] font-medium">Confirming your payment</p>
+                <p className="mt-2 text-[14px] leading-relaxed text-[var(--color-muted)]">
+                  Waiting for confirmation from our payment provider. We don&apos;t
+                  mark an order paid until our own server has verified it.
+                </p>
+              </div>
             ) : (
               <>
                 <button

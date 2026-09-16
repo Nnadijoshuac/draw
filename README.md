@@ -8,11 +8,18 @@
 </p>
 
 <p align="center">
-  <a href="#x-running-it"><strong>Run it locally</strong></a>
+  <a href="https://draw-fin.vercel.app"><strong>See it ↗</strong></a>
+  &nbsp; · &nbsp;
+  <a href="#x-running-it">Run it locally</a>
   &nbsp; · &nbsp;
   <a href="#xi-what-is-true-and-what-is-not">What works today</a>
   &nbsp; · &nbsp;
   <a href="https://hackathons.solana.com/hackathons/stocklana">Stocklana ↗</a>
+</p>
+
+<p align="center">
+  <sub>The live site is the landing page. The app itself runs against a local
+  mainnet fork — <a href="#x-running-it">see Run locally</a>.</sub>
 </p>
 
 <p align="center">

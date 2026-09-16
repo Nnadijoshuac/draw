@@ -10,7 +10,7 @@ import { createChainClient, getTokenProgram, loadMarket } from "@draw/core";
 import { env } from "./env";
 import { createDrawLookupTable } from "./lut";
 import { oracleAccountsFor } from "./oracles";
-import { setLamports, setTokenBalance, streamAccount } from "./surfnet";
+import { resetAccount, setLamports, setTokenBalance, streamAccount } from "./surfnet";
 
 /**
  * Put the fork back into a state where a payment works.
@@ -192,13 +192,17 @@ async function main(): Promise<void> {
   let streamed = 0;
   for (const oracle of oracles) {
     try {
+      // Reset puts the account in the bank the runtime executes against;
+      // streaming keeps it current afterwards. Streaming alone leaves the
+      // lending program reading an empty account.
+      await resetAccount(env.rpcUrl, oracle);
       await streamAccount(env.rpcUrl, oracle);
       streamed += 1;
     } catch {
       /* best effort */
     }
   }
-  console.log(`  streaming ${streamed} price accounts`);
+  console.log(`  refreshed ${streamed} price accounts`);
 
   // The running server reads this file per request, so a reset does not need
   // a dev server restart to take effect.

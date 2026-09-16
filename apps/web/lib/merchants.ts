@@ -16,6 +16,10 @@ export interface Merchant {
   name: string;
   wallet: Address;
   origin: string;
+  /** Where payment events are POSTed. Absent means this merchant gets none. */
+  webhookUrl?: string;
+  /** Shared secret the event is signed with. Never leaves the server. */
+  webhookSecret?: string;
 }
 
 function canonicalOrigin(value: string): string | null {
@@ -36,6 +40,8 @@ function demoMerchant(): Merchant | null {
     name: process.env.DEMO_MERCHANT_NAME ?? "Demo store",
     wallet: address(wallet),
     origin: canonicalOrigin(origin) ?? origin,
+    webhookUrl: process.env.DEMO_MERCHANT_WEBHOOK_URL,
+    webhookSecret: process.env.DEMO_MERCHANT_WEBHOOK_SECRET,
   };
 }
 
