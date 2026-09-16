@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+/*
+ * An ordinary shop's stylesheet.
+ *
+ * Deliberately nothing like Draw's own design language — this page has to read
+ * as somebody else's website, because that is the whole claim. Warm paper,
+ * a serif for the product name, and no blue anywhere.
+ *
+ * System fonts only. A webfont that arrives late reflows the page mid-take.
+ */
+@theme {
+  --color-paper: #faf9f7;
+  --color-card: #ffffff;
+  --color-ink: #1c1917;
+  --color-muted: #78716c;
+  --color-line: #e7e5e4;
+  --color-olive: #5c6b4a;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
