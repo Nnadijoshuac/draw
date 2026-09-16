@@ -271,6 +271,16 @@ function Checkout() {
               />
               <Row label="Interest" value={`${formatPercent(quote.borrow.aprPercent)} a year`} />
               <Row label="Network fee" value="Free" />
+              {/* Checked, so say so. A number nobody verifies is worse than
+                  a number nobody shows. */}
+              <Row
+                label="Tracking its share"
+                value={
+                  quote.peg
+                    ? `within ${formatPercent(quote.peg.driftPercent, 2)}`
+                    : "unverified"
+                }
+              />
 
               <p className="mt-4 border-t border-[var(--color-line)] pt-4 text-[13px] leading-relaxed text-[var(--color-muted)]">
                 Your shares are held as security, not sold. Some may be sold only

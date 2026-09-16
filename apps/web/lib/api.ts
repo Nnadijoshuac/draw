@@ -53,6 +53,12 @@ export function handleApiError(error: unknown): NextResponse<ApiError> {
           "unhealthy",
           "That would put your position too close to liquidation.",
         );
+      case "depegged":
+        return jsonError(
+          400,
+          "depegged",
+          "Your shares are trading away from their real price right now, so we've paused lending against them. Nothing was charged.",
+        );
     }
   }
 

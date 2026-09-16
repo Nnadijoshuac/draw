@@ -5,5 +5,6 @@ export * from "./recipient";
 export * from "./policy";
 export * from "./kamino";
 export * from "./prices";
+export * from "./pyth";
 export * from "./transaction";
 export * from "./quote";
