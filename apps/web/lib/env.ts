@@ -32,7 +32,6 @@ function readRuntimeLookupTable(): string | null {
 export const publicEnv = {
   rpcUrl: process.env.NEXT_PUBLIC_RPC_URL ?? SURFNET_RPC_URL,
   privyAppId: process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "",
-  convexUrl: process.env.NEXT_PUBLIC_CONVEX_URL ?? "",
 
   get collateralMint(): Address {
     return address(required("NEXT_PUBLIC_XSTOCK_MINT"));

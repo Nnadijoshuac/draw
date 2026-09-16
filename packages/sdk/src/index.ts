@@ -5,7 +5,8 @@ import type { Portfolio, Quote, WebhookEvent } from "@draw/shared";
  *
  * Two audiences, deliberately kept apart:
  *
- *   - a merchant's server creates sessions and verifies webhooks
+ *   - a merchant's server verifies webhooks, which is the only thing it should
+ *     ever ship goods against
  *   - a merchant's page opens checkout (see @draw/embed, three lines, no build)
  *
  * Nothing here knows about Solana, wallets, collateral or liquidation. That is
@@ -20,21 +21,6 @@ export interface DrawConfig {
   /** Override for self-hosted or preview deployments. */
   baseUrl?: string;
   fetch?: typeof fetch;
-}
-
-export interface CreateSessionOptions {
-  /** Minor units. $40.00 is 4000. */
-  amount: number;
-  currency?: string;
-  /** Your order id. Comes back on the webhook so you can reconcile. */
-  reference?: string;
-}
-
-export interface Session {
-  id: string;
-  checkoutUrl: string;
-  status: string;
-  expiresAt: string;
 }
 
 export class DrawApiError extends Error {
@@ -82,22 +68,6 @@ export class Draw {
     }
 
     return body as T;
-  }
-
-  /** Create a checkout session. Returns the URL to open. */
-  async createSession(options: CreateSessionOptions): Promise<Session> {
-    return this.request<Session>("/api/sessions", {
-      method: "POST",
-      body: JSON.stringify({
-        amountMinor: options.amount,
-        currency: options.currency ?? "USD",
-        reference: options.reference,
-      }),
-    });
-  }
-
-  async getSession(sessionId: string): Promise<Session> {
-    return this.request<Session>(`/api/sessions/${sessionId}`);
   }
 
   /** What a wallet holds and can spend. */

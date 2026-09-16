@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "convex": "convex dev"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@draw/core": "workspace:*",
@@ -16,7 +15,6 @@
     "@privy-io/react-auth": "^2.0.0",
     "@solana/kit": "^2.3.0",
     "@solana/web3.js": "^1.99.0",
-    "convex": "^1.17.0",
     "decimal.js": "^10.4.3",
     "dotenv": "^16.6.1",
     "next": "^16.0.0",

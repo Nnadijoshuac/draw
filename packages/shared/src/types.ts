@@ -91,28 +91,6 @@ export interface Quote {
   expiresAt: string;
 }
 
-export type SessionStatus =
-  | "pending"
-  | "quoted"
-  | "signing"
-  | "submitted"
-  | "paid"
-  | "failed"
-  | "expired";
-
-export interface Session {
-  id: string;
-  merchantId: string;
-  amountMinor: number;
-  currency: string;
-  reference?: string;
-  status: SessionStatus;
-  signature?: string;
-  error?: string;
-  createdAt: string;
-  expiresAt: string;
-}
-
 export interface Merchant {
   id: string;
   name: string;
