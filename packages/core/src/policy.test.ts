@@ -4,6 +4,7 @@ import {
   DEFAULT_POLICY,
   availableToSpendUsd,
   checkDrawAllowed,
+  checkPegAcceptable,
   collateralRequiredUsd,
   healthFactor,
   liquidationPriceUsd,
@@ -138,5 +139,50 @@ describe("checkDrawAllowed", () => {
     expect(
       checkDrawAllowed({ ...base, existingDebtUsd: d("69"), drawUsd: d("10") }),
     ).toEqual({ ok: false, reason: "exceeds-available" });
+  });
+});
+
+describe("peg", () => {
+  const base = {
+    collateralValueUsd: d("198.40"),
+    existingDebtUsd: d("0"),
+    liquidationThreshold: d("0.65"),
+    drawUsd: d("40"),
+  };
+
+  it("accepts a wrapper trading on top of its share", () => {
+    expect(checkPegAcceptable(d("0.09"))).toBe(true);
+  });
+
+  it("accepts drift exactly at the cap", () => {
+    expect(checkPegAcceptable(d("2"))).toBe(true);
+  });
+
+  it("rejects drift past the cap", () => {
+    expect(checkPegAcceptable(d("2.01"))).toBe(false);
+  });
+
+  it("treats an unreadable feed as unknown, not as broken", () => {
+    expect(checkPegAcceptable(null)).toBe(true);
+  });
+
+  it("refuses a draw when the collateral has come loose", () => {
+    expect(
+      checkDrawAllowed({ ...base, pegDriftPercent: d("6.2") }),
+    ).toEqual({ ok: false, reason: "depegged" });
+  });
+
+  it("checks the peg before anything else, because it invalidates the rest", () => {
+    // Dust *and* depegged. The peg is the reason that comes back, because a
+    // broken peg means the amount was never the interesting problem.
+    expect(
+      checkDrawAllowed({ ...base, drawUsd: d("0.10"), pegDriftPercent: d("9") }),
+    ).toEqual({ ok: false, reason: "depegged" });
+  });
+
+  it("allows a draw when the peg is holding", () => {
+    expect(
+      checkDrawAllowed({ ...base, pegDriftPercent: d("0.0918") }),
+    ).toEqual({ ok: true });
   });
 });

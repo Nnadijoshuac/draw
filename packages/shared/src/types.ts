@@ -87,6 +87,17 @@ export interface Quote {
     networkFeeUsd: DecimalString;
     drawFeeUsd: DecimalString;
   };
+  /**
+   * How far the tokenized share is trading from the share behind it, read from
+   * Pyth's redemption-rate feed. Null when the feed could not be read, which
+   * the UI shows as unverified rather than passing off as healthy.
+   */
+  peg: {
+    /** The wrapper priced in the underlying. 1.0 is a perfect peg. */
+    rate: DecimalString;
+    driftPercent: DecimalString;
+    ageSeconds: number;
+  } | null;
   /** Quotes are short lived; a stale quote must never be signed. */
   expiresAt: string;
 }

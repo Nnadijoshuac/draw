@@ -24,6 +24,15 @@ export interface RiskPolicy {
   minDrawUsd: Decimal;
   /** How long a quote stays signable. */
   quoteTtlSeconds: number;
+  /**
+   * How far the tokenized share may trade from the share itself, as a
+   * percentage, before we stop lending against it.
+   *
+   * Everything else here assumes an NVDAx is an Nvidia share. It is a claim on
+   * one, and a claim that has come loose from the thing it claims is not worth
+   * the price the lending market is using.
+   */
+  maxPegDriftPercent: Decimal;
 }
 
 export const DEFAULT_POLICY: RiskPolicy = {
@@ -32,6 +41,10 @@ export const DEFAULT_POLICY: RiskPolicy = {
   dangerHealthFactor: new Decimal("1.25"),
   minDrawUsd: new Decimal("1"),
   quoteTtlSeconds: 30,
+  // Two percent. An xStock normally sits within a few basis points of its
+  // share; a couple of percent is well outside ordinary spread and inside the
+  // 30 points of margin between our 35% cap and Kamino's 65% liquidation.
+  maxPegDriftPercent: new Decimal("2"),
 };
 
 export function policyFromEnv(env: Record<string, string | undefined>): RiskPolicy {
@@ -122,7 +135,31 @@ export function priceDropToLiquidationPercent(
 
 export type DrawRejection =
   | { ok: true }
-  | { ok: false; reason: "below-minimum" | "exceeds-available" | "unhealthy" };
+  | {
+      ok: false;
+      reason: "below-minimum" | "exceeds-available" | "unhealthy" | "depegged";
+    };
+
+/**
+ * Has the wrapper come loose from the share?
+ *
+ * Checked before anything else in a draw, because if this is true then every
+ * other number — the collateral value, the health factor, the liquidation
+ * price we put in front of the user — is computed from a price that no longer
+ * describes the asset.
+ *
+ * `null` means we could not read the feed. That is deliberately not a
+ * rejection: an oracle outage should not stop every payment, and at a 35% cap
+ * against a 65% liquidation threshold there is room to absorb not knowing for
+ * a few minutes. It is surfaced to the user as unverified rather than hidden.
+ */
+export function checkPegAcceptable(
+  driftPercent: Decimal | null,
+  policy: RiskPolicy = DEFAULT_POLICY,
+): boolean {
+  if (driftPercent === null) return true;
+  return driftPercent.lte(policy.maxPegDriftPercent);
+}
 
 /**
  * Gate a draw before we build anything. Every one of these must be checked
@@ -133,6 +170,8 @@ export function checkDrawAllowed(params: {
   collateralValueUsd: Decimal;
   existingDebtUsd: Decimal;
   liquidationThreshold: Decimal;
+  /** How far the collateral has drifted from its underlying. Null if unknown. */
+  pegDriftPercent?: Decimal | null;
   policy?: RiskPolicy;
 }): DrawRejection {
   const {
@@ -140,8 +179,14 @@ export function checkDrawAllowed(params: {
     collateralValueUsd,
     existingDebtUsd,
     liquidationThreshold,
+    pegDriftPercent = null,
     policy = DEFAULT_POLICY,
   } = params;
+
+  // First, because a broken peg invalidates every number below it.
+  if (!checkPegAcceptable(pegDriftPercent, policy)) {
+    return { ok: false, reason: "depegged" };
+  }
 
   if (drawUsd.lt(policy.minDrawUsd)) {
     return { ok: false, reason: "below-minimum" };

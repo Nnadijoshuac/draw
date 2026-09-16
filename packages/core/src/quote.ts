@@ -15,6 +15,7 @@ import {
   type RiskPolicy,
 } from "./policy";
 import { getTokenBalance } from "./tokens";
+import { getPegStatus, type PegStatus } from "./pyth";
 
 /**
  * Turns "I want to spend $40" into every number the user and the transaction
@@ -27,7 +28,11 @@ import { getTokenBalance } from "./tokens";
 
 export class DrawNotAllowedError extends Error {
   constructor(
-    public readonly reason: "below-minimum" | "exceeds-available" | "unhealthy",
+    public readonly reason:
+      | "below-minimum"
+      | "exceeds-available"
+      | "unhealthy"
+      | "depegged",
     public readonly availableUsd: Decimal,
   ) {
     super(`Draw rejected: ${reason}`);
@@ -151,11 +156,21 @@ export async function buildQuote(params: QuoteParams): Promise<QuoteResult> {
   const heldValueUsd = valueInUsd(held, collateralPrice);
   const existingDebtUsd = new Decimal(0);
 
+  // Is the collateral still worth what the lending market thinks it is?
+  // Unreadable is not the same as healthy, so it stays null rather than zero.
+  let peg: PegStatus | null = null;
+  try {
+    peg = await getPegStatus(rpc);
+  } catch (error) {
+    console.warn("[draw:peg] could not read the redemption rate", error);
+  }
+
   const decision = checkDrawAllowed({
     drawUsd: amountUsd,
     collateralValueUsd: heldValueUsd,
     existingDebtUsd,
     liquidationThreshold: reserve.liquidationThreshold,
+    pegDriftPercent: peg?.driftPercent ?? null,
     policy,
   });
 
@@ -217,6 +232,13 @@ export async function buildQuote(params: QuoteParams): Promise<QuoteResult> {
       networkFeeUsd: "0.00",
       drawFeeUsd: "0.00",
     },
+    peg: peg
+      ? {
+          rate: peg.rate.toFixed(6),
+          driftPercent: peg.driftPercent.toFixed(3),
+          ageSeconds: peg.ageSeconds,
+        }
+      : null,
     expiresAt: new Date(
       Date.now() + policy.quoteTtlSeconds * 1000,
     ).toISOString(),
