@@ -13,10 +13,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": [
-    "node_modules",
-    // Convex compiles its own functions and generates their types on `convex
-    // dev`. Until that has run there is no _generated directory to resolve.
-    "convex"
-  ]
+  "exclude": ["node_modules"]
 }
