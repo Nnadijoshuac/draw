@@ -55,9 +55,10 @@ Before the lookup table it was 1,512 bytes, and none of this existed.
 | Drawing to your own wallet, and sending it on to a stranger | Solana addresses only. No fiat offramp exists. |
 | Repayment releasing the collateral, $40.00 → $0.00 | Partial repayment is built but unexercised. |
 | A first-time user with zero SOL completing a payment | Draw sponsors the rent; that subsidy has no accounting behind it. |
+| The shop confirming an order from a signed webhook, not the browser | Retries are in-process and last about two seconds. |
 
-**The webhook does not fire, and Convex has never been deployed.**
-Both are stated plainly in [What works today](#xi-what-is-true-and-what-is-not).
+**Everything here runs against a mainnet fork, not mainnet.** That and every
+other boundary are stated plainly in [What works today](#xi-what-is-true-and-what-is-not).
 
 <details>
 <summary><strong>Contents — the product, the engineering, the evidence</strong></summary>
@@ -146,8 +147,8 @@ by the same code.
 | :--- | :--- | :--- | :--- |
 | **App** | [`apps/web/`](apps/web/) | Next.js 16 · Tailwind 4 | Landing, portfolio, checkout popup, send, API routes |
 | **Demo merchant** | [`apps/store/`](apps/store/) | Next.js 16 | A different origin, on purpose |
-| **Chain layer** | [`packages/core/`](packages/core/) | `@solana/kit` · klend-sdk v12 | Tokens, pricing, Kamino, policy, transactions |
-| **Integration** | [`packages/sdk/`](packages/sdk/) · [`embed/`](packages/embed/) | zero-dependency TS | Sessions, webhook verification, a 1,370-byte shim |
+| **Chain layer** | [`packages/core/`](packages/core/) | `@solana/kit` · klend-sdk v12 | Tokens, pricing, Kamino, Pyth, policy, transactions |
+| **Integration** | [`packages/sdk/`](packages/sdk/) · [`embed/`](packages/embed/) | zero-dependency TS | Webhook verification, a 1,370-byte shim |
 
 ```mermaid
 flowchart TB
@@ -157,7 +158,7 @@ flowchart TB
     portfolio["Portfolio<br/>balances · draw · repay · send"]
     routes["Next.js route handlers<br/>quote · recipient · build · submit · send · repay"]
     core["@draw/core<br/>tokens · prices · policy · transaction"]
-    convex["Convex<br/>merchants · sessions · webhooks"]
+    pyth["Pyth<br/>NVDAx/NVDA redemption rate"]
     kamino["Kamino Lend<br/>xStocks market"]
     chain["Solana<br/>Token-2022 · legacy SPL · lookup tables"]
 
@@ -167,7 +168,7 @@ flowchart TB
     checkout --> routes
     portfolio --> routes
     routes --> core
-    routes -.-> convex
+    routes --> pyth
     core --> kamino
     core --> chain
     kamino --> chain
@@ -177,20 +178,29 @@ flowchart TB
     classDef external fill:#F7F8FA,stroke:#E5E8EE,color:#5B6472
     class store,checkout,portfolio surface
     class embed,routes,core engine
-    class convex,kamino,chain external
+    class pyth,kamino,chain external
 ```
 
 **On-chain is value and ownership; off-chain is coordination.** Balances, debt,
-collateral and the payment itself live on Solana. Convex holds merchants and
-checkout sessions — the things a public ledger is the wrong place for. There is
-no payments table anywhere: the transaction signature *is* the receipt, and a
-second record of it could only ever disagree with the first.
+collateral and the payment itself live on Solana. There is no payments table
+anywhere: the transaction signature *is* the receipt, and a second record of it
+could only ever disagree with the first.
+
+There is also no database. An earlier version of this carried a Convex
+deployment for merchants and checkout sessions; it was written, never deployed,
+and never called by the checkout, which reads its amount and origin from the
+popup URL. It has been removed rather than left in the repository looking load
+bearing.
+
+What replaced it is smaller and honest about its size: **one merchant, declared
+in the environment, resolved from the origin on every request.** A real
+deployment needs a table and a merchant dashboard. It does not need a database
+in the payment path.
 
 > [!IMPORTANT]
-> The dotted line to Convex is dotted for a reason. Its functions are written and
-> its schema is defined; `convex dev` has never been run against this repository.
-> The checkout path in use reads its amount and origin from the popup URL and
-> never calls `/api/sessions`. See [What works today](#xi-what-is-true-and-what-is-not).
+> Draw reads Pyth for one thing and it is not the price. Kamino's oracle prices
+> the collateral; Pyth answers whether that collateral is still tracking the
+> share behind it. See [Risk](#vii-risk).
 
 ---
 
@@ -474,7 +484,7 @@ the same screen so the money has a way back in.
 
 ## 07 · Risk
 
-[`policy.ts`](packages/core/src/policy.ts) is 165 lines and 22 unit tests, and it
+[`policy.ts`](packages/core/src/policy.ts) is 165 lines and 29 unit tests, and it
 is the only file in the repository allowed to decide whether a draw may happen.
 
 | Rule | Value | Why |
@@ -502,6 +512,37 @@ NVDA drops below $82.40" is immediately legible, and
 
 Every one of these checks runs server-side in `checkDrawAllowed` before anything
 is built. The client's idea of what is affordable is a suggestion.
+
+### Is the collateral still the thing it claims to be?
+
+Every number above assumes an NVDAx **is** an Nvidia share. It is not. It is a
+claim on one, issued by somebody, and claims trade away from the thing they
+claim. If the wrapper comes loose, the collateral value, the health factor and
+the liquidation price on the confirmation screen are all computed from a price
+that no longer describes the asset.
+
+Pyth publishes that gap directly, and it is a better instrument than the obvious
+one. Comparing an xStock feed against the equity feed fails exactly when it
+matters, because the equity feed is frozen while the market is shut — which is
+the weekend, which is the gap this whole policy exists for.
+`Crypto.NVDAX/NVDA.RR` is the redemption rate: **the wrapper priced in the
+underlying, updated around the clock.** One number, no market-hours problem.
+
+```text
+   rate     1.000918        NVDAx trading 0.09% above its share
+   drift    0.092%
+   cap      2%              past this, no new draws
+```
+
+Read from Pyth's sponsored push account over the same RPC as everything else —
+no API key and no subscription. Hermes, the off-chain API, now requires a paid
+plan; the chain does not, and an on-chain read is what a program would do anyway.
+
+**An unreadable feed is not a rejection.** An oracle outage should not halt every
+payment, and 30 points of margin between our cap and Kamino's liquidation
+threshold can absorb not knowing for a few minutes. It renders as *unverified*
+on the confirmation rather than being passed off as healthy — which is the same
+rule the rest of this codebase follows about numbers it cannot stand behind.
 
 ---
 
@@ -656,8 +697,9 @@ explains why it is not a hole.
 <details>
 <summary><strong>7. The signature is the receipt — there is no payments table</strong></summary>
 
-Convex holds merchants and sessions. It does not hold payments, and adding a
-payments table would create a record that can only ever disagree with the chain.
+Nothing stores payments. A payments table would create a record that can only
+ever disagree with the chain, and the signature already says everything such a
+row would.
 
 The consequence is that the merchant's source of truth must be the **webhook**,
 not the popup's `postMessage`. `@draw/sdk` says so in as many words, and
@@ -665,11 +707,19 @@ not the popup's `postMessage`. `@draw/sdk` says so in as many words, and
 constant time — a plain `===` returns on the first differing character, and that
 timing is enough to recover a signature one character at a time.
 
-> **This rule is currently violated by this repository's own demo store.**
-> `/api/tx/submit` dispatches no webhook, so the store treats a browser
-> `postMessage` as proof of payment — precisely what the SDK documentation tells
-> merchants never to do. It is listed in
-> [open work](#xi-what-is-true-and-what-is-not) rather than quietly left in place.
+> **This repository violated its own rule for most of its life.** Nothing
+> dispatched, so the demo store treated a browser `postMessage` as proof of
+> payment — precisely what the SDK tells merchants never to do.
+>
+> It fires now. `/api/tx/submit` resolves the merchant from the origin, signs
+> the event with their secret, and POSTs it before returning. The store shows
+> *"Confirming your payment"* until its **own server** has verified that event,
+> and only then calls the order confirmed. That wait is the part worth
+> demonstrating.
+
+Delivery is awaited rather than backgrounded. A serverless host kills the
+process the moment the response is returned and a floating promise dies with
+it — the payment would land on chain and the shop would never hear.
 
 </details>
 
@@ -683,7 +733,7 @@ phrase, no extension, no prior SOL. Draw never sees user key material.
 
 Draw's own key is the fee payer, and `lib/feePayer.ts` is marked `server-only` so
 importing it into a client component fails at build rather than at the worst
-possible moment. The same marker is on `lib/merchants.ts` and `lib/convex.ts`.
+possible moment. The same marker is on `lib/merchants.ts` and `lib/webhooks.ts`.
 
 > Privy's Solana wallet creation is **not** the documented top-level
 > `createOnLogin` — that path is Ethereum-only and deprecated. It is
@@ -802,17 +852,17 @@ rewind.
 
 ## 09 · Repository map
 
-8,150 lines of TypeScript across seven workspace packages.
+8,814 lines of TypeScript across seven workspace packages.
 
 | Package | Lines | Responsibility |
 | :--- | ---: | :--- |
-| [`apps/web/`](apps/web/) | 3,969 | Landing, portfolio, checkout, send, API routes, Convex functions |
-| [`packages/core/`](packages/core/) | 1,985 | Tokens, prices, Kamino, policy, recipients, transaction assembly |
-| [`packages/scripts/`](packages/scripts/) | 1,500 | Fork lifecycle, funding, probes, end-to-end runs |
-| [`packages/shared/`](packages/shared/) | 246 | Domain types and money handling |
-| [`packages/sdk/`](packages/sdk/) | 207 | Merchant SDK — sessions, quotes, webhook verification |
+| [`apps/web/`](apps/web/) | 3,958 | Landing, portfolio, checkout, send, API routes, webhook dispatch |
+| [`packages/core/`](packages/core/) | 2,244 | Tokens, prices, Kamino, policy, recipients, transaction assembly |
+| [`packages/scripts/`](packages/scripts/) | 1,635 | Fork lifecycle, funding, probes, end-to-end runs |
+| [`packages/shared/`](packages/shared/) | 235 | Domain types and money handling |
+| [`packages/sdk/`](packages/sdk/) | 177 | Merchant SDK — sessions, quotes, webhook verification |
 | [`packages/embed/`](packages/embed/) | 133 | The 1,370-byte script that opens checkout |
-| [`apps/store/`](apps/store/) | 110 | Demo merchant, on a separate origin on purpose |
+| [`apps/store/`](apps/store/) | 432 | Demo merchant, on a separate origin on purpose |
 
 <details>
 <summary><strong>Open the full source map</strong></summary>
@@ -822,7 +872,7 @@ rewind.
      tokens.ts                 Token-2022 vs legacy SPL — resolve, never assume
      prices.ts                 collateral value from the reserve's own oracle
      kamino.ts                 market load, draw / repay instructions, obligation
-     policy.ts                 Draw's risk rules — 22 tests, the only gate
+     policy.ts                 Draw's risk rules — 29 tests, the only gate
      recipient.ts              is this somewhere money can safely go
      quote.ts                  price a draw, and the balance sheet
      transaction.ts            draw, repay, send · lookup tables · rent
@@ -840,8 +890,7 @@ rewind.
      app/api/tx/submit/        co-sign, simulate, send
      app/api/send/             a plain transfer, no borrowing
      app/api/repay/            release the collateral
-     app/api/sessions/         merchant-declared checkout sessions (Convex)
-     convex/                   merchants · sessions · webhooks · schema
+     lib/webhooks.ts           server-only. signed delivery to the merchant
      lib/feePayer.ts           server-only. the one key Draw holds
      lib/merchants.ts          server-only. origin → payee
      components/AddressField   validated address input, shared by both flows
@@ -904,6 +953,11 @@ FEE_PAYER_SECRET_KEY=               # pnpm keygen
 DEMO_MERCHANT_ORIGIN=http://localhost:3001
 DEMO_MERCHANT_WALLET=
 DEMO_MERCHANT_NAME=Kitui Supply Co.
+
+# Both sides of the webhook. Same value; Draw signs with it, the shop verifies.
+DEMO_MERCHANT_WEBHOOK_URL=http://localhost:3001/api/draw/webhook
+DEMO_MERCHANT_WEBHOOK_SECRET=
+DRAW_WEBHOOK_SECRET=
 ```
 
 `NEXT_PUBLIC_*` values are inlined into the browser bundle by design. None of
@@ -934,11 +988,12 @@ Then open the store, add something to the basket, and pay. Or stay in
 
 ```bash
 pnpm typecheck      # all 8 packages
-pnpm test           # 22 policy tests
+pnpm test           # 29 policy tests
 pnpm lint           # eslint, flat config
 pnpm build
 
 pnpm portfolio <wallet> [amount]    # the whole read path, no browser
+pnpm e2e-webhook <secret>           # build, sign, submit, and ask the shop
 pnpm --filter @draw/scripts exec tsx src/e2e-draw.ts <secret> <merchant> [usd]
 pnpm --filter @draw/scripts exec tsx src/e2e-wallet.ts <secret> [usd]
 pnpm --filter @draw/scripts exec tsx src/e2e-repay.ts <secret>
@@ -998,6 +1053,28 @@ The refusals, run in the same pass against a live fork:
    a new wallet      allowed, flagged unfunded
 ```
 
+**The merchant loop, end to end, with no browser in it.** `pnpm e2e-webhook`
+builds through the real route, signs, submits, and then asks the *shop's own
+server* whether it believes the order is paid:
+
+```text
+   shop believes paid, before: false
+   built  12 ixs, 787/1232 bytes → Kitui Supply Co.
+   landed 2CuCzkh6uTbeaCyvUE6cXiG49omzLRLypzy8qz2VUn1qmKjCCaU9W1uhGjE9TirtAPLUDmBUDaWdgNMAMF1kEeWD
+   notified merchant: true
+
+   shop confirms order order_1042
+     $40.00 USD
+     signature matches what actually landed
+```
+
+The assertion at the end is the point: the shop learned about the payment from a
+signed server-to-server event, and the signature it recorded is the transaction
+that actually landed.
+
+**The peg, read live.** `Crypto.NVDAX/NVDA.RR` off Pyth's sponsored push account
+at `9Qxr7ZFs…VHKir` — rate **1.000918**, drift **0.092%**, well inside the 2% cap.
+
 Also observed: a wallet holding **zero SOL** completing a first-ever payment with
 account setup in the same transaction; email login through Privy with no seed
 phrase and no extension; the risk policy refusing draws above the 35% cap; and
@@ -1008,19 +1085,14 @@ simulation catching a failing transaction before the user was asked to sign.
 <details>
 <summary><strong>Built, not observed end to end</strong></summary>
 
-- **The webhook does not fire.** `/api/tx/submit` returns a signature to the
-  browser and tells no one else. `convex/webhooks.ts` is written, `verifyWebhook`
-  in the SDK is written and correct, and nothing dispatches between them. The
-  demo store therefore trusts a browser `postMessage` — which
-  [decision 7](#7-the-signature-is-the-receipt) says explicitly that no merchant
-  should ever do. This is the single largest gap in the repository.
-- **Convex has never been deployed.** `convex dev` has not been run,
-  `convex/_generated/` does not exist, and `lib/convex.ts` hand-writes its
-  function references for exactly that reason. The merchant registry that the
-  checkout actually uses is `DEMO_MERCHANT_*` in the environment. The
-  Convex-backed session path — `POST /api/sessions`, `sessions.create`,
-  `recordQuote`, `setStatus` — is written and unexercised; the checkout in use
-  reads its amount and origin from the popup URL.
+- **Webhook retries.** Delivery retries twice, in process, over about two and a
+  half seconds. A merchant who is redeploying for longer than that misses the
+  event and has to reconcile from the signature. Durable retries need a queue,
+  and this does not have one.
+- **A depegged draw has never been refused for real.** The guard is unit tested
+  and the live rate reads 1.000918, which is healthy — so the rejection path has
+  only ever been exercised against synthetic drift, never against an xStock
+  that actually came loose.
 - **Partial repayment.** `buildRepayInstructions` takes an amount and the route
   passes the full outstanding balance. Repaying less has never been run.
 - **The repayment shortfall state.** `repayShortfallUsd` is computed and the
@@ -1047,7 +1119,10 @@ simulation catching a failing transaction before the user was asked to sign.
   partner, and pretending otherwise in a demo would be the one claim a judge
   could check and find empty.
 - **No leverage.** Borrowed funds cannot be redeposited, by construction.
-- **No payments table.** [Decision 7](#7-the-signature-is-the-receipt).
+- **No payments table, and now no database at all.** The Convex deployment that
+  was written for merchants and sessions was removed rather than left in the
+  repository looking load bearing — it was never deployed and the checkout never
+  called it. [Decision 7](#7-the-signature-is-the-receipt).
 - **No mobile app.** Web only, on purpose, for this deadline.
 
 </details>
@@ -1060,6 +1135,12 @@ simulation catching a failing transaction before the user was asked to sign.
   bills the same fee payer for their token account, on the same terms.
 - The merchant registry is one environment-configured origin. Onboarding a second
   merchant currently means an environment variable.
+- The webhook is dispatched for the origin the checkout was opened from, and
+  nothing yet proves the transaction it describes actually paid *that* merchant.
+  Binding the event to the transaction's contents is the next hardening step.
+- The peg guard covers NVDAx only. Every collateral asset needs its own
+  redemption-rate feed, and `NVDAX_REDEMPTION_RATE` is a constant rather than a
+  lookup.
 - `react-hooks/set-state-in-effect` is downgraded to a warning in
   `apps/web/eslint.config.mjs`, with four instances outstanding. Each is a
   deliberate reset when a prop flips; none has been rewritten.
@@ -1068,7 +1149,6 @@ simulation catching a failing transaction before the user was asked to sign.
   silently re-priced instead of being rejected.
 - The name **Draw** has not been checked for collisions with existing Solana
   projects.
-- No `LICENSE` file has been committed yet; the intent is MIT.
 
 </details>
 
