@@ -10,7 +10,7 @@ import { createChainClient, getTokenProgram, loadMarket } from "@draw/core";
 import { env } from "./env";
 import { createDrawLookupTable } from "./lut";
 import { oracleAccountsFor } from "./oracles";
-import { resetAccount, setLamports, setTokenBalance, streamAccount } from "./surfnet";
+import { resetAccount, setLamports, setTokenBalance } from "./surfnet";
 
 /**
  * Put the fork back into a state where a payment works.
@@ -58,9 +58,9 @@ async function isForkHealthy(rpcUrl: string): Promise<boolean> {
  * Kamino rejects a price older than max_age, and it measures that against the
  * fork's clock rather than ours. Surfpool produces slots slightly faster than
  * mainnet's real average, so a fork left running for a day ends up minutes
- * ahead — and a freshly streamed mainnet oracle is then born already expired.
+ * ahead — and a freshly pulled mainnet oracle is then born already expired.
  *
- * Streaming cannot fix that. Only a restart resets the clock.
+ * Re-pulling cannot fix that. Only a restart resets the clock.
  */
 const MAX_CLOCK_DRIFT_SECONDS = 120;
 
@@ -141,9 +141,9 @@ function writeEnvValue(key: string, value: string): void {
 async function main(): Promise<void> {
   const [walletArg] = process.argv.slice(2);
 
-  // Streaming keeps the oracles current, so a running fork usually does not
-  // need to be torn down — restarting throws away every funded wallet. The
-  // exception is clock drift, which streaming cannot help with at all.
+  // Re-pulling the oracles is usually enough, so a running fork does not need
+  // to be torn down — restarting throws away every funded wallet. The exception
+  // is clock drift, which re-pulling cannot help with at all.
   let running = await isForkHealthy(env.rpcUrl);
 
   if (running) {
@@ -153,7 +153,7 @@ async function main(): Promise<void> {
 
     if (drift > MAX_CLOCK_DRIFT_SECONDS) {
       console.log(`fork clock is ${drift}s ahead of real time`);
-      console.log("  every streamed price would arrive already expired");
+      console.log("  every price we pull would arrive already expired");
       console.log("  restarting, which clears funded wallets");
       running = false;
     } else {
@@ -185,24 +185,22 @@ async function main(): Promise<void> {
   });
   writeEnvValue("DRAW_LOOKUP_TABLE", table);
 
-  // Oracles only. Streaming a reserve or a vault would overwrite it with
+  // Oracles only. Re-pulling a reserve or a vault would overwrite it with
   // mainnet state and erase every deposit made on this fork.
   const { market } = await loadMarket(rpc, { refresh: true });
   const oracles = oracleAccountsFor(market);
-  let streamed = 0;
+  let pulled = 0;
   for (const oracle of oracles) {
     try {
-      // Reset puts the account in the bank the runtime executes against;
-      // streaming keeps it current afterwards. Streaming alone leaves the
-      // lending program reading an empty account.
+      // Re-pull only. Streaming these keeps them fresh for RPC reads while
+      // leaving the runtime reading an empty account — see refresh.ts.
       await resetAccount(env.rpcUrl, oracle);
-      await streamAccount(env.rpcUrl, oracle);
-      streamed += 1;
+      pulled += 1;
     } catch {
       /* best effort */
     }
   }
-  console.log(`  refreshed ${streamed} price accounts`);
+  console.log(`  re-pulled ${pulled} price accounts`);
 
   // The running server reads this file per request, so a reset does not need
   // a dev server restart to take effect.
