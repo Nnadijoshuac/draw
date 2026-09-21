@@ -72,7 +72,7 @@ other boundary are stated plainly in [What works today](#xi-what-is-true-and-wha
 | 05 | [Three destinations](#v-three-destinations) | A merchant, a wallet, or yourself |
 | 06 | [Getting out](#vi-getting-out) | Repayment, and the balance sheet |
 | 07 | [Risk](#vii-risk) | Draw's own limits, and why they are lower |
-| 08 | [Engineering decisions](#viii-the-decisions) | Twelve choices and the incidents behind them |
+| 08 | [Engineering decisions](#viii-the-decisions) | Thirteen choices and the incidents behind them |
 | 09 | [Repository map](#ix-the-map) | Where the moving parts live |
 | 10 | [Run locally](#x-running-it) | Fork, fund, run |
 | 11 | [What works today](#xi-what-is-true-and-what-is-not) | Observed, unobserved, absent |
@@ -846,6 +846,41 @@ rewind.
 
 </details>
 
+<a id="13-a-fresh-price-the-runtime-cannot-read"></a>
+
+<details>
+<summary><strong>13. A price can be fresh over RPC and unreadable to the program</strong></summary>
+
+`surfnet_streamAccount` keeps a cloned account current. It was in `pnpm refresh`
+for exactly that reason, and it is now deliberately gone.
+
+Streaming updates what RPC returns. It does not put the account in the bank the
+runtime executes against. So every off-chain read succeeds — the quote prices
+correctly, the transaction builds and fits — and then the lending program reads
+a zero-length slice:
+
+```text
+   panicked at 'range end index 8 out of range for slice of length 0',
+   programs/klend/src/utils/prices/scope.rs:66
+```
+
+Nothing there names an oracle, a stream, or a fork. The symptom is worse than
+the error: draws work for a few minutes after a reset and then stop, so it
+reads as flakiness rather than as a bug with a cause.
+
+`surfnet_resetAccount` re-pulls the account properly, and `refresh` now does
+only that.
+
+> An earlier attempt at this reset the account and *then* streamed it, which
+> looked correct and fixed nothing — the stream re-broke it seconds later.
+>
+> Worse, streams live on the fork, not in the code. Removing the call stopped
+> new streams being created and did nothing about the ones already running, so
+> the bug survived its own fix until the fork was restarted. If an oracle reads
+> empty, restart the fork before trusting anything else.
+
+</details>
+
 ---
 
 <a id="ix-the-map"></a>
@@ -977,12 +1012,22 @@ Then open the store, add something to the basket, and pay. Or stay in
 `/portfolio` and draw to your own wallet, which needs no merchant at all.
 
 > [!TIP]
-> If borrows fail with `ReserveStale`, it is the fork's oracles, and there are two
-> different causes. **Prices aged out:** `pnpm refresh` streams them from mainnet
-> without touching reserve state — no restart, no lost deposits. **The fork's own
-> clock has drifted ahead:** streaming cannot help, because the price is fresh and
-> the clock is wrong. `pnpm reset` measures the drift and restarts when it has to.
+> Two different oracle problems look almost the same from the outside, and
+> neither error names the fork.
+>
+> **`ReserveStale` — the prices aged out.** `pnpm refresh` re-pulls them from
+> mainnet without touching reserve state, so no restart and no lost deposits.
+> Good for about half an hour; `pnpm refresh --watch` keeps doing it every two
+> minutes, which is what you want running during a recording session.
+>
+> **`ReserveStale` again, right after a refresh — the fork's own clock has
+> drifted ahead.** Re-pulling cannot help: the price is fresh and the clock is
+> wrong. `pnpm reset` measures the drift and restarts when it has to.
 > See [decision 12](#12-a-fork-left-running-stops-being-a-fork-of-now).
+>
+> **`SBF program panicked` on `RefreshReserve` — an oracle is empty.** Restart
+> the fork. Something streamed that account and streams outlive the code that
+> created them. See [decision 13](#13-a-fresh-price-the-runtime-cannot-read).
 
 ### 5 · Verify
 
