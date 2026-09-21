@@ -218,6 +218,39 @@ Four server round trips, one browser signature, one transaction.
 | **04 · Sign** | The browser | Privy embedded wallet. Draw holds no user key material |
 | **05 · Submit** | `POST /api/tx/submit` | Fee payer co-signs, **simulates**, then sends |
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Shop as Merchant page
+    participant Checkout as Checkout popup
+    participant Draw as Draw server
+    participant Chain as Solana
+    participant Server as Merchant server
+
+    Shop->>Checkout: Draw.checkout({ amount })
+    Checkout->>Draw: quote
+    Draw->>Chain: read reserves, oracle, peg
+    Draw-->>Checkout: collateral, rate, liquidation price
+    Checkout->>Draw: build
+    Note over Draw: payee resolved from the origin,<br/>never from the request
+    Draw-->>Checkout: unsigned transaction
+    Checkout->>Checkout: user signs, in the browser
+    Checkout->>Draw: submit
+    Draw->>Chain: simulate
+    Draw->>Chain: co-sign and send
+    Chain-->>Draw: signature
+    Draw->>Server: signed webhook
+    Server-->>Draw: 200
+    Draw-->>Checkout: signature
+    Checkout-->>Shop: postMessage
+    Note over Shop,Server: the shop waits for its own server,<br/>not for this message
+```
+
+Two things in that diagram are the whole security model. **Draw never holds a
+user key** — the signature happens in the browser, and Draw's own key only ever
+adds the fee payer signature afterwards. And the shop's confirmation comes from
+its own server, so the last arrow is a convenience rather than proof.
+
 <details>
 <summary><strong>1 · Pricing — the reserve's own oracle, never a second feed</strong></summary>
 
@@ -238,21 +271,51 @@ with the protocol's.
 <details>
 <summary><strong>2 · The transaction — what actually goes in it</strong></summary>
 
-```text
-   ┌─ setup ──────────────── first draw only, rides along in the same tx
-   │  initUserMetadata · InitObligation · createUserLut
-   │  ATA creation for collateral and debt
-   │  ~0.05 SOL from the fee payer, because Kamino bills the USER for this
-   │
-   ├─ lending ─────────────── every draw
-   │  RefreshReserve · RefreshObligation
-   │  Deposit          ← collateral in
-   │  inBetweenIxs     ← the refresh that makes the deposit visible
-   │  Borrow           ← stablecoin out
-   │
-   └─ payment ────────────── the part the merchant cares about
-      Transfer  user → merchant
+Seventeen instructions on a first draw, in four groups. Every one of them lands
+or none of them does.
+
+```mermaid
+flowchart TD
+    subgraph budget["Budget"]
+        b1["setComputeUnitLimit"] --> b2["setComputeUnitPrice"]
+    end
+
+    subgraph setup["Setup · first draw only"]
+        s1["transferSol<br/>fee payer → user, for rent"]
+        s2["initUserMetadata"]
+        s3["InitObligation"]
+        s4["createUserLut"]
+        s5["create token accounts"]
+        s1 --> s2 --> s3 --> s4 --> s5
+    end
+
+    subgraph lending["Lending · every draw"]
+        l1["RefreshReserve ×2"]
+        l2["RefreshObligation"]
+        l3["Deposit<br/>collateral in"]
+        l4["inBetweenIxs<br/>refresh, so the deposit is visible"]
+        l5["Borrow<br/>stablecoin out"]
+        l1 --> l2 --> l3 --> l4 --> l5
+    end
+
+    subgraph payment["Payment"]
+        p1["transferChecked<br/>user → destination"]
+    end
+
+    budget --> setup --> lending --> payment
+
+    classDef once fill:#F7F8FA,stroke:#E5E8EE,color:#5B6472
+    classDef always fill:#EEF2FF,stroke:#1B4DFF,color:#0B0D12
+    classDef pay fill:#0B0D12,stroke:#1B4DFF,color:#ffffff
+    class b1,b2,s1,s2,s3,s4,s5 once
+    class l1,l2,l3,l4,l5 always
+    class p1 pay
 ```
+
+The setup group disappears after a user's first draw, which is why the same
+payment is 17 instructions once and 12 afterwards. Drawing to your own wallet
+drops the payment group too, because the borrow already landed in the right
+account.
 
 The ordering of `inBetweenIxs` is not cosmetic. Kamino returns it as a separate
 array precisely because it belongs *between* the deposit and the borrow; placed
@@ -495,12 +558,27 @@ is the only file in the repository allowed to decide whether a draw may happen.
 | `minDrawUsd` | 1 | Below this the network cost stops making sense. |
 | `quoteTtlSeconds` | 30 | A quote stays signable this long, then it is re-priced. |
 
-**The gap between where Draw lends and where Kamino liquidates — 35% against
-65% — is the user's margin, and it exists because of something specific to this
-asset class.** Tokenized equities trade 24 hours a
-day; the underlying market does not. A position opened on Saturday can gap hard
-at Monday's open with no chance for anyone to react. That is a product decision,
-not a technical constraint, and it is written down as one.
+**The gap between where Draw lends and where Kamino liquidates is the user's
+margin**, and it exists because of something specific to this asset class.
+
+```text
+   0%                35%            55%            65%          100%
+   ├─────────────────┼──────────────┼──────────────┼─────────────┤
+   │                 │              │              │
+   │   Draw lends    │   headroom   │   Kamino     │  liquidated
+   │   up to here    │   nobody     │   would      │
+   │                 │   else uses  │   still lend │
+   │                 │              │              │
+   └─ $40 borrowed against $114 of NVDAx, at today's price ────────┘
+
+   30 points between where a Draw position sits and where it gets closed.
+   NVDAx would have to fall roughly 46% before any of it is at risk.
+```
+
+Tokenized equities trade 24 hours a day; the underlying market does not. A
+position opened on Saturday can gap hard at Monday's open with no chance for
+anyone to react. That is a product decision, not a technical constraint, and it
+is written down as one.
 
 **No leverage loops.** Borrowed funds cannot be redeposited. This is a spending
 product, not a leverage product, and the two have different blast radii.
@@ -543,6 +621,59 @@ payment, and 30 points of margin between our cap and Kamino's liquidation
 threshold can absorb not knowing for a few minutes. It renders as *unverified*
 on the confirmation rather than being passed off as healthy — which is the same
 rule the rest of this codebase follows about numbers it cannot stand behind.
+
+<a id="what-this-costs-to-run"></a>
+
+### What this costs to run
+
+Draw charges nothing today. `drawFeeUsd` is hardcoded to zero and the fee payer
+sponsors the network cost, so **every transaction is a loss.** Worth stating
+before anyone works it out for themselves.
+
+| Paid by Draw | Amount | Recoverable |
+| :--- | ---: | :--- |
+| Transaction fee | fractions of a cent | no |
+| Setup rent, once per new user | **0.05 SOL** | no |
+| A recipient's token account, if they have never held USDC | ~0.002 SOL | no |
+
+**Rent on Solana is refundable, and Draw still never sees it again.** Closing an
+account returns the deposit to whoever owns it — and Draw owns none of these. It
+sent SOL to the user, and the user paid rent on the user's own obligation,
+metadata, lookup table and token accounts. Those refunds belong to them. It is a
+transfer, not a float.
+
+The sizing makes it worse. The first failure asked for **1,280,640 lamports**;
+`SETUP_RENT_LAMPORTS` sends **50,000,000**. Some of the excess covers the other
+accounts, but a good deal of it is simply free SOL landing in a stranger's
+wallet.
+
+```text
+   needed, first charge      1,280,640 lamports
+   sent                     50,000,000 lamports
+```
+
+**And nothing caps it.** Setup runs once per wallet, but wallets cost nothing to
+make. There is no per-user limit and no rate limit, so the subsidy is drainable
+by anyone willing to generate addresses in a loop.
+
+#### Why the sizing is the whole argument
+
+At a merchant fee of 1.5%, a $40 basket earns $0.60.
+
+```text
+   0.05  SOL sponsored   ≈ $10.00   →  ~17 payments before that user pays for themselves
+   0.002 SOL sponsored   ≈ $0.40    →   1 payment
+```
+
+Measuring what those accounts actually need, instead of sending a round number,
+is the difference between a user being profitable immediately and being
+profitable eventually. That is the first thing to fix, ahead of charging anyone
+anything.
+
+The alternative is to charge it through: borrow $40.25 instead of $40 and let
+the first draw cover its own setup, which is how card processors handle
+onboarding costs. It works, and it costs the clean "no fees" line, which is why
+the sizing comes first.
 
 ---
 
@@ -604,14 +735,38 @@ SOL can pay for something"* is fatal:
 
 > `Transfer: insufficient lamports 0, need 1280640`
 
-`buildDrawTransaction` prepends a `transferSol` of `SETUP_RENT_LAMPORTS` from the
-fee payer to the user, and the setup rides along in the same transaction as the
-payment. It fits once the lookup table is applied, and keeping it to one
-transaction is the entire point: the user sees a payment, not a setup step
-followed by a payment.
+**Draw does not pay the rent. Draw pays the user, and the user pays the rent.**
+That distinction is the whole solution. Kamino's instruction names the user as
+the rent payer and there is no way to redirect it, so the fix has to happen
+upstream: `buildDrawTransaction` prepends a `transferSol` from the fee payer to
+the user, and by the time Kamino's setup runs there are lamports in the account
+it is about to bill.
 
-The subsidy is real money with no accounting behind it. That is named as open
-work rather than hidden.
+```mermaid
+flowchart LR
+    fee["Draw's fee payer"]
+    user["User's wallet<br/>0 SOL"]
+    kamino["Kamino setup<br/>obligation · metadata · lookup table"]
+
+    fee -->|"1 · transferSol 0.05 SOL"| user
+    user -->|"2 · rent, charged to the user"| kamino
+
+    classDef draw fill:#EEF2FF,stroke:#1B4DFF,color:#0B0D12
+    classDef ext fill:#F7F8FA,stroke:#E5E8EE,color:#5B6472
+    class fee,user draw
+    class kamino ext
+```
+
+The fee payer covers the *transaction fee*. Rent is a different thing, charged
+to whichever account the instruction designates, and sponsorship has to happen
+before that instruction runs rather than instead of it.
+
+Both live in the same transaction as the payment. That only fits because the
+lookup table freed the bytes, and keeping it to one transaction is the point:
+the user sees a payment, never a setup step followed by a payment.
+
+**What it costs, and why none of it comes back.** See
+[what this costs to run](#what-this-costs-to-run).
 
 </details>
 
